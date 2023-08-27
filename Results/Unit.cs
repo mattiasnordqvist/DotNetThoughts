@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Results;
+﻿namespace Results;
 
 /// <summary>
 /// A class to represent the return value of a void operation.
@@ -15,6 +13,6 @@ public class Unit
     /// <summary>
     /// The single instance of Unit.
     /// </summary>
-    public static Unit Instance = new Unit();
+    public static Unit Instance = new();
     private Unit() { }
 }

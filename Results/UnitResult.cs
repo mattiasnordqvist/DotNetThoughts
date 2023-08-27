@@ -1,4 +1,6 @@
-﻿namespace Results;
+﻿using System.Diagnostics.Contracts;
+
+namespace Results;
 
 /// <summary>
 /// Extension methods and utilities for working with Unit Results.
@@ -11,6 +13,7 @@ public static class UnitResult
     /// <typeparam name="T">The very unimportant type of the value being thrown away</typeparam>
     /// <param name="resultOfType">The result to convert to a Result of Unit</param>
     /// <returns></returns>
+    [Pure]
     public static Result<Unit> ToUnitResult<T>(this Result<T> result) =>
         result.Success
             ? Ok
@@ -23,11 +26,13 @@ public static class UnitResult
     /// 
     /// Maybe we should create a ValueResult, just like .Net has ValueTask for cases like this?
     /// </summary>
+    [Pure]
     public static Result<Unit> Ok => Result<Unit>.Ok(Unit.Instance);
 
-
-    public static Result<Unit> Error(params IError[] errors) => Result<Unit>.Error(errors);
+    [Pure]
     public static Result<Unit> Error(IEnumerable<IError> errors) => Result<Unit>.Error(errors);
+    [Pure]
     public static Result<Unit> Error(IError error, params IError[] errors) => Result<Unit>.Error(errors.Concat(new IError[] { error }));
+    [Pure]
     public static Result<Unit> Error(IError error, IEnumerable<IError> errors) => Result<Unit>.Error(errors.Concat(new IError[] { error }));
 }

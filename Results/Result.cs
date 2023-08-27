@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 namespace Results;
 
@@ -20,6 +21,7 @@ public readonly record struct Result<T>
     /// It is the same as calling Result.Ok(T t) or t.Return().
     /// </summary>
     /// <param name="result">The value to elevate to a successful Result</param>
+    [Pure]
     public static implicit operator Result<T>(T result) => Result<T>.Ok(result);
 
     /// <summary>
@@ -27,6 +29,7 @@ public readonly record struct Result<T>
     /// It is the same as calling Task.FromResult(resultOfT)
     /// </summary>
     /// <param name="result">The value to elevate to a successful Result and return as a completed Task</param>
+    [Pure]
     public static implicit operator Task<Result<T>>(Result<T> result) => Task.FromResult(result);
 
     /// <summary>
@@ -34,6 +37,7 @@ public readonly record struct Result<T>
     /// It is the same as calling result.ToUnitResult().
     /// </summary>
     /// <param name="result"></param>
+    [Pure]
     public static implicit operator Result<Unit>(Result<T> result) => result.ToUnitResult();
 
     /// <summary>
@@ -41,6 +45,7 @@ public readonly record struct Result<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns>A successful Result of type T, with the passed value as Value</returns>
+    [Pure]
     public static Result<T> Ok(T value) => new(value);
 
     /// <summary>
@@ -51,6 +56,7 @@ public readonly record struct Result<T>
     /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.</param>
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
     /// <returns></returns>
+    [Pure]
     public static Result<T> Error(IError error, params IError[] errors) => new(errors.Concat(new IError[] { error }));
 
     /// <summary>
@@ -61,8 +67,19 @@ public readonly record struct Result<T>
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
     /// </param>
     /// <returns></returns>
+    [Pure]
     public static Result<T> Error(IEnumerable<IError> errors) => new(errors);
 
+    /// <summary>
+    /// Creates a failed Result of type T, with at least one error.
+    /// </summary>
+    /// <param name="errors">
+    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
+    /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
+    /// </param>
+    /// <returns></returns>
+    [Pure]
+    public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat(new IError[] { error }));
     /// <summary>
     /// In the end, the only way to create a successful result is through this constructor, by passing a value of type T, which of course can be null.
     /// </summary>
@@ -88,6 +105,7 @@ public readonly record struct Result<T>
     /// </summary>
     /// <typeparam name="TError">The error to check for</typeparam>
     /// <returns>The error, if a match was found, otherwise null</returns>
+    [Pure]
     public TError? IsError<TError>() where TError : IError => Success
             ? default
             : Errors.Any(x => x.GetType() == typeof(TError))
@@ -101,6 +119,7 @@ public readonly record struct Result<T>
     /// <typeparam name="TError"></typeparam>
     /// <param name="error"></param>
     /// <returns></returns>
+    [Pure]
     public readonly bool IsError<TError>(out TError? error) where TError : IError
     {
         if (Success)
@@ -127,22 +146,25 @@ public readonly record struct Result<T>
     /// Maybe you though the operation could fail, but it could! Maybe whether it can fail or not has changed since you first wrote the operation, because other downstream operations now can fail.
     /// Make a habit of always checking the Success property before accessing the Value, and you'll never get this exception.
     /// </summary>
+    [Pure]
     public readonly T Value => Success
         ? _value!
         : throw new InvalidOperationException("Can't get a value from an unsuccesful result.");
 
     // Holds the value of a successful result. Can be null, if T is a nullable type, or if the result is a failure. 
     // We can't use a value of null alone to determine whether the result is a success or failure, because T can be a nullable type, and null is a valid value for a nullable type.
-    private readonly T? _value; 
+    private readonly T? _value;
 
     /// <summary>
     /// Returns whether the result is a success or failure.
     /// </summary>
+    [Pure]
     public readonly bool Success => !Errors.Any(); // A successful result has no errors. We check the number of errors instead of checking whether the Value is null, because T can be a nullable type, and null is a valid value for a successful result of the nullable type.
 
     /// <summary>
     /// A readonly list of errors. Will be empty if the result is a success, but you can safely enumerate it without checking the Success property first.
     /// </summary>
+    [Pure]
     public readonly IReadOnlyList<IError> Errors { get; }
 
     /// <summary>
@@ -151,6 +173,7 @@ public readonly record struct Result<T>
     /// </summary>
     /// <returns>The Value, if successful.</returns>
     /// <exception cref="ErrorResultAsException"></exception>
+    [Pure]
     public T ValueOrThrow()
     {
         if (Success) return Value;
@@ -168,7 +191,8 @@ public class ErrorResultAsException : Exception
         Errors = errors;
     }
 
+    [Pure]
     public override string Message => string.Join(Environment.NewLine, Errors.Select(x => x.ToString()));
 
-    public IReadOnlyList<IError> Errors { get; private set; }
+    public IReadOnlyList<IError> Errors { [Pure] get; private set; }
 }

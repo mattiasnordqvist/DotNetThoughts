@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 namespace Results;
 
@@ -38,6 +39,7 @@ public abstract record ErrorBase : IError
     /// Scans the inheriting type for all properties and returns them as a dictionary where property name is key, and the property value is the value.
     /// </summary>
     /// <returns></returns>
+    [Pure]
     public Dictionary<string, object?> GetData() => GetType()
          .GetProperties()
          .Where(p => p.DeclaringType != typeof(IError) && p.DeclaringType != typeof(ErrorBase))
