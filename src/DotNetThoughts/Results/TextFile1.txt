@@ -1,0 +1,4 @@
+﻿tests on all claims of Result.
+investigate ValueResult
+analyzer to find thrown away results
+analyzer that check that the success property was checked before accessing Value
