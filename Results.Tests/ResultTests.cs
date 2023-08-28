@@ -54,7 +54,7 @@ public class ResultTests
     public void ErrorResultWithMultipleErrorsAsListShouldRetainAllErrors()
     {
         Result<object>.Error(new List<FakeError>() { new FakeError(), new FakeError(), new FakeError() })
-            .Errors.Count().Should().Be(3);
+            .Errors.Count.Should().Be(3);
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public class ResultTests
         var listOfErrors = new List<IError>() { new FakeError(), new FakeError(), new FakeError() };
         var result = Result<object>.Error(listOfErrors);
         listOfErrors.Add(new FakeError());
-        result.Errors.Count().Should().Be(3);
+        result.Errors.Count.Should().Be(3);
     }
 
 }
