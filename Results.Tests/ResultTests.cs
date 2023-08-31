@@ -122,7 +122,6 @@ public class ResultTests
         listOfErrors.Add(new FakeError());
         result.Errors.Count.Should().Be(3);
     }
-
 }
 
 record FakeError : ErrorBase

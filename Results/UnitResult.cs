@@ -11,7 +11,7 @@ public static class UnitResult
     /// Converts a Result of type T to a Result of type Unit by throwing away the value, preserving only success or failure, along with errors.
     /// </summary>
     /// <typeparam name="T">The very unimportant type of the value being thrown away</typeparam>
-    /// <param name="resultOfType">The result to convert to a Result of Unit</param>
+    /// <param name="result">The result to convert to a Result of Unit</param>
     /// <returns></returns>
     [Pure]
     public static Result<Unit> ToUnitResult<T>(this Result<T> result) =>

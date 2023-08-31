@@ -74,7 +74,6 @@ public readonly record struct Result<T>
     /// </summary>
     /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
-    /// </param>
     /// <returns></returns>
     [Pure]
     public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat(new IError[] { error }));
