@@ -1,4 +1,4 @@
-﻿namespace Results;
+﻿namespace DotNetThoughts.Results;
 
 /// <summary>
 /// Represents an error in the case of a failed Result.

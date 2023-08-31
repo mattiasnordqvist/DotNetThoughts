@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using DotNetThoughts.Results;
+
+using FluentAssertions;
 
 using Xunit;
 
-namespace Results.Tests;
+namespace DotNetThoughts.Results.Tests;
 
 public class ErrorBaseTests
 {
@@ -18,7 +20,7 @@ public class ErrorBaseTests
     }
 
     [Fact]
-    public void TypePropertyGetsValueFromImplementingType() 
+    public void TypePropertyGetsValueFromImplementingType()
     {
         new FakeError().Type.Should().Be("FakeError");
     }

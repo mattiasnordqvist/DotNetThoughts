@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using DotNetThoughts.Results;
+
+using FluentAssertions;
 
 using Xunit;
 
-namespace Results.Tests;
+namespace DotNetThoughts.Results.Tests;
 
 public class UnitTests
 {

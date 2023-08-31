@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace Results;
+namespace DotNetThoughts.Results;
 
 /// <summary>
 /// The result class Represents a result of an operation that can either be successful or not.
@@ -89,7 +89,7 @@ public readonly record struct Result<T>
         _value = value;
         Errors = Array.Empty<IError>(); // This is a successful result, so there are no errors. Reference a cached empty array to avoid allocating a new one for each successful result.
     }
-    
+
     private Result(IEnumerable<IError> errors)
     {
         // It is semantically incorrect to create a failed result without any errors, so throw an exception if the passed errors list is empty.
@@ -126,9 +126,9 @@ public readonly record struct Result<T>
         {
             error = default;
             return false;
-           
+
         }
-        else if(Errors.Any(x => x.GetType() == typeof(TError)))
+        else if (Errors.Any(x => x.GetType() == typeof(TError)))
         {
             error = (TError)Errors.First(x => x.GetType() == typeof(TError));
             return true;

@@ -1,4 +1,4 @@
-﻿namespace Results;
+﻿namespace DotNetThoughts.Results;
 
 /// <summary>
 /// A class to represent the return value of a void operation.

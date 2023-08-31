@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 
-namespace Results;
+namespace DotNetThoughts.Results;
 
 /// <summary>
 /// Extension methods and utilities for working with Unit Results.

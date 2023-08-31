@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace Results;
+namespace DotNetThoughts.Results;
 
 /// <summary>
 /// Some default implementation of the IError interface.
