@@ -13,7 +13,6 @@ namespace DotNetThoughts.Results;
 /// A result is immutable, and can't be modified after creation.
 /// </summary>
 /// <typeparam name="T">If successful, the Result contains a value of type T. Use the Unit type to represent a void operation.</typeparam>
-[DebuggerDisplay("Success = {Success}, Value = {_value}")]
 public readonly record struct Result<T>
 {
     /// <summary>
@@ -73,7 +72,6 @@ public readonly record struct Result<T>
     /// <summary>
     /// Creates a failed Result of type T, with at least one error.
     /// </summary>
-    /// <param name="errors">
     /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
     /// </param>
@@ -181,8 +179,11 @@ public readonly record struct Result<T>
     }
 }
 
+/// <summary>
+/// An exception that can be created from a list of errors.
+/// Exception message is a new-line separated list of error messages.
+/// </summary>
 [Serializable]
-[DebuggerDisplay("{Message}")]
 public class ErrorResultAsException : Exception
 {
 
@@ -194,5 +195,8 @@ public class ErrorResultAsException : Exception
     [Pure]
     public override string Message => string.Join(Environment.NewLine, Errors.Select(x => x.ToString()));
 
+    /// <summary>
+    /// The list of errors that were deemed to cause an exception.
+    /// </summary>
     public IReadOnlyList<IError> Errors { [Pure] get; private set; }
 }

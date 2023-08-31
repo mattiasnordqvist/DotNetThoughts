@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 
 namespace DotNetThoughts.Results;
 
@@ -9,7 +8,6 @@ namespace DotNetThoughts.Results;
 /// The value of Type is probably good enough, but please provide a better Message by setting it in the constructor.
 /// Also defaults GetData() to return a string representation of all property values on the inheriting type.
 /// </summary>
-[DebuggerDisplay("Type = {Type}, Message = {Message}")]
 public abstract record ErrorBase : IError
 {
     /// <summary>

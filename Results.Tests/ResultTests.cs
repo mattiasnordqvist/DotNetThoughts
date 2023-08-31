@@ -1,6 +1,4 @@
-﻿using DotNetThoughts.Results;
-
-using FluentAssertions;
+﻿using FluentAssertions;
 
 using Xunit;
 
