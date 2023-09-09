@@ -29,10 +29,27 @@ public static class UnitResult
     [Pure]
     public static Result<Unit> Ok => Result<Unit>.Ok(Unit.Instance);
 
-    [Pure]
-    public static Result<Unit> Error(IEnumerable<IError> errors) => Result<Unit>.Error(errors);
+    /// <summary>
+    /// Creates a failed Result of type T, with at least one error.
+    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
+    /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
+    /// </summary>
     [Pure]
     public static Result<Unit> Error(IError error, params IError[] errors) => Result<Unit>.Error(errors.Concat(new IError[] { error }));
+
+    /// <summary>
+    /// Creates a failed Result of type T, with at least one error. Zero errors will throw an exception.
+    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
+    /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
+    /// </summary>
+    [Pure]
+    public static Result<Unit> Error(IEnumerable<IError> errors) => Result<Unit>.Error(errors);
+
+    /// <summary>
+    /// Creates a failed Result of type T, with at least one error.
+    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
+    /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
+    /// </summary>
     [Pure]
     public static Result<Unit> Error(IError error, IEnumerable<IError> errors) => Result<Unit>.Error(errors.Concat(new IError[] { error }));
 }

@@ -49,38 +49,31 @@ public readonly record struct Result<T>
 
     /// <summary>
     /// Creates a failed Result of type T, with at least one error.
-    /// </summary>
-    /// <param name="error"></param>
-    /// <param name="errors">
-    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.</param>
+    /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
-    /// <returns></returns>
+    /// </summary>
     [Pure]
     public static Result<T> Error(IError error, params IError[] errors) => new(errors.Concat(new IError[] { error }));
 
     /// <summary>
     /// Creates a failed Result of type T, with at least one error. Zero errors will throw an exception.
-    /// </summary>
-    /// <param name="errors">
     /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
-    /// </param>
-    /// <returns></returns>
+    /// </summary>
     [Pure]
     public static Result<T> Error(IEnumerable<IError> errors) => new(errors);
 
     /// <summary>
     /// Creates a failed Result of type T, with at least one error.
-    /// </summary>
     /// The passed array of errors will be copied to a new list structure. The array will be left untouched. You can't modify the passed array to modify the errors list of the created result.
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
-    /// <returns></returns>
+    /// </summary>
     [Pure]
     public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat(new IError[] { error }));
+    
     /// <summary>
     /// In the end, the only way to create a successful result is through this constructor, by passing a value of type T, which of course can be null.
     /// </summary>
-    /// <param name="value"></param>
     private Result(T value)
     {
         _value = value;
@@ -113,9 +106,6 @@ public readonly record struct Result<T>
     /// Not sure whether this method is good enough to be included in the Result class.
     /// Works much as the other IsError method, but returns a boolean indicating whether a match was found, and an out parameter containing the error, if any.
     /// </summary>
-    /// <typeparam name="TError"></typeparam>
-    /// <param name="error"></param>
-    /// <returns></returns>
     [Pure]
     public readonly bool IsError<TError>(out TError? error) where TError : IError
     {
