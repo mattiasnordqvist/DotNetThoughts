@@ -4,7 +4,7 @@
 /// Extension methods that can lift a T or Task of T into its corresponding Result counterpart.
 /// https://fsharpforfunandprofit.com/posts/elevated-world/#return
 /// </summary>
-public static partial class Extensions
+public static partial class Apply
 {
     /// <summary>
     /// Takes any T and wraps it in a successful Result.
