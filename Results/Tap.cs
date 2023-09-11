@@ -20,5 +20,4 @@ public static partial class And
         }
         return UnitResult.Error((await source).Errors);
     }
-
 }

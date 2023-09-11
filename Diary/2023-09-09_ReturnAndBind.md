@@ -1,6 +1,23 @@
 ﻿The Bind method offers a way to chain multiple functions that return a Result<T>.
 
-Instead of checking for a successful result, and if so, unack the value and pass it to new function, we can use Bind.
+Instead of checking for a successful result, and if so, unpack the value and pass it to new function, we can use Bind.
+
+You can compare Bind with several already existing C# and .Net.
+
+For example null coalescing, where you chain properties and method calls as long as they don't return null.
+
+```csharp
+var customerName = customer?.FirstName;
+var customerZip = customer?.Address?.Zip;
+```
+
+Or ContinueWith, which executes the next task when the previous is completed, providing the result of the finished task as parameter to next.
+
+```csharp
+createUserTask.ContinueWith(customer => SendEmail(customer));
+```
+
+
 
 ```csharp
 int a = 1;
