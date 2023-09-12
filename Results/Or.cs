@@ -8,7 +8,6 @@
 /// </summary>
 public static partial class Extensions
 {
-
         public static Result<(T, T2)> OrResult<T, T2>(Result<T> a, Result<T2> b) => a.Or(b);
         public static Result<(T, T2, T3)> OrResult<T, T2, T3>(Result<T> a, Result<T2> b, Result<T3> c) => a.Or(b).Or(c);
         public static Result<(T, T2, T3, T4)> OrResult<T, T2, T3, T4>(Result<T> a, Result<T2> b, Result<T3> c, Result<T4> d) => a.Or(b).Or(c).Or(d);
