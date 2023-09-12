@@ -112,7 +112,6 @@ public static partial class Extensions
     public static Task<Result<(T, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12)>> And<T, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(this Result<(T, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11)> source, Func<T, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, Task<Result<T12>>> next)
         => source.Bind(sourceValue => next(sourceValue.Item1, sourceValue.Item2, sourceValue.Item3, sourceValue.Item4, sourceValue.Item5, sourceValue.Item6, sourceValue.Item7, sourceValue.Item8, sourceValue.Item9, sourceValue.Item10, sourceValue.Item11).Map(nextValue => (sourceValue.Item1, sourceValue.Item2, sourceValue.Item3, sourceValue.Item4, sourceValue.Item5, sourceValue.Item6, sourceValue.Item7, sourceValue.Item8, sourceValue.Item9, sourceValue.Item10, sourceValue.Item11, nextValue)));
 
-    [Pure]
     #endregion
 
     #region Task<Result<T>> -> (T -> Result<U>) -> Task<Result<(T,U>)>
