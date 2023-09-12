@@ -1,5 +1,5 @@
 ﻿namespace DotNetThoughts.Results;
-public static partial class And
+public static partial class Extensions
 {
     public static Result<Unit> Tap<T>(this Result<T> source, Action<T> next)
     {
@@ -20,5 +20,4 @@ public static partial class And
         }
         return UnitResult.Error((await source).Errors);
     }
-
 }
