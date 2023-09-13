@@ -5,7 +5,7 @@ namespace DotNetThoughts.Results;
 /// <summary>
 /// Read on the alternative interpretation https://fsharpforfunandprofit.com/posts/elevated-world/#map
 /// </summary>
-public static partial class Apply
+public static partial class Extensions
 {
     #region Result<T> -> (T -> U) -> Result<U>
 

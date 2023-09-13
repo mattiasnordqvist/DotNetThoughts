@@ -16,7 +16,7 @@ namespace DotNetThoughts.Results;
 /// * Bind to a Task of Result of T
 /// https://fsharpforfunandprofit.com/posts/elevated-world-2/#bind
 /// </summary>
-public static partial class Apply
+public static partial class Extensions
 {
 
     #region Result<T> -> (T -> Result<U>) -> Result<U>
