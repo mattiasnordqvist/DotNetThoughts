@@ -1,0 +1,6 @@
+<Project>
+	<ItemGroup Condition="'$(UserSecretsId)' != ''">
+		<None Include="$([System.Environment]::GetFolderPath(SpecialFolder.ApplicationData))\Microsoft\UserSecrets\$(UserSecretsId)\secrets.json" Link="secrets.json" />
+		<None Include="secrets.template.json" />
+	</ItemGroup>
+</Project>
