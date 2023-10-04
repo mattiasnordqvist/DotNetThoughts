@@ -1,23 +1,21 @@
 ﻿namespace DotNetThoughts.Results;
 public static partial class Extensions
 {
-    public static Result<Unit> Tap<T>(this Result<T> source, Action<T> next)
+    public static Result<T> Tap<T>(this Result<T> source, Action<T> next)
     {
         if (source.Success)
         {
             next(source.Value);
-            return UnitResult.Ok;
         }
-        return UnitResult.Error(source.Errors);
+        return source;
     }
 
-    public static async Task<Result<Unit>> Tap<T>(this Task<Result<T>> source, Action<T> next)
+    public static async Task<Result<T>> Tap<T>(this Task<Result<T>> source, Action<T> next)
     {
         if ((await source).Success)
         {
             next((await source).Value);
-            return UnitResult.Ok;
         }
-        return UnitResult.Error((await source).Errors);
+        return source;
     }
 }
