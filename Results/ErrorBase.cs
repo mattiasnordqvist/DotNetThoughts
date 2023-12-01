@@ -16,6 +16,20 @@ public abstract record ErrorBase : IError
     /// </summary>
     /// <param name="error"></param>
     public static implicit operator Result<Unit>(ErrorBase error) => Result<Unit>.Error(error);
+
+    /// <summary>
+    /// Type defaults to the name of the inheriting Type.
+    /// </summary>
+    public ErrorBase(string message)
+    {
+        Type = GetType().Name;
+        Message = message;
+    }
+
+    /// <summary>
+    /// Type defaults to the name of the inheriting Type.
+    /// Message defaults to the name of the inheriting Type.
+    /// </summary>
     public ErrorBase()
     {
         Type = GetType().Name;
