@@ -57,7 +57,7 @@ public abstract record ErrorBase : IError
     public Dictionary<string, object?> Data { get => GetData(); }
 
     [Pure]
-    private Dictionary<string, object?> GetData()
+    public Dictionary<string, object?> GetData()
     {
         var propValues = GetType()
          .GetProperties()
