@@ -16,6 +16,20 @@ public abstract record ErrorBase : IError
     /// </summary>
     /// <param name="error"></param>
     public static implicit operator Result<Unit>(ErrorBase error) => Result<Unit>.Error(error);
+
+    /// <summary>
+    /// Type defaults to the name of the inheriting Type.
+    /// </summary>
+    public ErrorBase(string message)
+    {
+        Type = GetType().Name;
+        Message = message;
+    }
+
+    /// <summary>
+    /// Type defaults to the name of the inheriting Type.
+    /// Message defaults to the name of the inheriting Type.
+    /// </summary>
     public ErrorBase()
     {
         Type = GetType().Name;
@@ -33,13 +47,26 @@ public abstract record ErrorBase : IError
     /// </summary>
     public string Message { get; protected set; }
 
+    private Dictionary<string, object?> _data = [];
+
     /// <summary>
-    /// Scans the inheriting type for all properties and returns them as a dictionary where property name is key, and the property value is the value.
+    /// In addition to data you add yourself, this also contains all properties on the inheriting type with property name as key and property value as value.
+    /// If you add a key to this dictionary, where the inheriting type has a property with the same name as your key, the value of that dictionary entry will be overwritten by the value of the property.
     /// </summary>
     /// <returns></returns>
+    public Dictionary<string, object?> Data { get => GetData(); }
+
     [Pure]
-    public Dictionary<string, object?> GetData() => GetType()
+    public Dictionary<string, object?> GetData()
+    {
+        var propValues = GetType()
          .GetProperties()
          .Where(p => p.DeclaringType != typeof(IError) && p.DeclaringType != typeof(ErrorBase))
          .ToDictionary(d => d.Name, d => d.GetValue(this));
+        foreach (var prop in propValues)
+        {
+            _data[prop.Key] = prop.Value;
+        }
+        return _data;
+    }
 }
