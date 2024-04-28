@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 namespace DotNetThoughts.Results;
@@ -71,7 +70,7 @@ public readonly record struct Result<T>
     /// </summary>
     [Pure]
     public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat([error]));
-    
+
     /// <summary>
     /// In the end, the only way to create a successful result is through this constructor, by passing a value of type T, which of course can be null.
     /// </summary>
@@ -157,17 +156,20 @@ public readonly record struct Result<T>
     [Pure]
     public readonly IReadOnlyList<IError> Errors { get; }
 
+
     /// <summary>
     /// Call this when you explicitly want a failed Result to throw an exception!
     /// The exception will hold the list of errors, so you can inspect them.
     /// </summary>
+    /// <param name="motivation">An optional motivation. Why is it ok for this to throw exception, or why do you expect that it never will?</param>
     /// <returns>The Value, if successful.</returns>
-    /// <exception cref="ErrorResultAsException"></exception>
+    /// <exception cref="ValueOrThrowException"></exception>
+
     [Pure]
-    public T ValueOrThrow()
+    public T ValueOrThrow(string? motivation = null)
     {
         if (Success) return Value;
-        else throw new ErrorResultAsException(Errors);
+        else throw new ValueOrThrowException(Errors, motivation);
     }
 
     /// <summary>
@@ -228,23 +230,44 @@ public readonly record struct Result<T>
 }
 
 /// <summary>
-/// An exception that can be created from a list of errors.
-/// Exception message is a new-line separated list of error messages.
+/// An exception created when a Result contains at least one Error, and ValueOrThrow is invoked on it.
 /// </summary>
 [Serializable]
-public class ErrorResultAsException : Exception
+public class ValueOrThrowException : Exception
 {
 
-    internal ErrorResultAsException(IReadOnlyList<IError> errors)
+    internal ValueOrThrowException(IReadOnlyList<IError> errors, string? motivation)
     {
         Errors = errors;
+        Motivation = motivation;
     }
 
+    /// <inheritdoc/>
+
     [Pure]
-    public override string Message => string.Join(Environment.NewLine, Errors.Select(x => x.ToString()));
+    public override string Message
+    {
+        get
+        {
+            var message = $"ValueOrThrow was called on a non-successful Result-object. {Environment.NewLine}";
+            if (Motivation is not null)
+            {
+                message += $"The developer provided the following motivation for this ValueOrThrow-invocation: {Environment.NewLine}";
+                message += $"- {Motivation}{Environment.NewLine}";
+            }
+            message += $"{Environment.NewLine}The result contains the following errors: {string.Join("", Errors.Select(x => $"{Environment.NewLine}- {x}"))}";
+
+            return message;
+        }
+    }
 
     /// <summary>
     /// The list of errors that were deemed to cause an exception.
     /// </summary>
     public IReadOnlyList<IError> Errors { [Pure] get; private set; }
+
+    /// <summary>
+    /// The motivation for the call to the ValueOrThrow that created this Exception, if provided.
+    /// </summary>
+    public string? Motivation { get; }
 }

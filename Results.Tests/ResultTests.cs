@@ -33,7 +33,7 @@ public class ResultTests
     public void ValueOrThrowOnErrorResultShouldThrowExceptionWithErrorsInside()
     {
         Func<object> act = () => Result<object>.Error(new FakeError()).ValueOrThrow();
-        act.Should().Throw<ErrorResultAsException>().Which.Errors.Should().ContainEquivalentOf(new FakeError());
+        act.Should().Throw<ValueOrThrowException>().Which.Errors.Should().ContainEquivalentOf(new FakeError());
     }
 
     [Fact]
