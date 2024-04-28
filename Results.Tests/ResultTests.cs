@@ -58,35 +58,37 @@ public class ResultTests
     }
 
     [Fact]
-    public void IsErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult()
+    public void HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult()
     {
         var firstError = new FakeError();
         Result<object>.Error(new List<FakeError>() { firstError, new FakeError(), new FakeError(), new FakeError() })
-            .IsError<FakeError>().Should().BeSameAs(firstError);
+            .HasError<FakeError>(out var error);
+        error.Should().BeSameAs(firstError);
     }
 
     [Fact]
-    public void IsErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult_OutParameterVersion()
+    public void HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult_OutParameterVersion()
     {
         var firstError = new FakeError();
-        var result = Result<object>.Error(new List<IError>() { firstError, new FakeError(), new AnotherError(), new AnotherError() });
-        var isError = result.IsError<FakeError>(out var error);
+        var result = Result<object>.Error([firstError, new FakeError(), new AnotherError(), new AnotherError()]);
+        var isError = result.HasError<FakeError>(out var error);
         isError.Should().BeTrue();
         error.Should().BeSameAs(firstError);
     }
 
     [Fact]
-    public void IsErrorCorrectlyAnswersWithNullWhenErrorIsNotPresentInResult()
+    public void HasErrorCorrectlyAnswersWithNullWhenErrorIsNotPresentInResult()
     {
         Result<object>.Error(new List<FakeError>() { new FakeError(), new FakeError() })
-            .IsError<AnotherError>().Should().Be(null);
+            .HasError<AnotherError>().Should().Be(false);
     }
 
     [Fact]
-    public void IsErrorCorrectlyAnswersWithNullWhenResultIsSuccess()
+    public void HasErrorCorrectlyAnswersWithNullWhenResultIsSuccess()
     {
         Result<object>.Ok(null!)
-            .IsError<FakeError>().Should().Be(null);
+            .HasError<FakeError>(out var noError).Should().Be(false);
+        noError.Should().Be(null);
     }
 
     [Fact]
