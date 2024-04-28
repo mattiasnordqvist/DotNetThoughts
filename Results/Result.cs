@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 namespace DotNetThoughts.Results;
@@ -53,7 +54,7 @@ public readonly record struct Result<T>
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
     /// </summary>
     [Pure]
-    public static Result<T> Error(IError error, params IError[] errors) => new(errors.Concat(new IError[] { error }));
+    public static Result<T> Error(IError error, params IError[] errors) => new(errors.Concat([error]));
 
     /// <summary>
     /// Creates a failed Result of type T, with at least one error. Zero errors will throw an exception.
@@ -69,7 +70,7 @@ public readonly record struct Result<T>
     /// Is there a way to tell the compiler and consumer that the passed array will be copied, and that the consumer can't modify the errors list of the created result?
     /// </summary>
     [Pure]
-    public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat(new IError[] { error }));
+    public static Result<T> Error(IError error, IEnumerable<IError> errors) => new(errors.Concat([error]));
     
     /// <summary>
     /// In the end, the only way to create a successful result is through this constructor, by passing a value of type T, which of course can be null.
@@ -96,6 +97,7 @@ public readonly record struct Result<T>
     /// <typeparam name="TError">The error to check for</typeparam>
     /// <returns>The error, if a match was found, otherwise null</returns>
     [Pure]
+    [Obsolete("Use HasError<TError> instead and use out parameter to capture error instance")]
     public TError? IsError<TError>() where TError : IError => Success
             ? default
             : Errors.Any(x => x.GetType() == typeof(TError))
@@ -107,6 +109,7 @@ public readonly record struct Result<T>
     /// Works much as the other IsError method, but returns a boolean indicating whether a match was found, and an out parameter containing the error, if any.
     /// </summary>
     [Pure]
+    [Obsolete("Use HasError<TError> instead")]
     public readonly bool IsError<TError>(out TError? error) where TError : IError
     {
         if (Success)
@@ -166,6 +169,62 @@ public readonly record struct Result<T>
         if (Success) return Value;
         else throw new ErrorResultAsException(Errors);
     }
+
+    /// <summary>
+    /// Returns true if the result contains any error of the given type
+    /// The out parameter contains the first instance of such error if return is true.
+    /// </summary>
+    /// <typeparam name="TError"></typeparam>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    [Pure]
+    public bool HasError<TError>([NotNullWhen(true)] out TError? error) where TError : IError
+    {
+        var firstTError = Errors.FirstOrDefault(x => x.GetType() == typeof(TError));
+        if (firstTError is TError { } actualError)
+        {
+            error = actualError;
+            return true;
+        }
+        else
+        {
+            error = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the result contains any error of the given type
+    /// </summary>
+    [Pure]
+    public bool HasError<TError>() where TError : IError
+        => HasError<TError>(out _);
+
+    /// <summary>
+    /// Returns true if result contains a single error, and this error is of the given type
+    /// The out parameter contains this single instance if return is true.
+    /// </summary>
+    [Pure]
+    public bool HasSingleError<TError>([NotNullWhen(true)] out TError? error) where TError : IError
+    {
+        if (HasError<TError>(out var actualError) && Errors.Count == 1)
+        {
+            error = actualError;
+            return true;
+        }
+        else
+        {
+            error = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// /// Returns true if result contains a single error, and this error is of the given type
+    /// </summary>
+    [Pure]
+    public bool HasSingleError<TError>() where TError : IError
+        => HasSingleError<TError>(out _);
 }
 
 /// <summary>
