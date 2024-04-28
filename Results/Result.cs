@@ -165,7 +165,6 @@ public readonly record struct Result<T>
     /// <returns>The Value, if successful.</returns>
     /// <exception cref="ValueOrThrowException"></exception>
 
-    [Pure]
     public T ValueOrThrow(string? motivation = null)
     {
         if (Success) return Value;
