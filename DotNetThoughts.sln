@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Tests", "Results.Tests\DotNetThoughts.Results.Tests.csproj", "{FE955D2E-64FA-4101-A4B1-62FD01374364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Messaging", "DotNetThoughts.Messaging\DotNetThoughts.Messaging.csproj", "{5384948B-8E91-48D8-B19C-183DD836D575}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Messaging.EfCore", "DotNetThoughts.Messaging.EfCore\DotNetThoughts.Messaging.EfCore.csproj", "{DBB82CD0-D365-4BAB-AF59-0BBD6F226E59}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{FE955D2E-64FA-4101-A4B1-62FD01374364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE955D2E-64FA-4101-A4B1-62FD01374364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE955D2E-64FA-4101-A4B1-62FD01374364}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5384948B-8E91-48D8-B19C-183DD836D575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5384948B-8E91-48D8-B19C-183DD836D575}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5384948B-8E91-48D8-B19C-183DD836D575}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5384948B-8E91-48D8-B19C-183DD836D575}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBB82CD0-D365-4BAB-AF59-0BBD6F226E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBB82CD0-D365-4BAB-AF59-0BBD6F226E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBB82CD0-D365-4BAB-AF59-0BBD6F226E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBB82CD0-D365-4BAB-AF59-0BBD6F226E59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
