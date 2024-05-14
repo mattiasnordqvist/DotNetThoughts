@@ -124,6 +124,27 @@ public class ResultTests
         listOfErrors.Add(new FakeError());
         result.Errors.Count.Should().Be(3);
     }
+
+    [Fact]
+    public void ToStringReturnsExpectedResultForSuccess()
+    {
+        var result = Result<int>.Ok(1234);
+        result.ToString().Should().Be("Result { Success = True, Value = 1234 }");
+    }
+
+    [Fact]
+    public void ToStringReturnsExpectedResultForErrorWithoutData()
+    {
+        var result = Result<object>.Error(new FakeError());
+        result.ToString().Should().Be("Result { Success = False, Errors = [ FakeError { Type = FakeError, Message = FakeError, Data = { } } ] }");
+    }
+
+    [Fact]
+    public void ToStringReturnsExpectedResultForErrorWithData()
+    {
+        var result = Result<object>.Error(new ErrorWithData(5));
+        result.ToString().Should().Be("Result { Success = False, Errors = [ ErrorWithData { Type = ErrorWithData, Message = Error message number 5, Data = { Number = 5 }, Number = 5 } ] }");
+    }
 }
 
 record FakeError : ErrorBase
@@ -132,6 +153,11 @@ record FakeError : ErrorBase
 }
 
 record AnotherError : ErrorBase
+{
+
+}
+
+record ErrorWithData(int Number) : ErrorBase($"Error message number {Number}")
 {
 
 }
