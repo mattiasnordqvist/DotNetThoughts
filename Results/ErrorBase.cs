@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+using System.Text;
 
 namespace DotNetThoughts.Results;
 
@@ -68,5 +69,30 @@ public abstract record ErrorBase : IError
             _data[prop.Key] = prop.Value;
         }
         return _data;
+    }
+
+    /// <summary>
+    /// Override default record print behavior in order print <see cref="Data"/> in a readable way
+    /// </summary>
+    protected virtual bool PrintMembers(StringBuilder builder)
+    {
+        builder.Append(nameof(Type));
+        builder.Append(" = ");
+        builder.Append(Type);
+
+        builder.Append(", ");
+
+        builder.Append(nameof(Message));
+        builder.Append(" = ");
+        builder.Append(Message);
+
+        builder.Append(", ");
+        builder.Append(nameof(Data));
+        builder.Append(" = ");
+        builder.Append("{");
+        builder.Append(Data.Any () ? $" {string.Join(", ", Data.Select(x => $"{x.Key} = {x.Value}"))} ": " ");
+        builder.Append("}");
+
+        return true;
     }
 }

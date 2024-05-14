@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Text;
 
 namespace DotNetThoughts.Results;
 
@@ -226,6 +227,35 @@ public readonly record struct Result<T>
     [Pure]
     public bool HasSingleError<TError>() where TError : IError
         => HasSingleError<TError>(out _);
+
+    /// <summary>
+    /// Override default record print behavior in order to avoid touching <see cref="Value"/> when <see cref="Success"/> is false
+    /// </summary>
+    bool PrintMembers(StringBuilder builder)
+    {
+        builder.Append(nameof(Success));
+        builder.Append(" = ");
+        builder.Append(Success);
+
+        if (Success)
+        {
+            builder.Append(", ");
+            builder.Append(nameof(Value));
+            builder.Append(" = ");
+            builder.Append(Value);
+        }
+        else
+        {
+            builder.Append(", ");
+            builder.Append(nameof(Errors));
+            builder.Append(" = ");
+            builder.Append("[ ");
+            builder.Append(string.Join(", ", Errors));
+            builder.Append(" ]");
+        }
+
+        return true;
+    }
 }
 
 /// <summary>
