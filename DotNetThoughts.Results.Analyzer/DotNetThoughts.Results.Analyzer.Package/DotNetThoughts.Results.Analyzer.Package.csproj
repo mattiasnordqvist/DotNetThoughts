@@ -23,7 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetThoughts.Results.Analyzer.CodeFixes\DotNetThoughts.Results.Analyzer.CodeFixes.csproj" />
     <ProjectReference Include="..\DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.csproj" />
   </ItemGroup>
 
@@ -34,7 +33,6 @@
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)\DotNetThoughts.Results.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
-      <TfmSpecificPackageFile Include="$(OutputPath)\DotNetThoughts.Results.Analyzer.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
   </Target>
 
