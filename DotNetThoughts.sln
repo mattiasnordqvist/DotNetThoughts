@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Anal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Analyzer.Package", "DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.Package\DotNetThoughts.Results.Analyzer.Package.csproj", "{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Validation", "DotNetThoughts.Results.Validation\DotNetThoughts.Results.Validation.csproj", "{EC515A1B-AA41-447F-988B-180741D08D85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Validation.Tests", "DotNetThoughts.Results.Validation.Tests\DotNetThoughts.Results.Validation.Tests.csproj", "{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC515A1B-AA41-447F-988B-180741D08D85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC515A1B-AA41-447F-988B-180741D08D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC515A1B-AA41-447F-988B-180741D08D85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC515A1B-AA41-447F-988B-180741D08D85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
