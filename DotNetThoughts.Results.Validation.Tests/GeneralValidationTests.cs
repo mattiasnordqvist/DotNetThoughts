@@ -6,6 +6,7 @@ namespace DotNetThoughts.Results.Validation.Tests;
 
 public class GeneralValidationTests
 {
+
     [Fact]
     public void Parse_Parseable_Success()
     {

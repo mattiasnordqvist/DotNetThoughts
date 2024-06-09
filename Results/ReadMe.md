@@ -33,7 +33,7 @@ I prefer to return the value not wrapped in a Result. It's simpler and more read
 Returning a Result that can't be in a failed state, might make the caller investigate how it can fail, just to find out that it can't. 
 After the caller found out it can't fail, he might remove the error handling code, skipping the Success-check before retrieving the value. The operation might in the future be changed to be able to fail, and then the error handling code is missing, resulting in an exception. Now, this is just as bad as unchecked exceptions.
 By marking your operation with the [Pure]-attribute, you indicate that the operation can't have any side-effects. If someone calls your operation without checking the result, roslyn will warn the consumer with a CA1806. However, sometimes your operation does have side-effects, so the [Pure]-attribute is not the perfect fit here.
-If the caller absolutely want a Result, he can always wrap the value in a Result.Ok().
+There is an analyzer though, that will warn you if you call a method that returns a Result, without checking the Success-property.
 
 ## Should I return void, Unit or Result<Unit> from an operation that doesn't return a value?
 For the same reason as above, I'd prefer to return Unit over Result<Unit>. But void is even better. Unit is just there to please the type system in the case of a void Result!
@@ -45,11 +45,6 @@ An alternative approach would be to have two different classes, one for success 
 I'm not sure which approach is better, maybe I'll try it some day. 
 
 Instead of having the Unit type represent void operations... maybe we could have a additional Result-type without any type-parameters, to represent void operations.
-
-## More ideas
-
-Is it possible to write a Roslyn analyzer that checks that the success property was checked before accessing Value?
-Is it possible to write a Roslyn analyzer that checks that a Result return is never left hanging? Even a Result<Unit> should be checked for success or failure, even though it does not contain any interesting value.
 
 # Return and Bind
 
@@ -125,7 +120,7 @@ if(d.Success){
 }
 ```
 
-To get rid of the declaration of a, you can elevate it to a successful Result with `Return`
+To get rid of the declaration of a, you can elevate it to a successful Result with `Return`. 
 
 ```csharp
 
@@ -265,7 +260,22 @@ These are all equivalent
                  select z;
 ```
         
+# Or
 
+While Bind is used to chain operations that can fail, Or is used when you want to combine multiple results into one. The resulting Result
+will be a success if all of the combined results are successful. If any of the combined results are a failure, the resulting Result will be a failure.
+
+You can chain Or-calls like this:
+
+```csharp
+Result<(TA, TB, TC)> result = A().Or(B()).Or(C());
+```
+
+However, since there is no relation between A, B and C really, I´d prefer to use the static OrResult-method instead:
+
+```csharp
+Result<(TA, TB, TC)> result = OrResult(A(), B(), C());
+```
 
 # The Case for an IResult
 So a college of mine wanted to use the Result-class that I had created. I've used it for 2 years by now so I thought it is probably good and stable enough to share. In my own projects, I had until now just copied the code over from one project to another when I wanted to reuse it. Of course, I had to update code in all my projects when I had new ideas or added some documentation or whatever. I decided it was time to package it into a nuget and so I did. 2 days later my college wanted to make changes to it! How is it possible? I've used it basically without changes for two years.
