@@ -1,0 +1,14 @@
+﻿[
+  {
+    Type: MyError,
+    Message: MyError,
+    Data: {
+      Code: {
+        ValueKind: Number
+      },
+      Description: {
+        ValueKind: String
+      }
+    }
+  }
+]

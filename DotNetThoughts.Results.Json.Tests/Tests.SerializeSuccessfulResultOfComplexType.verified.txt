@@ -1,0 +1,22 @@
+﻿{
+  "Success": true,
+  "Value": {
+    "Id": 123,
+    "Name": "Complex name",
+    "Ints": [
+      1,
+      2,
+      3
+    ],
+    "ComplexTypes": [
+      {
+        "Id": 2345,
+        "Description": "Description"
+      },
+      {
+        "Id": 2345,
+        "Description": "Description"
+      }
+    ]
+  }
+}

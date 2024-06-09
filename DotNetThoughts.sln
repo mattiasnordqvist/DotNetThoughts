@@ -7,13 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Tests", "Results.Tests\DotNetThoughts.Results.Tests.csproj", "{FE955D2E-64FA-4101-A4B1-62FD01374364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Analyzer", "DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.csproj", "{FCE1627B-AAC7-4FA8-A9C1-C295B78F6305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Analyzer", "DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.csproj", "{FCE1627B-AAC7-4FA8-A9C1-C295B78F6305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Analyzer.Package", "DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.Package\DotNetThoughts.Results.Analyzer.Package.csproj", "{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Analyzer.Package", "DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.Package\DotNetThoughts.Results.Analyzer.Package.csproj", "{792972AF-1E1D-4A92-9E5C-B73C6695AFDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Validation", "DotNetThoughts.Results.Validation\DotNetThoughts.Results.Validation.csproj", "{EC515A1B-AA41-447F-988B-180741D08D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Validation", "DotNetThoughts.Results.Validation\DotNetThoughts.Results.Validation.csproj", "{EC515A1B-AA41-447F-988B-180741D08D85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Validation.Tests", "DotNetThoughts.Results.Validation.Tests\DotNetThoughts.Results.Validation.Tests.csproj", "{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Validation.Tests", "DotNetThoughts.Results.Validation.Tests\DotNetThoughts.Results.Validation.Tests.csproj", "{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Json", "DotNetThoughts.Results.Json\DotNetThoughts.Results.Json.csproj", "{68955C85-5020-4D7B-BFCA-15FF5A8F3BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Json.Tests", "DotNetThoughts.Results.Json.Tests\DotNetThoughts.Results.Json.Tests.csproj", "{AEC21F41-388B-45D1-A562-AEDA1BCCE1B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C726F29-9DFA-4EDF-90C9-85A238BCDFE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68955C85-5020-4D7B-BFCA-15FF5A8F3BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68955C85-5020-4D7B-BFCA-15FF5A8F3BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68955C85-5020-4D7B-BFCA-15FF5A8F3BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68955C85-5020-4D7B-BFCA-15FF5A8F3BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEC21F41-388B-45D1-A562-AEDA1BCCE1B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEC21F41-388B-45D1-A562-AEDA1BCCE1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEC21F41-388B-45D1-A562-AEDA1BCCE1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEC21F41-388B-45D1-A562-AEDA1BCCE1B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

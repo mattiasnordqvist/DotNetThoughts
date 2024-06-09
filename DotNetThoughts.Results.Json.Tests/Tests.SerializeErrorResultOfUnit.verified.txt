@@ -1,0 +1,13 @@
+﻿{
+  "Success": false,
+  "Errors": [
+    {
+      "Type": "MyError",
+      "Message": "MyError",
+      "Data": {
+        "Code": 123,
+        "Description": "hej fel"
+      }
+    }
+  ]
+}
