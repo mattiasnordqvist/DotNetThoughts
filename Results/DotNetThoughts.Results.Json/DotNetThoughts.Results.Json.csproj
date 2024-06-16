@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>1.5.7</Version>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\DotNetThoughts.Results\DotNetThoughts.Results.csproj" />
+	</ItemGroup>
+</Project>

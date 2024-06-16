@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net8.0": {
+      "dotnetthoughts.results": {
+        "type": "Project",
+        "dependencies": {
+          "DotNetThoughts.Results.Analyzer": "[1.5.6, )"
+        }
+      },
+      "DotNetThoughts.Results.Analyzer": {
+        "type": "CentralTransitive",
+        "requested": "[1.5.6, )",
+        "resolved": "1.5.6",
+        "contentHash": "DW9GEts/Pb91EemjYdFwhAm38m0l0RhcQVI1Tsvxmp9oU4FNvnIJDBNOGqhVwQtRuD0W4a24o8SjZv3vWWWekg=="
+      }
+    }
+  }
+}

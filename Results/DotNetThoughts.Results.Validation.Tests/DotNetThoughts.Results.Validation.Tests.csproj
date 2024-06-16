@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetThoughts.Results.Validation\DotNetThoughts.Results.Validation.csproj" />
+  </ItemGroup>
+
+</Project>
