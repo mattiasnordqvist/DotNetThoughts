@@ -2,7 +2,7 @@ While appsettings.json and appsettings.Development.json can contain base configu
 
 Some put secrets in Development.json and de-lists it from git, but there is already a feature in VS and .Net for this. Its called UserSecrets. UserSecrets are stored in you AppData/Roaming-folder and is of course not tracked in git.
 
-As with other common "non-committed-file"-based solutions to this problem, it is quite hard to keep user secrets updated among developers, and we constantly get errors because someone else added some code that expects a secret value in a config, which is therefor not checked in. 
+As with other common "non-committed-file"-based solutions to this problem, it is quite hard to keep user secrets updated among developers, and we constantly get errors because someone else added some code that expects a secret value in a config, which is therefor not checked in.
 
 This is not a solution, but it helps a bit.
 
@@ -26,9 +26,7 @@ This is not a solution, but it helps a bit.
     "add": {
       "fileToFile": {
         "add": {
-          "secrets.json": [
-            "appsettings.json"
-          ]
+          "secrets.json": ["appsettings.json"]
         }
       }
     }
@@ -38,4 +36,4 @@ This is not a solution, but it helps a bit.
 
 Restart vs and your projects with usersecrets enabled should look like this
 
-![Alt text](2023-09-14_UserSecrets.png)
+![Alt text](UserSecrets.png)

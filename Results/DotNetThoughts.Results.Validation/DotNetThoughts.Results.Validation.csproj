@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Results\DotNetThoughts.Results.csproj" />
+    <ProjectReference Include="..\DotNetThoughts.Results\DotNetThoughts.Results.csproj" />
   </ItemGroup>
 
 </Project>
