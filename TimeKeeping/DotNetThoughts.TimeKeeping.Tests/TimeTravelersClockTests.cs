@@ -1,8 +1,4 @@
-﻿using FluentAssertions;
-
-using System.Diagnostics;
-
-using Xunit;
+﻿using System.Diagnostics;
 
 namespace DotNetThoughts.TimeKeeping.Tests;
 public class TimeTravelersClockTests

@@ -1,8 +1,4 @@
-﻿using FluentAssertions;
-
-using Xunit;
-
-namespace DotNetThoughts.Results.Validation.Tests;
+﻿namespace DotNetThoughts.Results.Validation.Tests;
 
 public class GeneralValidationTests
 {

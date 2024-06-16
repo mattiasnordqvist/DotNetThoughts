@@ -1,8 +1,4 @@
-﻿using FluentAssertions;
-
-using Xunit;
-
-namespace DotNetThoughts.Results.Tests;
+﻿namespace DotNetThoughts.Results.Tests;
 
 public class ResultTests
 {
