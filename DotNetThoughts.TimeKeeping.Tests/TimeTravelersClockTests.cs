@@ -7,7 +7,7 @@ using Xunit;
 namespace DotNetThoughts.TimeKeeping.Tests;
 public class TimeTravelersClockTests
 {
-    private static TimeSpan _allowedDeviation = TimeSpan.FromMilliseconds(10);
+    private static TimeSpan _allowedDeviation = TimeSpan.FromMilliseconds(100);
     [Fact]
     public void FreezeTime()
     {
@@ -64,7 +64,7 @@ public class TimeTravelersClockTests
         var baseLine = now.AddDays(-1);
         sut.SetBaseline(baseLine);
         sut.UtcNow().Should().BeCloseTo(baseLine, _allowedDeviation);
-        var slept = Sleep(20);
+        var slept = Sleep(1000);
         sut.UtcNow().Should().BeCloseTo(baseLine.Add(slept), _allowedDeviation);
     }
 
@@ -94,7 +94,7 @@ public class TimeTravelersClockTests
         sut.Freeze(frozenTime);
         sut.Advance(TimeSpan.FromDays(1));
         sut.Thaw();
-        var slept = Sleep(20);
+        var slept = Sleep(1000);
         sut.UtcNow().Should().BeCloseTo(frozenTime.AddDays(1).Add(slept), _allowedDeviation);
     }
 
@@ -110,9 +110,9 @@ public class TimeTravelersClockTests
         sut.UtcNow().Should().BeCloseTo(baseLine.Add(timer.Elapsed), _allowedDeviation);
         var frozen = sut.Freeze();
         sut.UtcNow().Should().Be(frozen);
-        var sleptWhileFrozen = Sleep(200);
+        var sleptWhileFrozen = Sleep(2000);
         sut.Thaw();
-        Sleep(20);
+        Sleep(1000);
         sut.UtcNow().Should().BeCloseTo(baseLine.Add(timer.Elapsed).Add(-sleptWhileFrozen), _allowedDeviation);
     }
 
