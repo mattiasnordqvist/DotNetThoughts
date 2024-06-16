@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.TimeKeeping.Tests", "TimeKeeping\DotNetThoughts.TimeKeeping.Tests\DotNetThoughts.TimeKeeping.Tests.csproj", "{DF62C221-71AD-49A7-A9D8-48E31F06E27B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TimeKeeping", "TimeKeeping", "{695E363E-055E-4ED5-9613-587E02A67578}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results", "Results\DotNetThoughts.Results\DotNetThoughts.Results.csproj", "{7032EE8C-FC18-4610-B7D6-613E552C278D}"
 EndProject
@@ -28,6 +31,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Analyzer.Package", "Results\DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.Package\DotNetThoughts.Results.Analyzer.Package.csproj", "{E0E86A0B-F4CE-4E88-99CF-C54AFC1C0C58}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Results", "Results", "{BECD3795-EDD5-459E-BFCC-017082E1C34D}"
+	ProjectSection(SolutionItems) = preProject
+		Results\ReadMe.md = Results\ReadMe.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserSecrets", "UserSecrets", "{BC7FC0EC-0CDC-4B88-A60C-BC920712841B}"
 	ProjectSection(SolutionItems) = preProject
@@ -41,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Global
