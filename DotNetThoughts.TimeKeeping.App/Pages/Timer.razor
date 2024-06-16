@@ -1,0 +1,93 @@
+@page "/timer"
+
+<PageTitle>Timing</PageTitle>
+
+<h1>System Time</h1>
+<p role="status">@systemTime.ToString("O")</p>
+<button class="btn btn-primary" @onclick="SetBaseLine">Baseline 2021-01-01</button>
+<button class="btn btn-primary" @onclick="FreezeAbsolute">Freeze 2021-01-01</button>
+<button class="btn btn-primary" @onclick="AdvanceOneHour">Advance 1 Hour</button>
+<button class="btn btn-primary" @onclick="SubtractOneHour">Subtract 1 Hour</button>
+<button class="btn btn-primary" @onclick="Freeze">Freeze</button>
+<button class="btn btn-primary" disabled="@IsNotFrozen()" @onclick="Thaw">Thaw</button>
+<button class="btn btn-primary" @onclick="Reset">Reset</button>
+<h1>Real Time</h1>
+<p role="status">@realTime.ToString("O")</p>
+
+
+
+@code {
+    private int currentCount = 0;
+    private TimeTravelersClock clock = new TimeTravelersClock();
+    private DateTimeOffset systemTime = DateTimeOffset.UtcNow;
+    private DateTimeOffset realTime = DateTimeOffset.UtcNow;
+    System.Threading.Timer? timer;
+
+    private void UpdateUI()
+    {
+        systemTime = clock.UtcNow();
+        realTime = DateTimeOffset.UtcNow;
+    }
+    protected override void OnInitialized()
+    {
+        timer = new System.Threading.Timer(async _ =>  // async void
+        {
+            UpdateUI();
+            // we need StateHasChanged() because this is an async void handler
+            // we need to Invoke it because we could be on the wrong Thread
+            await InvokeAsync(StateHasChanged);
+        }, null, 0, 10);
+    }
+    private void AdvanceOneHour()
+    {
+        clock.Advance(TimeSpan.FromHours(1));
+        UpdateUI();
+
+    }
+
+    private void SubtractOneHour()
+    {
+        clock.Advance(TimeSpan.FromHours(-1));
+        UpdateUI();
+
+    }
+
+    private void Freeze()
+    {
+        clock.Freeze();
+        UpdateUI();
+
+    }
+
+    private void Thaw()
+    {
+        clock.Thaw();
+        UpdateUI();
+
+    }
+
+    private void Reset()
+    {
+        clock.Reset();
+        UpdateUI();
+
+    }
+    private bool IsNotFrozen()
+    {
+        return !clock.IsFrozen();
+    }
+
+    private void SetBaseLine()
+    {
+        clock.SetBaseline(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        UpdateUI();
+
+    }
+
+    private void FreezeAbsolute()
+    {
+        clock.Freeze(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        UpdateUI();
+
+    }
+}

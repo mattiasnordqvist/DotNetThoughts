@@ -98,7 +98,6 @@ public class BindAllTests
         result.Value.Count().Should().Be(6);
     }
 
-
     [Fact]
     public async Task T_Success_WithTaskResultInput_WithTaskResultOutput()
     {

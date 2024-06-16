@@ -157,7 +157,6 @@ public readonly record struct Result<T>
     [Pure]
     public readonly IReadOnlyList<IError> Errors { get; }
 
-
     /// <summary>
     /// Call this when you explicitly want a failed Result to throw an exception!
     /// The exception will hold the list of errors, so you can inspect them.
