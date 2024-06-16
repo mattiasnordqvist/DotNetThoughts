@@ -277,6 +277,14 @@ However, since there is no relation between A, B and C really, I´d prefer to use
 Result<(TA, TB, TC)> result = OrResult(A(), B(), C());
 ```
 
+# Conversions
+
+1. Any object T can be converted to a successful Result<T>. There's an implicit cast operator for this. It is the same as calling .Return on the object, or wrapping it like Result<T>.Ok(object).
+2. Any Result<T> can be converted to a Result<Unit>. There's an implicit cast operator for this as well. The Result keeps it success/error status.
+3. Any Result<T> can be converted to a completed Task<Result<T>> and there's an implicict cast operator for this too! The Result keeps it success/error status.
+4. Any unsuccessul Result<T> can be converted to a Result<S>. The method ErrorTo<S> is a shortcut for this, and will throw an exception if the Result is successful.
+5. Any Result<T> can be converted to a Result<T?>. Unfortunately, this can not be implemented as an implicit cast, and not as a method on Result, so there are two extension methods, ToNullable and ToNullableStruct to accomplish this.
+
 # The Case for an IResult
 So a college of mine wanted to use the Result-class that I had created. I've used it for 2 years by now so I thought it is probably good and stable enough to share. In my own projects, I had until now just copied the code over from one project to another when I wanted to reuse it. Of course, I had to update code in all my projects when I had new ideas or added some documentation or whatever. I decided it was time to package it into a nuget and so I did. 2 days later my college wanted to make changes to it! How is it possible? I've used it basically without changes for two years.
 

@@ -3,9 +3,22 @@
 using Xunit;
 
 namespace DotNetThoughts.Results.Tests;
-
 public class ResultTests
 {
+    [Fact]
+    public void ErrorResultsCanBeReTyped()
+    {
+        var retypedErrorResult = Result<int>.Error(new FakeError()).ErrorTo<string>();
+        retypedErrorResult.Errors.Should().ContainEquivalentOf(new FakeError());
+    }
+
+    [Fact]
+    public void SuccesfulResultsCannotBeReTyped()
+    {
+        var act = () => Result<int>.Ok(10).ErrorTo<string>();
+        act.Should().Throw<InvalidOperationException>();
+    }
+
     [Theory]
     [InlineData((object?)null)]
     [InlineData(new[] { 1 })]

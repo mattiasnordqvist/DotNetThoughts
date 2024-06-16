@@ -228,6 +228,18 @@ public readonly record struct Result<T>
         => HasSingleError<TError>(out _);
 
     /// <summary>
+    /// Returns new re-typed result, if the result is an Error. Otherwise throws an exception.
+    /// </summary>
+    /// <typeparam name="R">Desired Result-type</typeparam>
+    /// <returns>Errors from this Result contained in a new Result with the desired type</returns>
+    /// <exception cref="InvalidOperationException">If this Result is a success</exception>
+    public Result<R> ErrorTo<R>()
+    {
+        if (Success) throw new InvalidOperationException("Can't convert a successful result to a failed result of another type.");
+        return Result<R>.Error(Errors);
+    }
+
+    /// <summary>
     /// Override default record print behavior in order to avoid touching <see cref="Value"/> when <see cref="Success"/> is false
     /// </summary>
     bool PrintMembers(StringBuilder builder)
