@@ -34,6 +34,11 @@ public readonly record struct LocalDateTime
     public DateTime DateTime { get; }
     public TimeZoneInfo TimeZoneInfo { get; }
 
+    public LocalDateTime ToTimeZone(TimeZoneInfo newTz)
+    {
+        return new LocalDateTime(TimeZoneInfo.ConvertTime(DateTime, TimeZoneInfo, newTz), newTz);
+    }
+
     public LocalDateTime ToMidnight()
     {
         return new LocalDateTime(DateTime.Date, TimeZoneInfo);

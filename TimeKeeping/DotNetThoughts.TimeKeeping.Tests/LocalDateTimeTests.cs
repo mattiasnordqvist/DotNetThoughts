@@ -13,6 +13,51 @@ public class LocalDateTimeTests
     }
 
     [Fact]
+    public void ConvertBetweenTimeZones_Utc()
+    {
+        var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Unspecified);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var ldt = new LocalDateTime(t, tz);
+        var utc = ldt.ToTimeZone(TimeZoneInfo.Utc);
+        utc.DateTime.Kind.Should().Be(DateTimeKind.Utc);
+        utc.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
+    }
+
+    [Fact]
+    public void UtcIsLocalUtc()
+    {
+        var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Utc);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("UTC");
+        var ldt = new LocalDateTime(t, tz);
+        ldt.ToDateTimeOffsetLocal().Should().Be(ldt.ToDateTimeOffsetUtc());
+    }
+
+    [Fact]
+    public void ConvertBetweenTimeZones_Hawaii1()
+    {
+        var t = new DateTime(2024, 06, 17, 22, 24, 0, DateTimeKind.Unspecified);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var ldt = new LocalDateTime(t, tz);
+        var hawaii = ldt.ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Hawaiian Standard Time"));
+        hawaii.DateTime.Kind.Should().Be(DateTimeKind.Unspecified);
+        hawaii.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
+        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").Should().Be("2024-06-17T10:24:00-10:00");
+    }
+
+    [Fact]
+    public void ConvertBetweenTimeZones_Hawaii2()
+    {
+        var t = new DateTime(2024, 02, 17, 22, 24, 0, DateTimeKind.Unspecified);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var ldt = new LocalDateTime(t, tz);
+        var hawaii = ldt.ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Hawaiian Standard Time"));
+        hawaii.DateTime.Kind.Should().Be(DateTimeKind.Unspecified);
+        hawaii.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
+        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").Should().Be("2024-02-17T11:24:00-10:00");
+    }
+
+    // 
+    [Fact]
     public void TestDateConstructor()
     {
         var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Unspecified);

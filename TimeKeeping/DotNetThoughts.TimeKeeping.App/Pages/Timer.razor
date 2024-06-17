@@ -2,31 +2,60 @@
 
 <PageTitle>Timing</PageTitle>
 
-<h1>System Time</h1>
-<p role="status">@systemTime.ToString("O")</p>
+<h1>UTC Real Time</h1>
+<p role="status">@realTime.ToString("O")</p>
+<div>
 <button class="btn btn-primary" @onclick="SetBaseLine">Baseline 2021-01-01</button>
 <button class="btn btn-primary" @onclick="FreezeAbsolute">Freeze 2021-01-01</button>
-<button class="btn btn-primary" @onclick="AdvanceOneHour">Advance 1 Hour</button>
-<button class="btn btn-primary" @onclick="SubtractOneHour">Subtract 1 Hour</button>
 <button class="btn btn-primary" @onclick="Freeze">Freeze</button>
 <button class="btn btn-primary" disabled="@IsNotFrozen()" @onclick="Thaw">Thaw</button>
 <button class="btn btn-primary" @onclick="Reset">Reset</button>
-<h1>Real Time</h1>
-<p role="status">@realTime.ToString("O")</p>
+</div>
+<div>
+<button class="btn btn-primary" @onclick="AdvanceOneHour">Advance 1 Hour</button>
+<button class="btn btn-primary" @onclick="AdvanceOneDay">Advance 1 Day</button>
+<button class="btn btn-primary" @onclick="AdvanceOneWeek">Advance 1 Week</button>
+</div>
+<div>
+<button class="btn btn-primary" @onclick="SubtractOneHour">Subtract 1 Hour</button>
+<button class="btn btn-primary" @onclick="SubtractOneDay">Subtract 1 Day</button>
+<button class="btn btn-primary" @onclick="SubtractOneWeek">Subtract 1 Week</button>
+</div>
 
+<h1>UTC System Time</h1>
+<p role="status">@systemTime.ToString("O")</p>
+
+<h1>Local System Time</h1>
+<p role="status">@localSystemTime.ToString("O")</p>
+
+<h1>
+    <select value="@selectedTimeZone" @onchange=OnTimeZoneChange>
+        @foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
+        {
+            <option value="@tz.Id">@tz.Id Local System Time</option>
+        }
+    </select>
+</h1>
+<p role="status">@nairobiLocalSystemTime.ToString("O")</p>
 
 
 @code {
     private int currentCount = 0;
     private TimeTravelersClock clock = new TimeTravelersClock();
-    private DateTimeOffset systemTime = DateTimeOffset.UtcNow;
     private DateTimeOffset realTime = DateTimeOffset.UtcNow;
+    private DateTimeOffset systemTime = DateTimeOffset.UtcNow;
+    private DateTimeOffset localSystemTime = DateTimeOffset.UtcNow;
+    private DateTimeOffset nairobiLocalSystemTime = DateTimeOffset.UtcNow;
+    private string selectedTimeZone = TimeZoneInfo.GetSystemTimeZones().First().Id;
     System.Threading.Timer? timer;
 
     private void UpdateUI()
     {
         systemTime = clock.UtcNow();
         realTime = DateTimeOffset.UtcNow;
+        localSystemTime = new LocalDateTime(systemTime.DateTime, TimeZoneInfo.Utc).ToTimeZone(TimeZoneInfo.Local).ToDateTimeOffsetLocal();
+        nairobiLocalSystemTime = new LocalDateTime(systemTime.DateTime, TimeZoneInfo.Utc).ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById(selectedTimeZone)).ToDateTimeOffsetLocal();
+
     }
     protected override void OnInitialized()
     {
@@ -38,9 +67,28 @@
             await InvokeAsync(StateHasChanged);
         }, null, 0, 10);
     }
+
+    private void OnTimeZoneChange(ChangeEventArgs args)
+    {
+        selectedTimeZone = ((string)args.Value);
+    }
     private void AdvanceOneHour()
     {
         clock.Advance(TimeSpan.FromHours(1));
+        UpdateUI();
+
+    }
+
+    private void AdvanceOneDay()
+    {
+        clock.Advance(TimeSpan.FromDays(1));
+        UpdateUI();
+
+    }
+
+    private void AdvanceOneWeek()
+    {
+        clock.Advance(TimeSpan.FromDays(7));
         UpdateUI();
 
     }
@@ -49,7 +97,18 @@
     {
         clock.Advance(TimeSpan.FromHours(-1));
         UpdateUI();
+    }
 
+    private void SubtractOneDay()
+    {
+        clock.Advance(TimeSpan.FromDays(-1));
+        UpdateUI();
+    }
+
+    private void SubtractOneWeek()
+    {
+        clock.Advance(TimeSpan.FromDays(-7));
+        UpdateUI();
     }
 
     private void Freeze()
