@@ -70,6 +70,18 @@ public class LocalDateTimeTests
     }
 
     [Fact]
+    public void TestDateTimeOffsetConstructor()
+    {
+        var t = new DateTimeOffset(2024, 06, 06, 0, 0, 0, TimeSpan.FromHours(2));
+        var d = new DateOnly(2024, 06, 06);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var ldt = new LocalDateTime(t, tz);
+        var ldt2 = new LocalDateTime(d, tz);
+
+        ldt.DateTime.Should().Be(ldt2.DateTime);
+    }
+
+    [Fact]
     public void TestUtcDateTimeOffset()
     {
         var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Unspecified);

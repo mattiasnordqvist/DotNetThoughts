@@ -8,6 +8,9 @@ public readonly record struct LocalDateTime
     public LocalDateTime(DateOnly date, TimeZoneInfo timeZoneInfo)
         : this(date.ToDateTime(TimeOnly.MinValue), timeZoneInfo) { }
 
+    public LocalDateTime(DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
+        : this(TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo).DateTime, timeZoneInfo) { }
+
     public LocalDateTime(DateTime dateTime, TimeZoneInfo timeZoneInfo)
     {
         if (!((dateTime.Kind == DateTimeKind.Local && timeZoneInfo == TimeZoneInfo.Local)
