@@ -231,6 +231,9 @@
           "System.Text.Encodings.Web": "8.0.0"
         }
       },
+      "dotnetthoughts.localtimekit": {
+        "type": "Project"
+      },
       "dotnetthoughts.timekeeping": {
         "type": "Project"
       }

@@ -1,4 +1,6 @@
-﻿namespace DotNetThoughts.TimeKeeping.Tests;
+﻿using DotNetThoughts.LocalTimeKit;
+
+namespace DotNetThoughts.TimeKeeping.Tests;
 public class LocalDateTimeTests
 {
 
