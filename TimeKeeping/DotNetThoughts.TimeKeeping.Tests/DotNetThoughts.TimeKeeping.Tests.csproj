@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DotNetThoughts.LocalTimeKit\DotNetThoughts.LocalTimeKit.csproj" />
+    <ProjectReference Include="..\DotNetThoughts.LocalTimeKit\DotNetThoughts.LocalTimeKit.csproj" />
     <ProjectReference Include="..\DotNetThoughts.TimeKeeping\DotNetThoughts.TimeKeeping.csproj" />
   </ItemGroup>
 
