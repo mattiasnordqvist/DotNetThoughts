@@ -167,6 +167,9 @@
           "xunit.extensibility.core": "[2.8.1]"
         }
       },
+      "dotnetthoughts.localtimekit": {
+        "type": "Project"
+      },
       "dotnetthoughts.timekeeping": {
         "type": "Project"
       }
