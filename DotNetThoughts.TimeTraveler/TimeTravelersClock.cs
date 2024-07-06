@@ -1,4 +1,4 @@
-﻿namespace DotNetThoughts.TimeKeeping;
+﻿namespace DotNetThoughts.TimeTraveler;
 
 
 public class TimeTravelersClock
@@ -96,7 +96,7 @@ public class TimeTravelersClock
     private TimeSpan RealTimeFrozen()
     {
         using var context = new OperationContext();
-        return FreezedAt != null ? (context.UtcNow() - FreezedAt.Value) : TimeSpan.Zero;
+        return FreezedAt != null ? context.UtcNow() - FreezedAt.Value : TimeSpan.Zero;
     }
 
     internal void From(TimeTravelersClock xSystemTime)
