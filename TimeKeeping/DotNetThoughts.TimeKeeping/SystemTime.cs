@@ -2,7 +2,6 @@
 
 /// <summary>
 /// "Mockable" DateTime that you still can use statically using the ambient context anti-pattern. Let's see how it rolls.
-/// Replace with an IDateTime if problems arise.
 /// </summary>
 public class SystemTime
 {

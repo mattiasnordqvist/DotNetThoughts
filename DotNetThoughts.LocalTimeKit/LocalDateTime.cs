@@ -1,4 +1,4 @@
-﻿namespace DotNetThoughts.TimeKeeping;
+﻿namespace DotNetThoughts.LocalTimeKit;
 
 /// <summary>
 /// Unambigious representation of a local datetime
@@ -13,9 +13,9 @@ public readonly record struct LocalDateTime
 
     public LocalDateTime(DateTime dateTime, TimeZoneInfo timeZoneInfo)
     {
-        if (!((dateTime.Kind == DateTimeKind.Local && timeZoneInfo == TimeZoneInfo.Local)
-            || (dateTime.Kind == DateTimeKind.Utc && timeZoneInfo == TimeZoneInfo.Utc)
-            || (dateTime.Kind == DateTimeKind.Unspecified && timeZoneInfo != TimeZoneInfo.Local)))
+        if (!(dateTime.Kind == DateTimeKind.Local && timeZoneInfo == TimeZoneInfo.Local
+            || dateTime.Kind == DateTimeKind.Utc && timeZoneInfo == TimeZoneInfo.Utc
+            || dateTime.Kind == DateTimeKind.Unspecified && timeZoneInfo != TimeZoneInfo.Local))
         {
             throw new ArgumentException("Invalid combinations of datetime kinds and timezoneinfo");
         }
