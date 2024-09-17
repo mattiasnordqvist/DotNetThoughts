@@ -41,6 +41,15 @@ public readonly record struct Result<T>
     public static implicit operator Result<Unit>(Result<T> result) => result.ToUnitResult();
 
     /// <summary>
+    /// This implicit operator takes a Result of type T and returns a Result of type Unit by throwing away the value, preserving only success or failure, along with errors.
+    /// This UnitResult is then wrapped in a completed Task.
+    /// It is the same as calling Task.FromResult(result.ToUnitResult()).
+    /// </summary>
+    /// <param name="result"></param>
+    [Pure]
+    public static implicit operator Task<Result<Unit>>(Result<T> result) => Task.FromResult(result.ToUnitResult());
+
+    /// <summary>
     /// Creates a successful Result of type T.
     /// </summary>
     /// <param name="value"></param>
