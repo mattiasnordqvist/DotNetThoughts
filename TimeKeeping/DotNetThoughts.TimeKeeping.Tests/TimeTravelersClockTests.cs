@@ -11,7 +11,7 @@ public class TimeTravelersClockTests
         var sut = new TimeTravelersClock();
         sut.Freeze(frozenTime);
         sut.IsFrozen().Should().BeTrue();
-        sut.UtcNow().Should().Be(frozenTime);
+        sut.Now().Should().Be(frozenTime);
     }
     [Fact]
     public void FreezeAgainOverridesCurrentFreeze()
@@ -22,7 +22,7 @@ public class TimeTravelersClockTests
         sut.Freeze(frozenTime);
         sut.Freeze(newFrozenTime);
         sut.IsFrozen().Should().BeTrue();
-        sut.UtcNow().Should().Be(newFrozenTime);
+        sut.Now().Should().Be(newFrozenTime);
     }
 
     [Fact]
@@ -31,8 +31,8 @@ public class TimeTravelersClockTests
         var sut = new TimeTravelersClock();
         sut.Freeze();
         sut.IsFrozen().Should().BeTrue();
-        sut.UtcNow().Should().BeCloseTo(DateTimeOffset.Now, _allowedDeviation);
-        sut.UtcNow().Should().NotBeAfter(DateTimeOffset.Now);
+        sut.Now().Should().BeCloseTo(DateTimeOffset.Now, _allowedDeviation);
+        sut.Now().Should().NotBeAfter(DateTimeOffset.Now);
     }
 
     [Fact]
@@ -44,12 +44,12 @@ public class TimeTravelersClockTests
         sut.Freeze(frozenTime);
         // check arrange
         sut.IsFrozen().Should().BeTrue();
-        sut.UtcNow().Should().Be(frozenTime);
+        sut.Now().Should().Be(frozenTime);
         // Act
         sut.Reset();
         // Assert
         sut.IsFrozen().Should().BeFalse();
-        sut.UtcNow().Should().BeCloseTo(DateTimeOffset.Now, _allowedDeviation);
+        sut.Now().Should().BeCloseTo(DateTimeOffset.Now, _allowedDeviation);
     }
 
     [Fact]
@@ -58,10 +58,10 @@ public class TimeTravelersClockTests
         var sut = new TimeTravelersClock();
         var now = DateTimeOffset.Now;
         var baseLine = now.AddDays(-1);
-        sut.SetBaseline(baseLine);
-        sut.UtcNow().Should().BeCloseTo(baseLine, _allowedDeviation);
+        sut.SetNow(baseLine);
+        sut.Now().Should().BeCloseTo(baseLine, _allowedDeviation);
         var slept = Sleep(1000);
-        sut.UtcNow().Should().BeCloseTo(baseLine.Add(slept), _allowedDeviation);
+        sut.Now().Should().BeCloseTo(baseLine.Add(slept), _allowedDeviation);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class TimeTravelersClockTests
         var frozenTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
         sut.Freeze(frozenTime);
         sut.Advance(TimeSpan.FromDays(1));
-        sut.UtcNow().Should().Be(new DateTimeOffset(2021, 1, 2, 0, 0, 0, TimeSpan.Zero));
+        sut.Now().Should().Be(new DateTimeOffset(2021, 1, 2, 0, 0, 0, TimeSpan.Zero));
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class TimeTravelersClockTests
     {
         var sut = new TimeTravelersClock();
         sut.Advance(TimeSpan.FromDays(1));
-        sut.UtcNow().Should().BeCloseTo(DateTimeOffset.Now.AddDays(1), _allowedDeviation);
+        sut.Now().Should().BeCloseTo(DateTimeOffset.Now.AddDays(1), _allowedDeviation);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class TimeTravelersClockTests
         sut.Advance(TimeSpan.FromDays(1));
         sut.Thaw();
         var slept = Sleep(1000);
-        sut.UtcNow().Should().BeCloseTo(frozenTime.AddDays(1).Add(slept), _allowedDeviation);
+        sut.Now().Should().BeCloseTo(frozenTime.AddDays(1).Add(slept), _allowedDeviation);
     }
 
     [Fact]
@@ -100,16 +100,16 @@ public class TimeTravelersClockTests
         var sut = new TimeTravelersClock();
         var baseLine = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var timer = new Stopwatch(); timer.Start();
-        sut.SetBaseline(baseLine);
-        sut.UtcNow().Should().BeCloseTo(baseLine.Add(timer.Elapsed), _allowedDeviation);
+        sut.SetNow(baseLine);
+        sut.Now().Should().BeCloseTo(baseLine.Add(timer.Elapsed), _allowedDeviation);
         Sleep(20);
-        sut.UtcNow().Should().BeCloseTo(baseLine.Add(timer.Elapsed), _allowedDeviation);
+        sut.Now().Should().BeCloseTo(baseLine.Add(timer.Elapsed), _allowedDeviation);
         var frozen = sut.Freeze();
-        sut.UtcNow().Should().Be(frozen);
+        sut.Now().Should().Be(frozen);
         var sleptWhileFrozen = Sleep(2000);
         sut.Thaw();
         Sleep(1000);
-        sut.UtcNow().Should().BeCloseTo(baseLine.Add(timer.Elapsed).Add(-sleptWhileFrozen), _allowedDeviation);
+        sut.Now().Should().BeCloseTo(baseLine.Add(timer.Elapsed).Add(-sleptWhileFrozen), _allowedDeviation);
     }
 
     private static TimeSpan Sleep(int milliseconds)
