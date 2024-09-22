@@ -4,7 +4,7 @@
 
 `SystemTime.Now()` is a drop-in replacement for `DateTimeOffset.UtcNow` with a couple of extra features.
 
-To begin with, you can manipulate time using SystemTime.
+You can manipulate time using SystemTime.
 This is useful for testing, where you want to test how your code behave at different times, or where you want the code to be deterministic.
 `SystemTime` works through `AsyncLocal`, so you do not have to inject a `ITimeProvider` wherever you need to be able to mock time.
 
