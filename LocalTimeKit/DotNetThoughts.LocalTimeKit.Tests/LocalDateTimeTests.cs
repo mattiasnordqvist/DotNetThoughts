@@ -1,13 +1,11 @@
-﻿using DotNetThoughts.LocalTimeKit;
-
-namespace DotNetThoughts.TimeKeeping.Tests;
+﻿namespace DotNetThoughts.LocalTimeKit.Tests;
 public class LocalDateTimeTests
 {
 
     [Fact]
     public void TestLocalDateTimeOffset()
     {
-        var t = new DateTime(2024,06,06, 0, 0, 0, DateTimeKind.Unspecified);
+        var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Unspecified);
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var expectedDateTimeOffset = DateTimeOffset.Parse("2024-06-06T00:00:00+02:00");
@@ -67,7 +65,7 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var ldt2 = new LocalDateTime(d, tz);
-        
+
         ldt.DateTime.Should().Be(ldt2.DateTime);
     }
 
