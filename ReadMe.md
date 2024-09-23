@@ -1,11 +1,11 @@
 # Results
-[Results/ReadMe.md](Results/ReadMe.md)
+[Results/DotNetThoughts.Results/ReadMe.md](Results/DotNetThoughts.Results/ReadMe.md)
 
 # TimeKeeping
-[TimeKeeping/ReadMe.md](TimeKeeping/ReadMe.md)
+[TimeKeeping/DotNetThoughts.TimeKeeping/ReadMe.md](TimeKeeping/DotNetThoughts.TimeKeeping/ReadMe.md)
 
 # LocalDateTime
-[LocalDateTime/ReadMe.md](LocalDateTime/ReadMe.md)
+[LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md](LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md)
 
 # UserSecrets
 [UserSecrets/ReadMe.md](UserSecrets/ReadMe.md)

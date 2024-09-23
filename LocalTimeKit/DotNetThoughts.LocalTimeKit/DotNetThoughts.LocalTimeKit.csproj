@@ -4,6 +4,7 @@
 		<Version>1.0.1</Version>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>ReadMe.md</PackageReadmeFile>
 	</PropertyGroup>
 
 </Project>

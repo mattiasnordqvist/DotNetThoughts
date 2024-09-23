@@ -28,9 +28,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.Results.Analyzer.Package", "Results\DotNetThoughts.Results.Analyzer\DotNetThoughts.Results.Analyzer.Package\DotNetThoughts.Results.Analyzer.Package.csproj", "{E0E86A0B-F4CE-4E88-99CF-C54AFC1C0C58}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Results", "Results", "{BECD3795-EDD5-459E-BFCC-017082E1C34D}"
-	ProjectSection(SolutionItems) = preProject
-		Results\ReadMe.md = Results\ReadMe.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserSecrets", "UserSecrets", "{BC7FC0EC-0CDC-4B88-A60C-BC920712841B}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,9 +45,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LocalTimeKit", "LocalTimeKit", "{11FA58AF-0B7C-4465-8448-AA710D5725AA}"
-	ProjectSection(SolutionItems) = preProject
-		LocalTimeKit\ReadMe.md = LocalTimeKit\ReadMe.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetThoughts.LocalTimeKit", "LocalTimeKit\DotNetThoughts.LocalTimeKit\DotNetThoughts.LocalTimeKit.csproj", "{0F5838D8-AC76-4C87-8DB6-6AE8140397A8}"
 EndProject
