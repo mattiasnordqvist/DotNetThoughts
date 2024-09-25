@@ -176,7 +176,7 @@
       "dotnetthoughts.results.validation": {
         "type": "Project",
         "dependencies": {
-          "DotNetThoughts.Results": "[1.5.7, )"
+          "DotNetThoughts.Results": "[1.5.9, )"
         }
       },
       "DotNetThoughts.Results.Analyzer": {
