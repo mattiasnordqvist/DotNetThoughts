@@ -4,6 +4,12 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+	<PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\ReadMe.md')">
+		<PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+	</PropertyGroup>
+	<ItemGroup Condition="Exists('$(MSBuildProjectDirectory)\ReadMe.md')">
+		<None Include="ReadMe.md" Pack="true" PackagePath="\"/>
+	</ItemGroup>
 	<ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />

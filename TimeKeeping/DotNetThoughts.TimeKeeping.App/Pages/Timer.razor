@@ -52,7 +52,7 @@
 
     private void UpdateUI()
     {
-        systemTime = clock.UtcNow();
+        systemTime = clock.Now();
         realTime = DateTimeOffset.UtcNow;
         localSystemTime = new LocalDateTime(systemTime.DateTime, TimeZoneInfo.Utc).ToTimeZone(TimeZoneInfo.Local).ToDateTimeOffsetLocal();
         nairobiLocalSystemTime = new LocalDateTime(systemTime.DateTime, TimeZoneInfo.Utc).ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById(selectedTimeZone)).ToDateTimeOffsetLocal();
@@ -139,7 +139,7 @@
 
     private void SetBaseLine()
     {
-        clock.SetBaseline(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        clock.SetNow(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
         UpdateUI();
 
     }

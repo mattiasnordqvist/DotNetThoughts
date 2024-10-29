@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetThoughts.LocalTimeKit\DotNetThoughts.LocalTimeKit.csproj" />
+  </ItemGroup>
+
+</Project>
