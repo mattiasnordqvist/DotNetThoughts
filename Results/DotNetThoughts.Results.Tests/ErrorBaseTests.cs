@@ -2,6 +2,10 @@
 
 public class ErrorBaseTests
 {
+    public record GenericError<T> : ErrorBase
+    {
+    }
+
     public record FakeError : ErrorBase
     {
         public string PropertyA { get; set; } = "A";
@@ -11,6 +15,13 @@ public class ErrorBaseTests
     public record FakeError2 : FakeError
     {
         public decimal PropertyC { get; set; } = 3.1m;
+    }
+
+    [Fact]
+    public void GenericErrorContainsGenericArgumentsInType()
+    {
+        new GenericError<int>().Type.Should().Be("GenericError<Int32>");
+        new GenericError<GenericError<string>>().Type.Should().Be("GenericError<GenericError<String>>");
     }
 
     [Fact]

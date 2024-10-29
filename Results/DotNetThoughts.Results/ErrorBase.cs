@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace DotNetThoughts.Results;
@@ -11,6 +12,27 @@ namespace DotNetThoughts.Results;
 /// </summary>
 public abstract record ErrorBase : IError
 {
+    private static readonly ConcurrentDictionary<Type, string> _cache = new();
+
+    private static string ExpandTypeName(Type t)
+    {
+        // Check if the result is already cached
+        if (_cache.TryGetValue(t, out var cachedResult))
+        {
+            return cachedResult;
+        }
+
+        // Perform the expansion
+        string result = !t.IsGenericType || t.IsGenericTypeDefinition
+            ? !t.IsGenericTypeDefinition ? t.Name : t.Name.Remove(t.Name.IndexOf('`'))
+            : $"{ExpandTypeName(t.GetGenericTypeDefinition())}<{string.Join(',', t.GetGenericArguments().Select(x => ExpandTypeName(x)))}>";
+
+        // Cache the result before returning
+        _cache[t] = result;
+
+        return result;
+    }
+
     /// <summary>
     /// This implicit operator takes an ErrorBase and returns a failed Result of type Unit, with the passed ErrorBase as the only error.
     /// Can't have this for type generics, because that doesnt work with implicit operators, because an implicit cast operator must be defined in the type of either its return value or its argument.
@@ -23,7 +45,7 @@ public abstract record ErrorBase : IError
     /// </summary>
     public ErrorBase(string message)
     {
-        Type = GetType().Name;
+        Type = ExpandTypeName(GetType());
         Message = message;
     }
 
@@ -33,8 +55,8 @@ public abstract record ErrorBase : IError
     /// </summary>
     public ErrorBase()
     {
-        Type = GetType().Name;
-        Message = GetType().Name;
+        Type = ExpandTypeName(GetType());
+        Message = ExpandTypeName(GetType());
     }
 
     public string Type
