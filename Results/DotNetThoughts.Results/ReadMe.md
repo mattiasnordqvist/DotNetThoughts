@@ -32,8 +32,8 @@ However, the compiler can't stop the caller from passing a topping that has alre
 I prefer to return the value not wrapped in a Result. It's simpler and more readable.
 Returning a Result that can't be in a failed state, might make the caller investigate how it can fail, just to find out that it can't. 
 After the caller found out it can't fail, he might remove the error handling code, skipping the Success-check before retrieving the value. The operation might in the future be changed to be able to fail, and then the error handling code is missing, resulting in an exception. Now, this is just as bad as unchecked exceptions.
-By marking your operation with the [Pure]-attribute, you indicate that the operation can't have any side-effects. If someone calls your operation without checking the result, roslyn will warn the consumer with a CA1806. However, sometimes your operation does have side-effects, so the [Pure]-attribute is not the perfect fit here.
-There is an analyzer though, that will warn you if you call a method that returns a Result, without checking the Success-property.
+
+By marking your operation with the [Pure]-attribute, you indicate that the operation can't have any side-effects. If someone calls your operation without checking the result, roslyn will warn the consumer with a CA1806. However, sometimes your operation does have side-effects, so the [Pure]-attribute is not the perfect fit here. There is an analyzer though, that will warn you if you call a method that returns a Result, without checking the Success-property.
 
 ## Should I return void, Unit or Result<Unit> from an operation that doesn't return a value?
 For the same reason as above, I'd prefer to return Unit over Result<Unit>. But void is even better. Unit is just there to please the type system in the case of a void Result!
@@ -52,7 +52,7 @@ The Bind method offers a way to chain multiple functions that return a Result<T>
 
 Instead of checking for a successful result, and if so, unpack the value and pass it to new function, we can use Bind.
 
-You can compare Bind with several already existing C# and .Net.
+You can compare Bind with several already existing features of C# and .Net.
 
 For example null coalescing, where you chain properties and method calls as long as they don't return null.
 
@@ -67,7 +67,7 @@ Or ContinueWith, which executes the next task when the previous is completed, pr
 createUserTask.ContinueWith(customer => SendEmail(customer));
 ```
 
-
+Anyways... 
 
 ```csharp
 int a = 1;
