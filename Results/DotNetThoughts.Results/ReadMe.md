@@ -252,7 +252,7 @@ These are all equivalent
 
     var result = Divide(1, 2)
         .And(x => Multiply(x, 2))
-        .And((x, y) => Divide(y, x));
+        .Bind((x, y) => Divide(y, x));
 
     var result = from x in Divide(1, 2)
                  from y in Multiply(x, 2)
