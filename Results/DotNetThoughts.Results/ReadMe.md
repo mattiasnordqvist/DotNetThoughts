@@ -1,6 +1,6 @@
 Inspired by scott wlaschins talks about railway oriented programming and functional domain modeling, I decided to implement a Result type in c#. 
 This post explains a lot: https://fsharpforfunandprofit.com/posts/elevated-world/
-I know lang-ext library already has something similar, but I found the library hard to understand and use, so I decided to make an implementation that fits my needs better.
+I know lang-ext library already has something similar, but I found the library hard to understand and use, so I decided to make my own implementation, as a way of learning.
 
 # The Result type
 
@@ -271,7 +271,7 @@ You can chain Or-calls like this:
 Result<(TA, TB, TC)> result = A().Or(B()).Or(C());
 ```
 
-However, since there is no relation between A, B and C really, I´d prefer to use the static OrResult-method instead:
+However, since there is no relation between A, B and C really, IÂ´d prefer to use the static OrResult-method instead:
 
 ```csharp
 Result<(TA, TB, TC)> result = OrResult(A(), B(), C());
