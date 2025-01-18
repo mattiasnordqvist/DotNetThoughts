@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net8.0": {
+    "net9.0": {
       "DotNetThoughts.Results.Analyzer": {
         "type": "Direct",
         "requested": "[1.5.6, )",
