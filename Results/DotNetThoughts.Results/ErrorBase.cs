@@ -14,7 +14,7 @@ public abstract record ErrorBase : IError
 {
     private static readonly ConcurrentDictionary<Type, string> _cache = new();
 
-    private static string ExpandTypeName(Type t)
+    public static string ExpandTypeName(Type t)
     {
         // Check if the result is already cached
         if (_cache.TryGetValue(t, out var cachedResult))
@@ -23,9 +23,23 @@ public abstract record ErrorBase : IError
         }
 
         // Perform the expansion
-        string result = !t.IsGenericType || t.IsGenericTypeDefinition
-            ? !t.IsGenericTypeDefinition ? t.Name : t.Name.Remove(t.Name.IndexOf('`'))
-            : $"{ExpandTypeName(t.GetGenericTypeDefinition())}<{string.Join(',', t.GetGenericArguments().Select(x => ExpandTypeName(x)))}>";
+        string result;
+
+        if (t.IsGenericTypeDefinition)
+        {
+            var removedBackTick = (t.Name.IndexOf('`') >= 0 ? t.Name.Remove(t.Name.IndexOf('`')) : t.Name);
+            var nrOfGenericArguments = t.GetGenericArguments().Length;
+            result = removedBackTick + "<" +new string(',',nrOfGenericArguments-1)+ ">";
+        }
+        else if(!t.IsGenericType)
+        {
+            result = t.Name;
+        }
+        else
+        {
+            var removedBackTick = (t.Name.IndexOf('`') >= 0 ? t.Name.Remove(t.Name.IndexOf('`')) : t.Name);
+            result = $"{removedBackTick}<{string.Join(',', t.GetGenericArguments().Select(x => ExpandTypeName(x)))}>";
+        }
 
         // Cache the result before returning
         _cache[t] = result;

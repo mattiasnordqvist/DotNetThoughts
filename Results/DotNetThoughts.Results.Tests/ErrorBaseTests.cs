@@ -2,6 +2,24 @@
 
 public class ErrorBaseTests
 {
+    [Theory]
+    [InlineData(typeof(string), "String")]
+    [InlineData(typeof(List<>), "List<>")]
+    [InlineData(typeof(ErrorBase), "ErrorBase")]
+    [InlineData(typeof(GenericError<int>), "GenericError<Int32>")]
+    [InlineData(typeof(GenericError<GenericError<string>>), "GenericError<GenericError<String>>")]
+    [InlineData(typeof(TwoGenerics<int, string>), "TwoGenerics<Int32,String>")]
+    [InlineData(typeof(TaskTakesTooLongError), "TaskTakesTooLongError")]
+    [InlineData(typeof(TaskFailedError), "TaskFailedError")]
+    public void ExpandTypeNameTest1(Type t, string result)
+    {
+        ErrorBase.ExpandTypeName(t).Should().Be(result);
+
+    }
+    public record TaskTakesTooLongError : ErrorBase;
+    public record TaskFailedError : ErrorBase;
+    public record TwoGenerics<T, T2> : ErrorBase;
+
     public record GenericError<T> : ErrorBase
     {
     }
