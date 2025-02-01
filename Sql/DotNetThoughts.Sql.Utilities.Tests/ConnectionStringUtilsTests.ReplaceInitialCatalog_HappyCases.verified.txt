@@ -1,0 +1,4 @@
+﻿{
+  ConnectionString: Data Source=PINKGOLD\PINKGOLD16; Integrated Security=SSPI; Initial Catalog=master; TrustServerCertificate=True;MultipleActiveResultSets=False;,
+  AfterInitialCatalogReplaced: Data Source=PINKGOLD\PINKGOLD16;Initial Catalog=newCatalog;Integrated Security=True;Multiple Active Result Sets=False;Trust Server Certificate=True
+}

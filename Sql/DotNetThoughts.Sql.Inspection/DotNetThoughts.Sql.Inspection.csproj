@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Version>0.0.1</Version>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Results\DotNetThoughts.Results\DotNetThoughts.Results.csproj" />
+    <ProjectReference Include="..\DotNetThoughts.Sql.Utilities\DotNetThoughts.Sql.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>
