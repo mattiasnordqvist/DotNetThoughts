@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace DotNetThoughts.Sql.Utilities.Tests;
 
 public class ConnectionStringUtilsTests
