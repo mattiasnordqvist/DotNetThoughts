@@ -13,5 +13,8 @@
 # LocalDateTime
 [LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md](LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md)
 
+# Sql.Migrations
+[Sql/DotNetThoughts.Sql.Migrations/ReadMe.md](Sql/DotNetThoughts.Sql.Migrations/ReadMe.md)
+
 # UserSecrets
 [UserSecrets/ReadMe.md](UserSecrets/ReadMe.md)
