@@ -1,18 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="xunit.assert" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DotNetThoughts.Sql.Utilities\DotNetThoughts.Sql.Utilities.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>
