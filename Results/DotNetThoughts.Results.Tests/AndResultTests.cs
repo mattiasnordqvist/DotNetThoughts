@@ -9,8 +9,8 @@ public class AndResultTests
         var result = Result<int>.Ok(1)
             .And(x => Result<int>.Ok(2));
 
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be((1, 2));
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe((1, 2));
     }
 
     [Fact]
@@ -20,7 +20,7 @@ public class AndResultTests
             .And(x => Result<int>.Ok(2))
             .And((x, y) => Result<int>.Ok(3));
 
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be((1, 2, 3));
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe((1, 2, 3));
     }
 }

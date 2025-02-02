@@ -66,8 +66,8 @@ public class Tests
         var unitResultJson = @"{""success"": true}";
         var unitResult = JsonSerializer.Deserialize<Result<Unit>>(unitResultJson, Options);
 
-        unitResult.Success.Should().BeTrue();
-        unitResult.Value.Should().Be(Unit.Instance);
+        unitResult.Success.ShouldBeTrue();
+        unitResult.Value.ShouldBe(Unit.Instance);
     }
 
     [Fact]
@@ -76,8 +76,8 @@ public class Tests
         var unitResultJson = @"{""success"": true, ""value"": 123 }";
         var unitResult = JsonSerializer.Deserialize<Result<int>>(unitResultJson, Options);
 
-        unitResult.Success.Should().BeTrue();
-        unitResult.Value.Should().Be(123);
+        unitResult.Success.ShouldBeTrue();
+        unitResult.Value.ShouldBe(123);
     }
 
     [Fact]
@@ -86,8 +86,8 @@ public class Tests
         var complextResult = Result<ComplexType>.Ok(new ComplexType());
         var json = JsonSerializer.Serialize(complextResult, Options);
         var deserialized = JsonSerializer.Deserialize<Result<ComplexType>>(json, Options);
-        deserialized.Success.Should().BeTrue();
-        deserialized.Value.Should().BeEquivalentTo(new ComplexType());
+        deserialized.Success.ShouldBeTrue();
+        deserialized.Value.ShouldBeEquivalentTo(new ComplexType());
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class Tests
         var unitResult = UnitResult.Error(new MyError(123, "hej fel"));
         var json = JsonSerializer.Serialize(unitResult, Options);
         var deserialized = JsonSerializer.Deserialize<Result<Unit>>(json, Options);
-        deserialized.Success.Should().BeFalse();
+        deserialized.Success.ShouldBeFalse();
         await Verify(deserialized.Errors);
     }
 }

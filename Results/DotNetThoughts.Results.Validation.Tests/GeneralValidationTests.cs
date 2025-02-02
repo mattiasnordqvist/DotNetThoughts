@@ -11,8 +11,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.Parse<long, string?>(parseable, StringToLong);
         // Assert
-        parseResult.Success.Should().BeTrue();
-        parseResult.Value.Should().Be(long.Parse(parseable));
+        parseResult.Success.ShouldBeTrue();
+        parseResult.Value.ShouldBe(long.Parse(parseable));
     }
 
     [Fact]
@@ -23,8 +23,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.Parse<long, string?>(unparseable, StringToLong);
         // Assert
-        parseResult.Success.Should().BeFalse();
-        parseResult.HasError<UnparseableError>().Should().BeTrue();
+        parseResult.Success.ShouldBeFalse();
+        parseResult.HasError<UnparseableError>().ShouldBeTrue();
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.Parse<long, string?>((string?)null, StringToLong);
         // Assert
-        parseResult.Success.Should().BeFalse();
-        parseResult.HasError<MissingArgumentError>().Should().BeTrue();
+        parseResult.Success.ShouldBeFalse();
+        parseResult.HasError<MissingArgumentError>().ShouldBeTrue();
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.ParseAllowNull((string?)null, StringToValueObject);
         // Assert
-        parseResult.Success.Should().BeTrue();
-        parseResult.Value.Should().Be(null);
+        parseResult.Success.ShouldBeTrue();
+        parseResult.Value.ShouldBe(null);
     }
 
     [Fact]
@@ -57,8 +57,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
         // Assert
-        parseResult.Success.Should().BeTrue();
-        parseResult.Value.Should().Be(new SomeValueObject(long.Parse(parseable)));
+        parseResult.Success.ShouldBeTrue();
+        parseResult.Value.ShouldBe(new SomeValueObject(long.Parse(parseable)));
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
         // Assert
-        parseResult.Success.Should().BeFalse();
-        parseResult.HasError<UnparseableError>().Should().BeTrue();
+        parseResult.Success.ShouldBeFalse();
+        parseResult.HasError<UnparseableError>().ShouldBeTrue();
     }
 
     [Fact]
@@ -81,8 +81,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.Should().BeTrue();
-        parseResult.Value.Should().Be(new DateOnly(2022, 12, 1));
+        parseResult.Success.ShouldBeTrue();
+        parseResult.Value.ShouldBe(new DateOnly(2022, 12, 1));
     }
 
     [Fact]
@@ -93,8 +93,8 @@ public class GeneralValidationTests
         // Act
         var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.Should().BeTrue();
-        parseResult.Value.Should().Be(null);
+        parseResult.Success.ShouldBeTrue();
+        parseResult.Value.ShouldBe(null);
     }
     public record UnparseableError(string? Candidate) : ErrorBase;
     public static Result<long> StringToLong(string? candidate) =>

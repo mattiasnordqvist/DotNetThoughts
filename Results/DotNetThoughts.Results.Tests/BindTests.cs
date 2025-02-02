@@ -7,8 +7,8 @@ public class BindTests
     [InlineData(null)]
     public void ReturnWrapsInSuccessResult(object? value)
     {
-        value.Return().Success.Should().BeTrue();
-        value.Return().Value.Should().Be(value);
+        value.Return().Success.ShouldBeTrue();
+        value.Return().Value.ShouldBe(value);
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public class BindTests
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1))
             .Bind(x => Result<int>.Ok(2))
-            .Value.Should().Be(2);
+            .Value.ShouldBe(2);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class BindTests
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1)
                 .Bind(x => Result<int>.Ok(2)))
-            .Value.Should().Be(2);
+            .Value.ShouldBe(2);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class BindTests
         Result<object>.Error(new FakeError())
             .Bind(x => Result<int>.Ok(1))
             .Bind(x => Result<int>.Ok(2))
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
     [Fact]
     public void BindReturnsErrorIfEndsWithError()
@@ -43,7 +43,7 @@ public class BindTests
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1))
             .Bind(x => Result<int>.Error(new FakeError()))
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class BindTests
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Error(new FakeError()))
             .Bind(x => Result<int>.Ok(2))
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class BindTests
         Result<int>.Ok(1)
             .Bind(x => Result<int>.Ok(x + 1))
             .Bind(x => Result<int>.Ok(x + 1))
-            .Value.Should().Be(3);
+            .Value.ShouldBe(3);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class BindTests
         Result<int>.Ok(1)
             .Bind(x => Result<int>.Ok(x + 1)
                 .Bind(x => Result<int>.Ok(x + 1)))
-            .Value.Should().Be(3);
+            .Value.ShouldBe(3);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class BindTests
         Result<(int, int)>.Ok((0, 10))
             .Bind((x, y) => Result<(int, int)>.Ok((x + 1, y + 1)))
             .Bind((x, y) => Result<(int, int)>.Ok((x + 1, y + 1)))
-            .Value.Should().Be((2, 12));
+            .Value.ShouldBe((2, 12));
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class BindTests
         Result<(int, int, decimal)>.Ok((0, 10, 100m))
             .Bind((x, y, z) => Result<(int, int, decimal)>.Ok((x + 1, y + 1, z + 1)))
             .Bind((x, y, z) => Result<(int, int, decimal)>.Ok((x + 1, y + 1, z + 1)))
-            .Value.Should().Be((2, 12, 102m));
+            .Value.ShouldBe((2, 12, 102m));
     }
 
     [Fact]
@@ -97,6 +97,6 @@ public class BindTests
         Result<(int, int, decimal, bool)>.Ok((0, 10, 100m, true))
             .Bind((x, y, z, w) => Result<(int, int, decimal, bool)>.Ok((x + 1, y + 1, z + 1, true)))
             .Bind((x, y, z, w) => Result<(int, int, decimal, bool)>.Ok((x + 1, y + 1, z + 1, true)))
-            .Value.Should().Be((2, 12, 102m, true));
+            .Value.ShouldBe((2, 12, 102m, true));
     }
 }

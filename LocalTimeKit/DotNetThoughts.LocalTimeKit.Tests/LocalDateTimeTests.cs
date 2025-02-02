@@ -9,7 +9,7 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var expectedDateTimeOffset = DateTimeOffset.Parse("2024-06-06T00:00:00+02:00");
-        ldt.ToDateTimeOffsetLocal().Should().Be(expectedDateTimeOffset);
+        ldt.ToDateTimeOffsetLocal().ShouldBe(expectedDateTimeOffset);
     }
 
     [Fact]
@@ -19,8 +19,8 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var utc = ldt.ToTimeZone(TimeZoneInfo.Utc);
-        utc.DateTime.Kind.Should().Be(DateTimeKind.Utc);
-        utc.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
+        utc.DateTime.Kind.ShouldBe(DateTimeKind.Utc);
+        utc.ToDateTimeOffsetUtc().ShouldBe(ldt.ToDateTimeOffsetUtc());
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class LocalDateTimeTests
         var t = new DateTime(2024, 06, 06, 0, 0, 0, DateTimeKind.Utc);
         var tz = TimeZoneInfo.FindSystemTimeZoneById("UTC");
         var ldt = new LocalDateTime(t, tz);
-        ldt.ToDateTimeOffsetLocal().Should().Be(ldt.ToDateTimeOffsetUtc());
+        ldt.ToDateTimeOffsetLocal().ShouldBe(ldt.ToDateTimeOffsetUtc());
     }
 
     [Fact]
@@ -39,9 +39,9 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var hawaii = ldt.ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Hawaiian Standard Time"));
-        hawaii.DateTime.Kind.Should().Be(DateTimeKind.Unspecified);
-        hawaii.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
-        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").Should().Be("2024-06-17T10:24:00-10:00");
+        hawaii.DateTime.Kind.ShouldBe(DateTimeKind.Unspecified);
+        hawaii.ToDateTimeOffsetUtc().ShouldBe(ldt.ToDateTimeOffsetUtc());
+        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").ShouldBe("2024-06-17T10:24:00-10:00");
     }
 
     [Fact]
@@ -51,9 +51,9 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var hawaii = ldt.ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Hawaiian Standard Time"));
-        hawaii.DateTime.Kind.Should().Be(DateTimeKind.Unspecified);
-        hawaii.ToDateTimeOffsetUtc().Should().Be(ldt.ToDateTimeOffsetUtc());
-        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").Should().Be("2024-02-17T11:24:00-10:00");
+        hawaii.DateTime.Kind.ShouldBe(DateTimeKind.Unspecified);
+        hawaii.ToDateTimeOffsetUtc().ShouldBe(ldt.ToDateTimeOffsetUtc());
+        hawaii.ToDateTimeOffsetLocal().ToString("yyyy-MM-ddTHH:mm:ssK").ShouldBe("2024-02-17T11:24:00-10:00");
     }
 
     // 
@@ -66,7 +66,7 @@ public class LocalDateTimeTests
         var ldt = new LocalDateTime(t, tz);
         var ldt2 = new LocalDateTime(d, tz);
 
-        ldt.DateTime.Should().Be(ldt2.DateTime);
+        ldt.DateTime.ShouldBe(ldt2.DateTime);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class LocalDateTimeTests
         var ldt = new LocalDateTime(t, tz);
         var ldt2 = new LocalDateTime(d, tz);
 
-        ldt.DateTime.Should().Be(ldt2.DateTime);
+        ldt.DateTime.ShouldBe(ldt2.DateTime);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var expectedUtcDateTimeOffset = DateTimeOffset.Parse("2024-06-05T22:00:00+00:00");
-        ldt.ToDateTimeOffsetUtc().Should().Be(expectedUtcDateTimeOffset);
+        ldt.ToDateTimeOffsetUtc().ShouldBe(expectedUtcDateTimeOffset);
     }
 
     [Fact]
@@ -96,8 +96,8 @@ public class LocalDateTimeTests
     {
         var t = new DateTime(2024, 03, 31, 2, 30, 0, DateTimeKind.Unspecified);
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        var ldt = () => new LocalDateTime(t, tz);
-        ldt.Should().Throw<ArgumentException>();
+        Action ldt = () => new LocalDateTime(t, tz);
+        ldt.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -105,8 +105,8 @@ public class LocalDateTimeTests
     {
         var t = new DateTime(2024, 10, 27, 2, 30, 0, DateTimeKind.Unspecified);
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        var ldt = () => new LocalDateTime(t, tz);
-        ldt.Should().Throw<ArgumentException>();
+        Action ldt = () => new LocalDateTime(t, tz);
+        ldt.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz).ToMidnight();
         var expectedDateTimeOffset = DateTimeOffset.Parse("2024-06-06T00:00:00+02:00");
-        ldt.ToDateTimeOffsetLocal().Should().Be(expectedDateTimeOffset);
+        ldt.ToDateTimeOffsetLocal().ShouldBe(expectedDateTimeOffset);
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class LocalDateTimeTests
         var t = new DateTime(nowInContextOfTest.Ticks, DateTimeKind.Local);
         var tz = TimeZoneInfo.Local;
         var ldt = new LocalDateTime(t, tz);
-        ldt.ToDateTimeOffsetLocal().Should().Be(nowInContextOfTest);
+        ldt.ToDateTimeOffsetLocal().ShouldBe(nowInContextOfTest);
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class LocalDateTimeTests
         var t = new DateTime(nowInContextOfTest.Ticks, DateTimeKind.Local);
         var tz = TimeZoneInfo.Local;
         var ldt = new LocalDateTime(t, tz);
-        ldt.ToDateTimeOffsetUtc().Should().Be(utcNow);
+        ldt.ToDateTimeOffsetUtc().ShouldBe(utcNow);
     }
 
     [Theory]
@@ -153,9 +153,9 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var past = ldt.PastMidnights(midnights);
-        past.Should().Be(new LocalDateTime(DateTime.Parse(expected), tz));
-        past.ToDateTimeOffsetLocal().Should().Be(DateTimeOffset.Parse(expectedLocalOffset));
-        past.ToDateTimeOffsetUtc().Should().Be(DateTimeOffset.Parse(expectedUtcOffset));
+        past.ShouldBe(new LocalDateTime(DateTime.Parse(expected), tz));
+        past.ToDateTimeOffsetLocal().ShouldBe(DateTimeOffset.Parse(expectedLocalOffset));
+        past.ToDateTimeOffsetUtc().ShouldBe(DateTimeOffset.Parse(expectedUtcOffset));
     }
 
     [Theory]
@@ -170,9 +170,9 @@ public class LocalDateTimeTests
         var tz = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         var ldt = new LocalDateTime(t, tz);
         var future = ldt.FutureMidnights(midnights);
-        future.Should().Be(new LocalDateTime(DateTime.Parse(expected), tz));
-        future.ToDateTimeOffsetLocal().Should().Be(DateTimeOffset.Parse(expectedLocalOffset));
-        future.ToDateTimeOffsetUtc().Should().Be(DateTimeOffset.Parse(expectedUtcOffset));
+        future.ShouldBe(new LocalDateTime(DateTime.Parse(expected), tz));
+        future.ToDateTimeOffsetLocal().ShouldBe(DateTimeOffset.Parse(expectedLocalOffset));
+        future.ToDateTimeOffsetUtc().ShouldBe(DateTimeOffset.Parse(expectedUtcOffset));
 
     }
 }

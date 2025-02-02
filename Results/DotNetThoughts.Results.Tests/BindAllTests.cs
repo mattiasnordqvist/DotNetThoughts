@@ -12,10 +12,10 @@ public class BindAllTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(2);
-        successfulResults.Should().Be(4);
-        failedResults.Should().Be(2);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(2);
+        successfulResults.ShouldBe(4);
+        failedResults.ShouldBe(2);
     }
 
     [Fact]
@@ -27,10 +27,10 @@ public class BindAllTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
     }
 
     [Fact]
@@ -42,10 +42,10 @@ public class BindAllTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = await bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(2);
-        successfulResults.Should().Be(4);
-        failedResults.Should().Be(2);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(2);
+        successfulResults.ShouldBe(4);
+        failedResults.ShouldBe(2);
     }
 
     [Fact]
@@ -57,10 +57,10 @@ public class BindAllTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = await bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
     }
 
     [Fact]
@@ -72,10 +72,10 @@ public class BindAllTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(2);
-        successfulResults.Should().Be(4);
-        failedResults.Should().Be(2);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(2);
+        successfulResults.ShouldBe(4);
+        failedResults.ShouldBe(2);
     }
 
     [Fact]
@@ -87,11 +87,11 @@ public class BindAllTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
-        result.Value.Count().Should().Be(6);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
+        result.Value.Count().ShouldBe(6);
     }
 
     [Fact]
@@ -113,10 +113,10 @@ public class BindAllTests
                 return await failure();
             }
         });
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
-        result.Value.Count().Should().Be(6);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
+        result.Value.Count().ShouldBe(6);
     }
 }

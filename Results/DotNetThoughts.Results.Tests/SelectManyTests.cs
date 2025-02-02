@@ -10,8 +10,8 @@ public class SelectManyTests
             from b in Result<int>.Ok(2)
             from c in Result<string>.Ok("c")
             select (a, b, c);
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be((Unit.Instance, 2, "c"));
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 
     [Fact]
@@ -22,8 +22,8 @@ public class SelectManyTests
             from b in Result<int>.Ok(2)
             from c in Result<string>.Error(new FakeError())
             select (a, b, c);
-        result.Success.Should().BeFalse();
-        result.HasError<FakeError>().Should().BeTrue();
+        result.Success.ShouldBeFalse();
+        result.HasError<FakeError>().ShouldBeTrue();
     }
 
     [Fact]
@@ -39,10 +39,10 @@ public class SelectManyTests
             from b in failure()
             from c in success()
             select (a, b, c);
-        result.Success.Should().BeFalse();
-        result.HasError<FakeError>().Should().BeTrue();
-        successfulResults.Should().Be(1);
-        failedResults.Should().Be(1);
+        result.Success.ShouldBeFalse();
+        result.HasError<FakeError>().ShouldBeTrue();
+        successfulResults.ShouldBe(1);
+        failedResults.ShouldBe(1);
     }
 
     [Fact]
@@ -53,8 +53,8 @@ public class SelectManyTests
              from b in Result<int>.Ok(2)
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be((Unit.Instance, 2, "c"));
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 
     [Fact]
@@ -65,8 +65,8 @@ public class SelectManyTests
              from b in Task.FromResult(Result<int>.Ok(2))
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be((Unit.Instance, 2, "c"));
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 
 }

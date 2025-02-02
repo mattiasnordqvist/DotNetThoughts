@@ -25,8 +25,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Mercury);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Mercury);
     }
 
     [Fact]
@@ -39,8 +39,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.Should().BeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().Should().BeTrue();
+        result.Success.ShouldBeFalse();
+        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
     }
 
     [Fact]
@@ -51,8 +51,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(null);
 
         // Assert
-        result.Success.Should().BeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().Should().BeTrue();
+        result.Success.ShouldBeFalse();
+        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
     }
 
     [Fact]
@@ -66,8 +66,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(implicitlyNumericFormat);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(enumFormat);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(enumFormat);
     }
 
     [Fact]
@@ -78,8 +78,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(null);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().BeNull();
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBeNull();
     }
 
     [Fact]
@@ -92,8 +92,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Neptune);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Neptune);
     }
 
     [Fact]
@@ -106,8 +106,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.Should().BeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().Should().BeTrue();
+        result.Success.ShouldBeFalse();
+        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.Should().BeFalse();
+        result.Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -133,8 +133,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Mercury);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Mercury);
     }
 
 
@@ -148,8 +148,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Mercury);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Mercury);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.Should().BeFalse();
+        result.Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -175,8 +175,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Mercury);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Mercury);
     }
 
 
@@ -190,8 +190,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(Planet.Mercury);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(Planet.Mercury);
     }
 
     [Fact]
@@ -201,8 +201,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(null, true);
 
         // Assert
-        result.Success.Should().BeTrue();
-        result.Value.Should().Be(null);
+        result.Success.ShouldBeTrue();
+        result.Value.ShouldBe(null);
     }
 
 

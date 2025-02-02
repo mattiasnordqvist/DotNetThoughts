@@ -5,7 +5,7 @@ public class UnitTests
     [Fact]
     public void UnitIsSingleInstance()
     {
-        Unit.Instance.Should().BeSameAs(Unit.Instance);
+        Unit.Instance.ShouldBeSameAs(Unit.Instance);
     }
 
     [Fact]
@@ -13,6 +13,6 @@ public class UnitTests
     {
         Result<Unit> result = Result<int>.Ok(23);
         Result<Unit> result2 = Result<decimal>.Ok(65.6m);
-        result.Value.Should().BeSameAs(result2.Value);
+        result.Value.ShouldBeSameAs(result2.Value);
     }
 }

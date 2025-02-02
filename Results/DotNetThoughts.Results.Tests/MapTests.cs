@@ -8,7 +8,7 @@ public class MapTests
         Result<object>.Ok(new object())
             .Map(x => 1)
             .Map(x => 2)
-            .Value.Should().Be(2);
+            .Value.ShouldBe(2);
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public class MapTests
         (await Task.FromResult(Result<object>.Ok(new object()))
             .Map(x => 1)
             .Map(x => 2))
-            .Value.Should().Be(2);
+            .Value.ShouldBe(2);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class MapTests
         Result<object>.Error(new FakeError())
             .Map(x => 1)
             .Map(x => 2)
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
     [Fact]
     public void MapReturnsErrorIfEndsWithError()
@@ -34,7 +34,7 @@ public class MapTests
         Result<object>.Ok(new object())
             .Map(x => 1)
             .Bind(x => Result<int>.Error(new FakeError()))
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class MapTests
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Error(new FakeError()))
             .Map(x => 2)
-            .Success.Should().BeFalse();
+            .Success.ShouldBeFalse();
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class MapTests
         Result<int>.Ok(1)
             .Map(x => x + 1)
             .Map(x => x + 1)
-            .Value.Should().Be(3);
+            .Value.ShouldBe(3);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class MapTests
         Result<(int, int)>.Ok((0, 10))
             .Map((x, y) => (x + 1, y + 1))
             .Map((x, y) => (x + 1, y + 1))
-            .Value.Should().Be((2, 12));
+            .Value.ShouldBe((2, 12));
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class MapTests
         (await Task.FromResult(Result<(int, int)>.Ok((0, 10)))
             .Map((x, y) => (x + 1, y + 1))
             .Map((x, y) => (x + 1, y + 1)))
-            .Value.Should().Be((2, 12));
+            .Value.ShouldBe((2, 12));
     }
 
     [Fact]
@@ -79,6 +79,6 @@ public class MapTests
         Result<(int, int, decimal)>.Ok((0, 10, 100m))
             .Map((x, y, z) => (x + 1, y + 1, z + 1))
             .Map((x, y, z) => (x + 1, y + 1, z + 1))
-            .Value.Should().Be((2, 12, 102m));
+            .Value.ShouldBe((2, 12, 102m));
     }
 }

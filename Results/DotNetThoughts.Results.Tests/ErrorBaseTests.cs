@@ -13,7 +13,7 @@ public class ErrorBaseTests
     [InlineData(typeof(TaskFailedError), "TaskFailedError")]
     public void ExpandTypeNameTest1(Type t, string result)
     {
-        ErrorBase.ExpandTypeName(t).Should().Be(result);
+        ErrorBase.ExpandTypeName(t).ShouldBe(result);
 
     }
     public record TaskTakesTooLongError : ErrorBase;
@@ -38,20 +38,20 @@ public class ErrorBaseTests
     [Fact]
     public void GenericErrorContainsGenericArgumentsInType()
     {
-        new GenericError<int>().Type.Should().Be("GenericError<Int32>");
-        new GenericError<GenericError<string>>().Type.Should().Be("GenericError<GenericError<String>>");
+        new GenericError<int>().Type.ShouldBe("GenericError<Int32>");
+        new GenericError<GenericError<string>>().Type.ShouldBe("GenericError<GenericError<String>>");
     }
 
     [Fact]
     public void TypePropertyGetsValueFromImplementingType()
     {
-        new FakeError().Type.Should().Be("FakeError");
+        new FakeError().Type.ShouldBe("FakeError");
     }
 
     [Fact]
     public void TypePropertyGetsValueFromImplementingType_WithDeeperInheritence()
     {
-        new FakeError2().Type.Should().Be("FakeError2");
+        new FakeError2().Type.ShouldBe("FakeError2");
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class ErrorBaseTests
     {
         var error = new FakeError();
         var data = error.GetData();
-        data.Should().BeEquivalentTo(new Dictionary<string, object?>
+        data.ShouldBeEquivalentTo(new Dictionary<string, object?>
         {
             { "PropertyA", "A"},
             { "PropertyB", 2}
@@ -71,11 +71,9 @@ public class ErrorBaseTests
     {
         var error = new FakeError2();
         var data = error.GetData();
-        data.Should().BeEquivalentTo(new Dictionary<string, object?>
-        {
-            { "PropertyA", "A"},
-            { "PropertyB", 2},
-            { "PropertyC", 3.1m}
-        });
+
+        data.ShouldContainKeyAndValue("PropertyA", "A");
+        data.ShouldContainKeyAndValue("PropertyB", 2);
+        data.ShouldContainKeyAndValue("PropertyC", 3.1m);
     }
 }

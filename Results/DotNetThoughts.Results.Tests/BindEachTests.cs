@@ -11,10 +11,10 @@ public class BindEachTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(1);
-        successfulResults.Should().Be(2);
-        failedResults.Should().Be(1);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(1);
+        successfulResults.ShouldBe(2);
+        failedResults.ShouldBe(1);
     }
 
     [Fact]
@@ -26,10 +26,10 @@ public class BindEachTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
     }
 
     [Fact]
@@ -41,10 +41,10 @@ public class BindEachTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(1);
-        successfulResults.Should().Be(2);
-        failedResults.Should().Be(1);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(1);
+        successfulResults.ShouldBe(2);
+        failedResults.ShouldBe(1);
     }
 
 
@@ -57,10 +57,10 @@ public class BindEachTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
     }
 
     [Fact]
@@ -72,10 +72,10 @@ public class BindEachTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return Task.FromResult(UnitResult.Error(new FakeError())); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = await bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeFalse();
-        result.Errors.Count().Should().Be(1);
-        successfulResults.Should().Be(2);
-        failedResults.Should().Be(1);
+        result.Success.ShouldBeFalse();
+        result.Errors.Count().ShouldBe(1);
+        successfulResults.ShouldBe(2);
+        failedResults.ShouldBe(1);
     }
 
     [Fact]
@@ -87,9 +87,9 @@ public class BindEachTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return Task.FromResult(UnitResult.Error(new FakeError())); };
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = await bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.Should().BeTrue();
-        result.Errors.Count().Should().Be(0);
-        successfulResults.Should().Be(6);
-        failedResults.Should().Be(0);
+        result.Success.ShouldBeTrue();
+        result.Errors.Count().ShouldBe(0);
+        successfulResults.ShouldBe(6);
+        failedResults.ShouldBe(0);
     }
 }

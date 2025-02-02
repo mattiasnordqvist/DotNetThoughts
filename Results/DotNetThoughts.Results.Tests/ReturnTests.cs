@@ -7,8 +7,8 @@ public class ReturnTests
     [InlineData(null)]
     public void ReturnWrapsInSuccessResult(object? value)
     {
-        value.Return().Success.Should().BeTrue();
-        value.Return().Value.Should().Be(value);
+        value.Return().Success.ShouldBeTrue();
+        value.Return().Value.ShouldBe(value);
     }
 
     [Theory]
@@ -16,7 +16,7 @@ public class ReturnTests
     [InlineData(null)]
     public async Task ReturnWrapsInSuccessResult_TaskVersion(object? value)
     {
-        (await Task.FromResult(value).Return()).Success.Should().BeTrue();
-        (await Task.FromResult(value).Return()).Value.Should().Be(value);
+        (await Task.FromResult(value).Return()).Success.ShouldBeTrue();
+        (await Task.FromResult(value).Return()).Value.ShouldBe(value);
     }
 }
