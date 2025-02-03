@@ -231,12 +231,17 @@ public class SqlPrinter
         sb.Append($"CREATE{(ix.IsUnique ? " UNIQUE" : "")} {ix.TypeDesc} INDEX [{ix.Name}] ON [{schema.SchemaName}].[{table.Name}] ({string.Join(", ", ixColumns.Select(x => $"[{x.Column.ColumnName}] {(x.IsDescendingKey ? "DESC" : "ASC")}"))})");
         if (includedColumns.Count != 0)
         {
-            sb.AppendLine($" INCLUDE ({string.Join(", ", includedColumns.Select(x => $"[{x.ColumnName}]"))});");
+            sb.AppendLine($" INCLUDE ({string.Join(", ", includedColumns.Select(x => $"[{x.ColumnName}]"))})");
+        }
+        if(ix.FilterDefinition != null)
+        {
+            sb.AppendLine($" WHERE {ix.FilterDefinition}");
         }
         else
         {
-            sb.AppendLine(";");
         }
+        sb.AppendLine(";");
+
         sb.AppendLine();
         return true;
     }

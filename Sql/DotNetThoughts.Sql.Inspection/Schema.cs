@@ -58,7 +58,8 @@ public static class Schema
             type_desc as TypeDesc,
             is_unique AS IsUnique, 
             is_primary_key as IsPrimaryKey, 
-            is_unique_constraint as IsUniqueConstraint 
+            is_unique_constraint as IsUniqueConstraint,
+            filter_definition as FilterDefinition
         FROM 
             sys.indexes;
         """;
@@ -158,7 +159,7 @@ public static class Schema
         bool IsIdentity,
         bool IsComputed);
     public record TypeInfo(string Name, byte SystemTypeId, int UserTypeId);
-    public record IndexInfo(int ObjectId, int IndexId, string Name, string TypeDesc, bool IsUnique, bool IsPrimaryKey, bool IsUniqueConstraint);
+    public record IndexInfo(int ObjectId, int IndexId, string Name, string TypeDesc, bool IsUnique, bool IsPrimaryKey, bool IsUniqueConstraint, string? FilterDefinition);
     public record IndexColumnsInfo(int ObjectId, int IndexId, int ColumnId, byte KeyOrdinal, bool IsDescendingKey, bool IsIncludedColumn);
     public record ForeignKeyInfo(string ForeignKeyName, int ObjectId, int ParentObjectId, int ReferencedObjectId, byte DeleteReferentialAction, byte UpdateReferentialAction);
     public record ForeignKeyColumnsInfo(int ConstraintObjectId, int ConstraintColumnId, int ParentObjectId, int ParentColumnId, int ReferencedObjectId, int ReferencedColumnId);
