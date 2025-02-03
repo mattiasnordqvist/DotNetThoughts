@@ -229,19 +229,12 @@ public class SqlPrinter
             .Select(x => db.ColumnInfos.Single(y => y.ObjectId == table.ObjectId && y.ColumnId == x.ColumnId))
             .ToList();
         sb.Append($"CREATE{(ix.IsUnique ? " UNIQUE" : "")} {ix.TypeDesc} INDEX [{ix.Name}] ON [{schema.SchemaName}].[{table.Name}] ({string.Join(", ", ixColumns.Select(x => $"[{x.Column.ColumnName}] {(x.IsDescendingKey ? "DESC" : "ASC")}"))})");
-        if (includedColumns.Count != 0)
-        {
-            sb.AppendLine($" INCLUDE ({string.Join(", ", includedColumns.Select(x => $"[{x.ColumnName}]"))})");
-        }
-        if(ix.FilterDefinition != null)
-        {
-            sb.AppendLine($" WHERE {ix.FilterDefinition}");
-        }
-        else
-        {
-        }
-        sb.AppendLine(";");
 
+        var includeStatement = includedColumns.Count != 0 ? $" INCLUDE ({string.Join(", ", includedColumns.Select(x => $"[{x.ColumnName}]"))})" : "";
+        var filterStatement = ix.FilterDefinition != null ? $" WHERE {ix.FilterDefinition}" : "";
+        sb.Append(includeStatement);
+        sb.Append(filterStatement);
+        sb.AppendLine(";");
         sb.AppendLine();
         return true;
     }
