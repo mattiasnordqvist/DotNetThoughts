@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 
 using System.Data.Common;
 using DotNetThoughts.Sql.Utilities;
+using DotNetThoughts.Results;
 namespace DotNetThoughts.Sql.Migrations;
 
 public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configuration, ILogger<T> logger) where T : MigrationRunner<T>
@@ -31,15 +32,45 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
             return;
         }
 
-        using var connection = new SqlConnection(connectionString);
-        connection.Open();
-        var migrations = _configuration.MigrationLoaders.SelectMany(x => x.LoadMigrations()).ToList();
+        var loadMigrationsResults = _configuration.MigrationLoaders.Select(x => x.LoadMigrations()).ToList();
+        var migrations = new List<IMigration>();
+        var actualErrors = UnitResult.Ok;
+        foreach(var loadMigrationsResult in loadMigrationsResults)
+        {
+            if (loadMigrationsResult.Success)
+            {
+                migrations.AddRange(loadMigrationsResult.Value);
+            }
+            else
+            {
+                foreach(var error in loadMigrationsResult.Errors)
+                {
+                    if(error is LoaderFoundNoMigrationsError loaderFoundNoMigrationsError)
+                    {
+                        _logger.LogWarning(loaderFoundNoMigrationsError.Message);
+                    }
+                    else
+                    {
+                        _logger.LogError(error.Message);
+                        actualErrors = actualErrors.Or(UnitResult.Error(error));
+                    }
+                }
+            }
+        }
+
+        actualErrors.ValueOrThrow();
+
         if (migrations.Count == 0)
         {
             _logger.LogWarning("No migrations found.");
             return;
         }
+
         OfflineMigrationsValidation(migrations, _logger, true);
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+
+
         OnlineMigrationsValidation(migrations, await GetVersionInfo(connection), true);
 
         var lastMigrationVersion = await GetCurrentVersion(connection);

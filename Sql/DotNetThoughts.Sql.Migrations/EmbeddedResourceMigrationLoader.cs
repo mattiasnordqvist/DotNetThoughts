@@ -23,9 +23,36 @@ public class EmbeddedResourceMigrationLoader : IMigrationLoader
 
     public Func<string, bool> IncludeFilter { get; set; }
 
-    public Result<IEnumerable<IMigration>> LoadMigrations() => _assemblieWhereYourMigrationsAreEmbedded
+    public Result<IEnumerable<IMigration>> LoadMigrations()
+    {
+        var assembliesXresources = _assemblieWhereYourMigrationsAreEmbedded
             .Select(assembly => (assembly, resources: assembly.GetManifestResourceNames()))
             .SelectMany(tuple => tuple.resources
                 .Where(IncludeFilter)
-                .Select(resource => EmbeddedResourceMigration.Create(tuple.assembly, resource)));
+                .Select(resource => (tuple.assembly, resource)))
+            .ToList();
+        var result = UnitResult.Ok;
+        var migrations = new List<IMigration>();
+        foreach (var x in assembliesXresources)
+        {
+            var createMigrationResult = EmbeddedResourceMigration.Create(x.assembly, x.resource);
+            if (createMigrationResult.Success)
+            {
+                migrations.Add(createMigrationResult.Value);
+            }
+            else
+            {
+                result = result.Or(createMigrationResult);
+            }
+        }
+
+        if(migrations.Count == 0)
+        {
+            result = result.Or(UnitResult.Error(new LoaderFoundNoMigrationsError($"{nameof(EmbeddedResourceMigrationLoader)} for assemblies {string.Join(",",_assemblieWhereYourMigrationsAreEmbedded.Select(x => x.FullName).ToArray())} did not locate any migrations.")));
+        }
+
+        return result.Map(_ => migrations.AsEnumerable());
+    }
 }
+
+public record LoaderFoundNoMigrationsError(string Message) : ErrorBase(Message);
