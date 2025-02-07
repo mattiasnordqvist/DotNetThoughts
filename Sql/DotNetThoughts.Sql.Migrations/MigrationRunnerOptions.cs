@@ -1,9 +1,19 @@
 namespace DotNetThoughts.Sql.Migrations;
 
+/// <summary>
+/// Options for the migration runner
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class MigrationRunnerOptions<T> where T : MigrationRunner<T>
 {
-
+    /// <summary>
+    /// If enabled, the migration runner will start by looking for a versioned snapshot file 
+    /// to act as the starting point for the migration.
+    /// 
+    /// Defaults to false
+    /// </summary>
     public bool EnableSnapshot { get; set; } = false;
+    
     /// <summary>
     /// The command timeout in seconds for database operations. Default is 200 seconds.
     /// </summary>
@@ -20,11 +30,11 @@ public class MigrationRunnerOptions<T> where T : MigrationRunner<T>
     public string VersionInfoTableSchema { get; set; } = "dbo";
 
     /// <summary>
-    ///  Configure the Migration Runner to either
+    /// Configure the Migration Runner to either
     /// 1. Create the database IF_NOT_EXISTS already.
     /// 2. To DROP_AND_CREATE the database, even if it already exists, or creates the database if it does not exist.
     /// 3. NEVER create the database. Expect it to exist already.
-    /// Default to NEVER.
+    /// Defaults to NEVER.
     /// </summary>
     public AutoCreateMode AutoCreate { get; set; } = AutoCreateMode.NEVER;
 

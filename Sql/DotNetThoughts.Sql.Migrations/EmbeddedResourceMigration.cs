@@ -1,5 +1,7 @@
 using Dapper;
 
+using DotNetThoughts.Results;
+
 using Microsoft.Data.SqlClient;
 
 using System.Data.Common;
@@ -16,15 +18,9 @@ internal partial class EmbeddedResourceMigration : IMigration
     private readonly Assembly _assembly;
     private readonly string _resourceName;
 
-    public EmbeddedResourceMigration(Assembly assembly, string resourceName)
-    {
-        _assembly = assembly;
-        _resourceName = resourceName;
-    }
+    public long Version { get; private set; }
 
-    public long Version => long.Parse(MigrationVersionRegex().Match(_resourceName).Groups[0].Value.Replace("_", ""));
-
-    public string Name => MigrationNameRegex().Match(_resourceName).Groups[0].Value;
+    public string Name { get; private set; }
 
     public bool IsSnapshot => _resourceName.Split('.', '_').Contains("snapshot");
 
@@ -48,12 +44,9 @@ internal partial class EmbeddedResourceMigration : IMigration
                              i + 1 == ex.LineNumber ? $"/* error on this line */ {x}" : $"{x}"
                             ))}
                     """, ex);
-
             }
         }
     }
-
-
 
     private static string GetResourceAsString(string resource, Assembly assembly)
     {
@@ -66,4 +59,44 @@ internal partial class EmbeddedResourceMigration : IMigration
 
     [GeneratedRegex("(\\d{3}_){4}.*")]
     private static partial Regex MigrationNameRegex();
+
+    internal static Result<EmbeddedResourceMigration> Create(Assembly assembly, string resource)
+    {
+        var migration = new EmbeddedResourceMigration(assembly, resource);
+
+        var result = UnitResult.Ok;
+
+        try
+        {
+           migration.Version = long.Parse(MigrationVersionRegex().Match(resource).Groups[0].Value.Replace("_", ""));
+        }
+        catch (Exception ex)
+        {
+            result = result.Or(Result<Unit>.Error(new CouldNotExtractVersionFromFileName(ex, resource)));
+        }
+
+        try
+        {
+            migration.Name = MigrationNameRegex().Match(resource).Groups[0].Value;
+        }
+        catch (Exception ex)
+        {
+            result = result.Or(Result<Unit>.Error(new CouldNotExtractNameFromFileName(ex, resource)));
+        }
+
+        return result
+            .Map(_ => migration);
+    }
+
+   
+
+    private EmbeddedResourceMigration(Assembly assembly, string resourceName)
+    {
+        _assembly = assembly;
+        _resourceName = resourceName;
+    }
+
+    public record CouldNotExtractVersionFromFileName(Exception Exception, string ResourceName) : ErrorBase();
+
+    public record CouldNotExtractNameFromFileName(Exception Exception, string ResourceName) : ErrorBase();
 }

@@ -4,7 +4,7 @@ namespace DotNetThoughts.Sql.Migrations;
 
 /// <summary>
 /// Represents a migration that can be executed against a database.
-/// A migrations version should be unique and should all migrations versions should be ordered in the order that they should be executed.
+/// A migrations version should be unique and all migrations versions should be ordered in the order that they should be executed.
 /// </summary>
 public interface IMigration
 {

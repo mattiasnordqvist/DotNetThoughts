@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Results\DotNetThoughts.Results\DotNetThoughts.Results.csproj" />
     <ProjectReference Include="..\DotNetThoughts.Sql.Utilities\DotNetThoughts.Sql.Utilities.csproj" />
   </ItemGroup>
 

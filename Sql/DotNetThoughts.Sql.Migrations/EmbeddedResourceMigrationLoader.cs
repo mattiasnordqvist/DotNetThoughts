@@ -1,3 +1,5 @@
+using DotNetThoughts.Results;
+
 using System.Reflection;
 
 namespace DotNetThoughts.Sql.Migrations;
@@ -21,9 +23,9 @@ public class EmbeddedResourceMigrationLoader : IMigrationLoader
 
     public Func<string, bool> IncludeFilter { get; set; }
 
-    public IEnumerable<IMigration> LoadMigrations() => _assemblieWhereYourMigrationsAreEmbedded
+    public Result<IEnumerable<IMigration>> LoadMigrations() => _assemblieWhereYourMigrationsAreEmbedded
             .Select(assembly => (assembly, resources: assembly.GetManifestResourceNames()))
             .SelectMany(tuple => tuple.resources
                 .Where(IncludeFilter)
-                .Select(resource => new EmbeddedResourceMigration(tuple.assembly, resource)));
+                .Select(resource => EmbeddedResourceMigration.Create(tuple.assembly, resource)));
 }

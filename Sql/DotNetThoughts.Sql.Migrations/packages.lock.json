@@ -334,11 +334,23 @@
         "resolved": "4.5.4",
         "contentHash": "zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg=="
       },
+      "dotnetthoughts.results": {
+        "type": "Project",
+        "dependencies": {
+          "DotNetThoughts.Results.Analyzer": "[1.5.6, )"
+        }
+      },
       "dotnetthoughts.sql.utilities": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Data.SqlClient": "[6.0.1, )"
         }
+      },
+      "DotNetThoughts.Results.Analyzer": {
+        "type": "CentralTransitive",
+        "requested": "[1.5.6, )",
+        "resolved": "1.5.6",
+        "contentHash": "DW9GEts/Pb91EemjYdFwhAm38m0l0RhcQVI1Tsvxmp9oU4FNvnIJDBNOGqhVwQtRuD0W4a24o8SjZv3vWWWekg=="
       }
     }
   }

@@ -1,3 +1,5 @@
+using DotNetThoughts.Results;
+
 namespace DotNetThoughts.Sql.Migrations;
 
 /// <summary>
@@ -9,5 +11,5 @@ public interface IMigrationLoader
     /// Returns a collection of migrations that should be run.
     /// </summary>
     /// <returns></returns>
-    IEnumerable<IMigration> LoadMigrations();
+    Result<IEnumerable<IMigration>> LoadMigrations();
 }
