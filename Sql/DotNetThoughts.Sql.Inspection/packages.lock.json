@@ -4,9 +4,9 @@
     "net9.0": {
       "Dapper": {
         "type": "Direct",
-        "requested": "[2.1.35, )",
-        "resolved": "2.1.35",
-        "contentHash": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw=="
+        "requested": "[2.1.66, )",
+        "resolved": "2.1.66",
+        "contentHash": "/q77jUgDOS+bzkmk3Vy9SiWMaetTw+NOoPAV0xPBsGVAyljd5S6P+4RUW7R3ZUGGr9lDRyPKgAMj2UAOwvqZYw=="
       },
       "Microsoft.Data.SqlClient": {
         "type": "Direct",
@@ -269,7 +269,7 @@
       "dotnetthoughts.results": {
         "type": "Project",
         "dependencies": {
-          "DotNetThoughts.Results.Analyzer": "[1.5.6, )"
+          "DotNetThoughts.Results.Analyzer": "[1.5.11, )"
         }
       },
       "dotnetthoughts.sql.utilities": {
@@ -280,13 +280,13 @@
       },
       "DotNetThoughts.Results.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[1.5.6, )",
-        "resolved": "1.5.6",
-        "contentHash": "DW9GEts/Pb91EemjYdFwhAm38m0l0RhcQVI1Tsvxmp9oU4FNvnIJDBNOGqhVwQtRuD0W4a24o8SjZv3vWWWekg=="
+        "requested": "[1.5.11, )",
+        "resolved": "1.5.11",
+        "contentHash": "v4aIHoS4NgoFtLZhVaesALlXlVXMx2+UK63KzRZsX9L4LUWHJFbJSJ5X1pr6azhPXyLpirRiKUPY7MP4LUEVqw=="
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "CentralTransitive",
-        "requested": "[9.0.1, )",
+        "requested": "[9.0.2, )",
         "resolved": "9.0.0",
         "contentHash": "g0UfujELzlLbHoVG8kPKVBaW470Ewi+jnptGS9KUi6jcb+k2StujtK3m26DFSGGwQ/+bVgZfsWqNzlP6YOejvw==",
         "dependencies": {

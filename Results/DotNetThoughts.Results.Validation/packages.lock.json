@@ -5,14 +5,14 @@
       "dotnetthoughts.results": {
         "type": "Project",
         "dependencies": {
-          "DotNetThoughts.Results.Analyzer": "[1.5.6, )"
+          "DotNetThoughts.Results.Analyzer": "[1.5.11, )"
         }
       },
       "DotNetThoughts.Results.Analyzer": {
         "type": "CentralTransitive",
-        "requested": "[1.5.6, )",
-        "resolved": "1.5.6",
-        "contentHash": "DW9GEts/Pb91EemjYdFwhAm38m0l0RhcQVI1Tsvxmp9oU4FNvnIJDBNOGqhVwQtRuD0W4a24o8SjZv3vWWWekg=="
+        "requested": "[1.5.11, )",
+        "resolved": "1.5.11",
+        "contentHash": "v4aIHoS4NgoFtLZhVaesALlXlVXMx2+UK63KzRZsX9L4LUWHJFbJSJ5X1pr6azhPXyLpirRiKUPY7MP4LUEVqw=="
       }
     }
   }
