@@ -1,0 +1,223 @@
+# A pipeline that checks for outdated NuGet packages and creates a PR with the updates.
+# The pipeline is triggered every day at 04:00 in the morning.
+# If there is an existing PR with the same branch name, the PR is updated with the new changes.
+# You must replace the targetPath variable with the path to your solution file.
+# The branchName variable is the name of the branch where the updates are pushed to. You can change this to any branch name you prefer, that is unlikely to conflict with existing or future branches.
+# The autoComplete variable is set to false, which means the PR will not be automatically completed. You can change this to true if you want the PR to be automatically completed. However, there can be other rules in your repository that prevent the PR from actually being completed, like required reviews, build validation, etc.
+schedules:
+  - cron: "0 4 * * *"
+    displayName: At 04:00 every day
+    branches:
+      include:
+        - main
+    always: true
+pr: none
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: UpdateNugets
+    variables:
+      targetPath: "path/to/your/solution.sln"
+      branchName: "auto-nuget-updates"
+      autoComplete: false
+    jobs:
+      - job: CheckForUpdates
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - bash: |
+              git config --global user.email "pipeline@dev.azure.com"
+              git config --global user.name "Azure DevOps Pipeline"
+              git config pull.rebase false
+            displayName: "Git Config"
+          - script: dotnet tool install --global dotnet-outdated-tool
+            displayName: "Install dotnet outdated"
+          - pwsh: |
+              Write-Host "Fetching all branches"
+              git fetch --all
+              Write-Host "Switching to branch $(branchName)"
+              $switch = Invoke-Expression -Command "git switch $(branchName)"
+              if ($LASTEXITCODE -ne 0) {
+                  Write-Host "Branch $(branchName) does not exist, staying on current branch"
+                  exit 0
+              }
+              else {
+                  Write-Host "Branch $(branchName) exists, git pull"
+                  Invoke-Expression -Command "git pull"
+              }
+            displayName: "Switch to branch $(branchName) if exists"
+          - script: |
+              dotnet outdated --fail-on-updates $(targetPath)
+              if [ $? -eq 2 ]; then
+                echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]true"
+                exit 0
+              else
+                echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]false"
+                exit $?
+              fi
+            displayName: Check for updates
+            name: UpdateCheck
+
+      - job: Update
+        dependsOn: CheckForUpdates
+        condition: and(succeeded('CheckForUpdates'), eq(dependencies.CheckForUpdates.outputs['UpdateCheck.UpdatesAvailable'], 'true'))
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - bash: |
+              git config --global user.email "pipeline@dev.azure.com"
+              git config --global user.name "Azure DevOps Pipeline"
+              git config pull.rebase false
+            displayName: "Git Config"
+          - script: dotnet tool install --global dotnet-outdated-tool
+            displayName: "Install dotnet outdated"
+          - pwsh: |
+              Write-Host "Fetching all branches"
+              git fetch --all
+              Write-Host "Switching to branch $(branchName)"
+              $switch = Invoke-Expression -Command "git switch $(branchName)"
+              if ($LASTEXITCODE -ne 0) {
+                  Write-Host "Branch $(branchName) does not exist, creating branch"
+                  $switch = Invoke-Expression -Command "git switch -c $(branchName)"
+              }
+              else {
+                  Write-Host "Branch $(branchName) exists, git pull"
+                  Invoke-Expression -Command "git pull"
+              }
+            displayName: Switch to or create branch $(branchName)
+          - script: dotnet outdated --upgrade --no-restore --output "../updates.md" --output-format "MarkDown"  $(targetPath)
+            displayName: "Run dotnet outdated"
+          - script: dotnet restore --force-evaluate $(targetPath)
+            displayName: "Run dotnet restore"
+          - pwsh: |
+              function Split-ContentIntoChunks {
+                param(
+                    [string]$content,
+                    [int]$maxChunkSize = 4000
+                )
+                
+                # Step 1: Split into sections
+                $sections = [System.Collections.ArrayList]::new()
+                $currentSection = ""
+                
+                $lines = $content -split "`n"
+                foreach ($line in $lines) {
+                    $lineWithNewline = $line + "`n"
+                    
+                    # If this is a header, start a new section
+                    if ($line -match "^#{1,6}\s") {
+                        # Save previous section if exists
+                        if ($currentSection) {
+                            $sections.Add($currentSection) | Out-Null
+                        }
+                        # Start new section with this header
+                        $currentSection = $lineWithNewline
+                    }
+                    else {
+                        # Add to current section
+                        $currentSection += $lineWithNewline
+                    }
+                }
+                # Add final section
+                if ($currentSection) {
+                    $sections.Add($currentSection) | Out-Null
+                }
+                
+                # Step 2: Combine sections into chunks of max 100 characters
+                $chunks = [System.Collections.ArrayList]::new()
+                $currentChunk = ""
+                
+                foreach ($section in $sections) {
+                    if (($currentChunk + $section).Length -gt $maxChunkSize) {
+                        if ($currentChunk) {
+                            $chunks.Add($currentChunk.Trim()) | Out-Null
+                        }
+                        $currentChunk = $section
+                    }
+                    else {
+                        $currentChunk += $section
+                    }
+                }
+                
+                if ($currentChunk) {
+                    $chunks.Add($currentChunk.Trim()) | Out-Null
+                }
+                
+                return $chunks
+              }
+
+              function Add-CommentsToPR {
+                  param(
+                      [string]$prId,
+                      [array]$chunks,
+                      [hashtable]$headers,
+                      [string]$orgUrl
+                  )
+                  
+                  $uri = "$orgUrl/$env:SYSTEM_TEAMPROJECTID/_apis/git/repositories/$($env:BUILD_REPOSITORY_NAME)/pullRequests/$($prId)/threads?api-version=7.1"
+                  
+                  # Reverse the chunks array to post comments in reverse order
+                  [array]::Reverse($chunks)
+                  
+                  foreach ($chunk in $chunks) {
+                      $Body = @{
+                          comments = @(
+                              @{
+                                  parentCommentId = 0
+                                  content = $chunk
+                                  commentType = 1
+                              }
+                          )
+                          status = 4
+                      } | ConvertTo-Json -Depth 10
+                      
+                      $response = Invoke-RestMethod -Uri $uri -Method Post -Headers $Headers -Body $Body
+                  }
+              }
+
+              $date = Get-Date
+              $newContent = Get-Content "../updates.md" -Raw
+              $title = "Update Nuget dependencies "+ $date.ToString("yyyy-MM-dd")
+
+              # Extract organization name from collection URI and setup auth headers
+              $orgUrl = $env:SYSTEM_COLLECTIONURI -replace "/$"
+              $pat = $env:AZURE_DEVOPS_EXT_PAT
+              $base64Auth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$pat"))
+              $Headers = @{
+                  Authorization = "Basic $base64Auth"
+                  'Content-Type' = 'application/json'
+              }
+
+              git add .
+              git commit -m "Updating nuget dependencies"
+              git push origin "HEAD:$(branchName)"
+
+              $prs = az repos pr list 
+              $activePr = $prs | ConvertFrom-Json | Where-Object { $_.sourceRefName -eq "refs/heads/" + "$(branchName)" } | Where-Object { $_.status -eq 'active' } | Select-Object -First 1
+
+              # Split content at section boundaries
+              $chunks = Split-ContentIntoChunks -content $newContent
+
+              if ($activePr -ne $null) { 
+                  # Update PR title only
+                  az repos pr update --title $title --id $activePr.pullRequestId
+                  Add-CommentsToPR -prId $activePr.pullRequestId -chunks $chunks -headers $Headers -orgUrl $orgUrl
+              } else {
+                  # Create new PR with empty description
+                  az repos pr create --repository $($env:BUILD_REPOSITORY_NAME) `
+                                    --source-branch $(branchName) `
+                                    --target-branch main `
+                                    --description "" `
+                                    --title $title `
+                                    --auto-complete $(autoComplete)
+                  
+                  # Get the newly created PR
+                  $newPr = (az repos pr list | ConvertFrom-Json | Where-Object { $_.sourceRefName -eq "refs/heads/" + "$(branchName)" } | Select-Object -First 1)
+                  Add-CommentsToPR -prId $newPr.pullRequestId -chunks $chunks -headers $Headers -orgUrl $orgUrl
+              }
+            displayName: "Create or update PR"
+            env:
+              AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
