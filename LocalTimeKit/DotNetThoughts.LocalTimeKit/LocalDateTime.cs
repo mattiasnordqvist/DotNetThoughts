@@ -62,7 +62,14 @@ public readonly record struct LocalDateTime
         TimeZoneInfo = timeZoneInfo;
     }
 
+    /// <summary>
+    /// Gets the underlying DateTime representation.
+    /// </summary>
     public DateTime DateTime { get; }
+
+    /// <summary>
+    /// Gets the time zone information associated with the DateTime property.
+    /// </summary>
     public TimeZoneInfo TimeZoneInfo { get; }
 
     /// <summary>
