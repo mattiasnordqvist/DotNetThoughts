@@ -86,7 +86,7 @@ public class Tests
         var json = JsonSerializer.Serialize(complextResult, Options);
         var deserialized = JsonSerializer.Deserialize<Result<ComplexType>>(json, Options);
         await Assert.That(deserialized.Success).IsTrue();
-        await Assert.That(deserialized.Value).IsEqualTo(new ComplexType());
+        await Assert.That(deserialized.Value).IsEquivalentTo(new ComplexType());
     }
 
     [Test]
