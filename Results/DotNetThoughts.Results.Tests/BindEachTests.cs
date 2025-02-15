@@ -11,10 +11,10 @@ public class BindEachTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(1);
-        successfulResults.ShouldBe(2);
-        failedResults.ShouldBe(1);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(1);
+        await Assert.That(successfulResults).IsEqualTo(2);
+        await Assert.That(failedResults).IsEqualTo(1);
     }
 
     [Test]
@@ -27,9 +27,9 @@ public class BindEachTests
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
         await Assert.That(result.Success).IsTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
     }
 
     [Test]
@@ -41,10 +41,10 @@ public class BindEachTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(1);
-        successfulResults.ShouldBe(2);
-        failedResults.ShouldBe(1);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(1);
+        await Assert.That(successfulResults).IsEqualTo(2);
+        await Assert.That(failedResults).IsEqualTo(1);
     }
 
 
@@ -58,9 +58,9 @@ public class BindEachTests
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
         await Assert.That(result.Success).IsTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
     }
 
     [Test]
@@ -72,10 +72,10 @@ public class BindEachTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return Task.FromResult(UnitResult.Error(new FakeError())); };
         List<bool> bs = new List<bool>() { true, true, false, true, true, false };
         var result = await bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(1);
-        successfulResults.ShouldBe(2);
-        failedResults.ShouldBe(1);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(1);
+        await Assert.That(successfulResults).IsEqualTo(2);
+        await Assert.That(failedResults).IsEqualTo(1);
     }
 
     [Test]
@@ -88,8 +88,8 @@ public class BindEachTests
         List<bool> bs = new List<bool>() { true, true, true, true, true, true };
         var result = await bs.Return<IEnumerable<bool>>().BindEach(x => x ? success() : failure());
         await Assert.That(result.Success).IsTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
     }
 }

@@ -13,9 +13,9 @@ public class ErrorBaseTests
     [Arguments(typeof(TaskFailedError), "TaskFailedError")]
     public async Task ExpandTypeNameTest1(Type t, string result)
     {
-        ErrorBase.ExpandTypeName(t).ShouldBe(result);
-
+        await Assert.That(ErrorBase.ExpandTypeName(t)).IsEqualTo(result);
     }
+
     public record TaskTakesTooLongError : ErrorBase;
     public record TaskFailedError : ErrorBase;
     public record TwoGenerics<T, T2> : ErrorBase;
@@ -38,20 +38,20 @@ public class ErrorBaseTests
     [Test]
     public async Task GenericErrorContainsGenericArgumentsInType()
     {
-        new GenericError<int>().Type.ShouldBe("GenericError<Int32>");
-        new GenericError<GenericError<string>>().Type.ShouldBe("GenericError<GenericError<String>>");
+        await Assert.That(new GenericError<int>().Type).IsEqualTo("GenericError<Int32>");
+        await Assert.That(new GenericError<GenericError<string>>().Type).IsEqualTo("GenericError<GenericError<String>>");
     }
 
     [Test]
     public async Task TypePropertyGetsValueFromImplementingType()
     {
-        new FakeError().Type.ShouldBe("FakeError");
+        await Assert.That(new FakeError().Type).IsEqualTo("FakeError");
     }
 
     [Test]
     public async Task TypePropertyGetsValueFromImplementingType_WithDeeperInheritence()
     {
-        new FakeError2().Type.ShouldBe("FakeError2");
+        await Assert.That(new FakeError2().Type).IsEqualTo("FakeError2");
     }
 
     [Test]
@@ -59,11 +59,12 @@ public class ErrorBaseTests
     {
         var error = new FakeError();
         var data = error.GetData();
-        data.ShouldBeEquivalentTo(new Dictionary<string, object?>
+        var expected = new Dictionary<string, object?>
         {
             { "PropertyA", "A"},
             { "PropertyB", 2}
-        });
+        };
+        await Assert.That(data).IsEquivalentTo(expected);
     }
 
     [Test]
@@ -72,8 +73,9 @@ public class ErrorBaseTests
         var error = new FakeError2();
         var data = error.GetData();
 
-        data.ShouldContainKeyAndValue("PropertyA", "A");
-        data.ShouldContainKeyAndValue("PropertyB", 2);
-        data.ShouldContainKeyAndValue("PropertyC", 3.1m);
+        await Assert.That(data).Contains(new KeyValuePair<string, object?>("PropertyA", "A"));
+        await Assert.That(data).Contains(new KeyValuePair<string, object?>("PropertyB", 2));
+        await Assert.That(data).Contains(new KeyValuePair<string, object?>("PropertyC", 3.1m));
+        await Assert.That(data.Count()).IsEqualTo(3);
     }
 }

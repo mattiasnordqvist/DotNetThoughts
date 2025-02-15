@@ -26,7 +26,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
     [Test]
@@ -39,8 +39,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
     [Test]
@@ -51,8 +51,8 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(null);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
     [Test]
@@ -67,7 +67,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(enumFormat);
+        await Assert.That(result.Value).IsEqualTo(enumFormat);
     }
 
     [Test]
@@ -79,7 +79,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBeNull();
+        await Assert.That(result.Value).IsNull();
     }
 
     [Test]
@@ -93,7 +93,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Neptune);
+        await Assert.That(result.Value).IsEqualTo(Planet.Neptune);
     }
 
     [Test]
@@ -106,8 +106,8 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
     [Test]
@@ -120,7 +120,7 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
     [Test]
@@ -134,9 +134,8 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
-
 
     [Test]
     public async Task ParseCaseInsensitive_RandomCased_Success()
@@ -149,7 +148,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
     [Test]
@@ -162,7 +161,7 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
     [Test]
@@ -176,9 +175,8 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
-
 
     [Test]
     public async Task ParseAllowNullCaseInsensitive_RandomCased_Success()
@@ -191,7 +189,7 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
     [Test]
@@ -202,9 +200,6 @@ public class EnumLoaderTests
 
         // Assert
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe(null);
+        await Assert.That(result.Value).IsNull();
     }
-
-
-
 }

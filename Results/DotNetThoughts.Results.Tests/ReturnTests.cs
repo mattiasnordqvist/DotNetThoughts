@@ -7,8 +7,9 @@ public class ReturnTests
     [Arguments(null)]
     public async Task ReturnWrapsInSuccessResult(object? value)
     {
-        value.Return().Success.ShouldBeTrue();
-        value.Return().Value.ShouldBe(value);
+        var result = value.Return();
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(value);
     }
 
     [Test]
@@ -16,7 +17,8 @@ public class ReturnTests
     [Arguments(null)]
     public async Task ReturnWrapsInSuccessResult_TaskVersion(object? value)
     {
-        (await Task.FromResult(value).Return()).Success.ShouldBeTrue();
-        (await Task.FromResult(value).Return()).Value.ShouldBe(value);
+        var result = await Task.FromResult(value).Return();
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(value);
     }
 }

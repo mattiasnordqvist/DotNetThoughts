@@ -17,7 +17,7 @@ public class OrTests
     public async Task SuccessfulOrFailureEqualsFailure()
     {
         var result = UnitResult.Ok.Or(_unitResultError);
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
     [Test]
@@ -25,23 +25,23 @@ public class OrTests
     {
         var result = Result<int>.Ok(1).Or(Result<int>.Ok(2));
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe((1, 2));
+        await Assert.That(result.Value).IsEqualTo((1, 2));
     }
 
     [Test]
     public async Task ErrorsShouldBeCollectedFromAllResults()
     {
         var result = Result<int>.Error(new FakeError()).Or(_intResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
     [Test]
     public async Task ErrorsShouldBeCollectedFromAll3Results()
     {
         var result = _intResultError.Or(_intResultError).Or(Result<bool>.Error(new FakeError()));
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
     [Test]
@@ -49,24 +49,24 @@ public class OrTests
     {
         var result = await _intResultErrorTask
             .Or(_intResultErrorTask);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
     [Test]
     public async Task ErrorsShouldBeCollectedFromAll2ResultTasksMixedWithNoTasks()
     {
         var result = await _intResultErrorTask.Or(_intResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
     [Test]
     public async Task ErrorsShouldBeCollectedFromAll3ResultTasksMixedWithNoTasks()
     {
         var result = await _intResultErrorTask.Or(_intResultError).Or(_intResultErrorTask);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
     [Test]
@@ -94,8 +94,8 @@ public class OrTests
             .Or(_unitResultError)
             .Or(_unitResultError)
             .Or(_unitResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(8);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(8);
     }
 
     [Test]
@@ -105,8 +105,8 @@ public class OrTests
              _intResultError,
              _intResultError,
              Result<bool>.Error(new FakeError()));
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
     [Test]
@@ -120,9 +120,9 @@ public class OrTests
              success(), failure(), success(), failure(),
              success(), failure(), success(), failure()
              );
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(4);
-        successfulResults.ShouldBe(4);
-        failedResults.ShouldBe(4);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(4);
+        await Assert.That(successfulResults).IsEqualTo(4);
+        await Assert.That(failedResults).IsEqualTo(4);
     }
 }

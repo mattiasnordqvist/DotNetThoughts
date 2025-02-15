@@ -11,7 +11,7 @@ public class SelectManyTests
             from c in Result<string>.Ok("c")
             select (a, b, c);
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe((Unit.Instance, 2, "c"));
+        await Assert.That(result.Value).IsEqualTo((Unit.Instance, 2, "c"));
     }
 
     [Test]
@@ -22,8 +22,8 @@ public class SelectManyTests
             from b in Result<int>.Ok(2)
             from c in Result<string>.Error(new FakeError())
             select (a, b, c);
-        result.Success.ShouldBeFalse();
-        result.HasError<FakeError>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<FakeError>()).IsTrue();
     }
 
     [Test]
@@ -39,10 +39,10 @@ public class SelectManyTests
             from b in failure()
             from c in success()
             select (a, b, c);
-        result.Success.ShouldBeFalse();
-        result.HasError<FakeError>().ShouldBeTrue();
-        successfulResults.ShouldBe(1);
-        failedResults.ShouldBe(1);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<FakeError>()).IsTrue();
+        await Assert.That(successfulResults).IsEqualTo(1);
+        await Assert.That(failedResults).IsEqualTo(1);
     }
 
     [Test]
@@ -54,7 +54,7 @@ public class SelectManyTests
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe((Unit.Instance, 2, "c"));
+        await Assert.That(result.Value).IsEqualTo((Unit.Instance, 2, "c"));
     }
 
     [Test]
@@ -66,7 +66,6 @@ public class SelectManyTests
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
         await Assert.That(result.Success).IsTrue();
-        result.Value.ShouldBe((Unit.Instance, 2, "c"));
+        await Assert.That(result.Value).IsEqualTo((Unit.Instance, 2, "c"));
     }
-
 }

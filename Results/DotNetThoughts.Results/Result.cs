@@ -90,47 +90,6 @@ public readonly record struct Result<T>
     }
 
     /// <summary>
-    /// Not sure whether this method is good enough to be included in the Result class.
-    /// However, it is sometimes useful to have a method that returns the first error of a specific type, if any.
-    /// Maybe we should return all errors of the type?
-    /// </summary>
-    /// <typeparam name="TError">The error to check for</typeparam>
-    /// <returns>The error, if a match was found, otherwise null</returns>
-    [Pure]
-    [Obsolete("Use HasError<TError> instead and use out parameter to capture error instance")]
-    public TError? IsError<TError>() where TError : IError => Success
-            ? default
-            : Errors.Any(x => x.GetType() == typeof(TError))
-                ? (TError)Errors.First(x => x.GetType() == typeof(TError))
-                : default;
-
-    /// <summary>
-    /// Not sure whether this method is good enough to be included in the Result class.
-    /// Works much as the other IsError method, but returns a boolean indicating whether a match was found, and an out parameter containing the error, if any.
-    /// </summary>
-    [Pure]
-    [Obsolete("Use HasError<TError> instead")]
-    public readonly bool IsError<TError>(out TError? error) where TError : IError
-    {
-        if (Success)
-        {
-            error = default;
-            return false;
-
-        }
-        else if (Errors.Any(x => x.GetType() == typeof(TError)))
-        {
-            error = (TError)Errors.First(x => x.GetType() == typeof(TError));
-            return true;
-        }
-        else
-        {
-            error = default;
-            return false;
-        }
-    }
-
-    /// <summary>
     /// Returns the Value of the Result, if it is successful, otherwise throws an exception.
     /// The exception is here to help you find out when you're expectations are wrong! Consider getting this exception as a hint that you should check the Success property before accessing the Value.
     /// Maybe you though the operation could fail, but it could! Maybe whether it can fail or not has changed since you first wrote the operation, because other downstream operations now can fail.
