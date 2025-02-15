@@ -2,59 +2,59 @@
 
 public class ResultTests
 {
-    [Theory]
-    [InlineData((object?)null)]
-    [InlineData(new[] { 1 })]
-    [InlineData(123)]
-    public void OkResultsAreSuccess(object? value)
+    [Test]
+    [Arguments((object?)null)]
+    [Arguments(new[] { 1 })]
+    [Arguments(123)]
+    public async Task OkResultsAreSuccess(object? value)
     {
-        Result<object?>.Ok(value).Success.ShouldBeTrue();
-        Result<object?>.Ok(value).Value.ShouldBe(value);
+        await Assert.That(Result<object?>.Ok(value).Success).IsTrue();
+        await Assert.That(Result<object?>.Ok(value).Value).IsEqualTo(value);
     }
 
-    [Fact]
-    public void ErrorResultsAreNotSuccess()
+    [Test]
+    public async Task ErrorResultsAreNotSuccess()
     {
-        Result<object>.Error(new FakeError()).Success.ShouldBeFalse();
+        await Assert.That(Result<object>.Error(new FakeError()).Success).IsFalse();
     }
 
-    [Fact]
-    public void AccessingValueOnErrorResultShouldThrowException()
+    [Test]
+    public async Task AccessingValueOnErrorResultShouldThrowException()
     {
         Func<object> act = () => Result<object>.Error(new FakeError()).Value;
         act.ShouldThrow<InvalidOperationException>();
     }
 
-    [Fact]
-    public void ValueOrThrowOnErrorResultShouldThrowExceptionWithErrorsInside()
+    [Test]
+    public async Task ValueOrThrowOnErrorResultShouldThrowExceptionWithErrorsInside()
     {
         Func<object> act = () => Result<object>.Error(new FakeError()).ValueOrThrow();
         act.ShouldThrow<ValueOrThrowException>("hello");
     }
 
-    [Fact]
-    public void CreateErrorResultWithoutErrorsShouldThrowException()
+    [Test]
+    public async Task CreateErrorResultWithoutErrorsShouldThrowException()
     {
         Action act = () => Result<object>.Error([]);
         act.ShouldThrow<InvalidOperationException>();
     }
 
-    [Fact]
-    public void ErrorResultWithMultipleErrorsShouldRetainAllErrors()
+    [Test]
+    public async Task ErrorResultWithMultipleErrorsShouldRetainAllErrors()
     {
         Result<object>.Error(new FakeError(), new FakeError(), new FakeError())
             .Errors.Count().ShouldBe(3);
     }
 
-    [Fact]
-    public void ErrorResultWithMultipleErrorsAsListShouldRetainAllErrors()
+    [Test]
+    public async Task ErrorResultWithMultipleErrorsAsListShouldRetainAllErrors()
     {
         Result<object>.Error(new List<FakeError>() { new FakeError(), new FakeError(), new FakeError() })
             .Errors.Count.ShouldBe(3);
     }
 
-    [Fact]
-    public void HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult()
+    [Test]
+    public async Task HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult()
     {
         var firstError = new FakeError();
         Result<object>.Error(new List<FakeError>() { firstError, new FakeError(), new FakeError(), new FakeError() })
@@ -62,8 +62,8 @@ public class ResultTests
         error.ShouldBeSameAs(firstError);
     }
 
-    [Fact]
-    public void HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult_OutParameterVersion()
+    [Test]
+    public async Task HasErrorCorrectlyAnswersWithFirstErrorWhenErrorIsPresentInResult_OutParameterVersion()
     {
         var firstError = new FakeError();
         var result = Result<object>.Error([firstError, new FakeError(), new AnotherError(), new AnotherError()]);
@@ -72,39 +72,39 @@ public class ResultTests
         error.ShouldBeSameAs(firstError);
     }
 
-    [Fact]
-    public void HasErrorCorrectlyAnswersWithNullWhenErrorIsNotPresentInResult()
+    [Test]
+    public async Task HasErrorCorrectlyAnswersWithNullWhenErrorIsNotPresentInResult()
     {
         Result<object>.Error(new List<FakeError>() { new FakeError(), new FakeError() })
             .HasError<AnotherError>().ShouldBe(false);
     }
 
-    [Fact]
-    public void HasErrorCorrectlyAnswersWithNullWhenResultIsSuccess()
+    [Test]
+    public async Task HasErrorCorrectlyAnswersWithNullWhenResultIsSuccess()
     {
         Result<object>.Ok(null!)
             .HasError<FakeError>(out var noError).ShouldBe(false);
         noError.ShouldBe(null);
     }
 
-    [Fact]
-    public void CastingResultToTaskOfResultRetainsResultValue()
+    [Test]
+    public async Task CastingResultToTaskOfResultRetainsResultValue()
     {
         Task<Result<object>> casted = Result<object>.Ok(1345);
         casted.Result.Value.ShouldBe(1345);
-        casted.Result.Success.ShouldBeTrue();
+        casted.await Assert.That(result.Success).IsTrue();
     }
 
-    [Fact]
-    public void CastingOkResultToUnitResultReplacesValueButKeepsSuccess()
+    [Test]
+    public async Task CastingOkResultToUnitResultReplacesValueButKeepsSuccess()
     {
         Result<Unit> casted = Result<object>.Ok(1345);
         casted.Value.ShouldBe(Unit.Instance);
         casted.Success.ShouldBeTrue();
     }
 
-    [Fact]
-    public void CastingErrorResultToUnitResultReplacesValueButKeepsErrors()
+    [Test]
+    public async Task CastingErrorResultToUnitResultReplacesValueButKeepsErrors()
     {
         Result<Unit> casted = Result<object>.Error(new FakeError());
 
@@ -112,8 +112,8 @@ public class ResultTests
         casted.IsError<FakeError>().ShouldNotBeNull();
     }
 
-    [Fact]
-    public void ModifyingAPassedListOfErrorsDoesNotModifyResult()
+    [Test]
+    public async Task ModifyingAPassedListOfErrorsDoesNotModifyResult()
     {
         var listOfErrors = new List<IError>() { new FakeError(), new FakeError(), new FakeError() };
         var result = Result<object>.Error(listOfErrors);
@@ -121,25 +121,25 @@ public class ResultTests
         result.Errors.Count.ShouldBe(3);
     }
 
-    [Fact]
-    public void ToStringReturnsExpectedResultForSuccess()
+    [Test]
+    public async Task ToStringReturnsExpectedResultForSuccess()
     {
         var result = Result<int>.Ok(1234);
         result.ToString().ShouldBe("Result { Success = True, Value = 1234 }");
     }
 
-    [Fact]
-    public void ToStringReturnsExpectedResultForErrorWithoutData()
+    [Test]
+    public async Task ToStringReturnsExpectedResultForErrorWithoutData()
     {
         var result = Result<object>.Error(new FakeError());
         result.ToString().ShouldBe("Result { Success = False, Errors = [ FakeError { Type = FakeError, Message = FakeError, Data = { } } ] }");
     }
 
-    [Fact]
-    public void ToStringReturnsExpectedResultForErrorWithData()
+    [Test]
+    public async Task ToStringReturnsExpectedResultForErrorWithData()
     {
         var result = Result<object>.Error(new ErrorWithData(5));
-        result.ToString().ShouldBe("Result { Success = False, Errors = [ ErrorWithData { Type = ErrorWithData, Message = Error message number 5, Data = { Number = 5 }, Number = 5 } ] }");
+        await Assert.That(result.ToString()).IsEqualTo("Result { Success = False, Errors = [ ErrorWithData { Type = ErrorWithData, Message = Error message number 5, Data = { Number = 5 }, Number = 5 } ]");
     }
 }
 

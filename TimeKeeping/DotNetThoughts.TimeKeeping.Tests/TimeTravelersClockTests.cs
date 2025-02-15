@@ -4,8 +4,8 @@ namespace DotNetThoughts.TimeKeeping.Tests;
 public class TimeTravelersClockTests
 {
     private static TimeSpan _allowedDeviation = TimeSpan.FromMilliseconds(100);
-    [Fact]
-    public void FreezeTime()
+    [Test]
+    public async Task FreezeTime()
     {
         var frozenTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var sut = new TimeTravelersClock();
@@ -13,8 +13,8 @@ public class TimeTravelersClockTests
         sut.IsFrozen().ShouldBeTrue();
         sut.Now().ShouldBe(frozenTime);
     }
-    [Fact]
-    public void FreezeAgainOverridesCurrentFreeze()
+    [Test]
+    public async Task FreezeAgainOverridesCurrentFreeze()
     {
         var frozenTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var newFrozenTime = new DateTimeOffset(2022, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -25,8 +25,8 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBe(newFrozenTime);
     }
 
-    [Fact]
-    public void FreezeCurrentTime()
+    [Test]
+    public async Task FreezeCurrentTime()
     {
         var sut = new TimeTravelersClock();
         sut.Freeze();
@@ -35,8 +35,8 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBeLessThan(DateTimeOffset.Now);
     }
 
-    [Fact]
-    public void ResetFrozenTimeShouldRevertEverythingToNormal()
+    [Test]
+    public async Task ResetFrozenTimeShouldRevertEverythingToNormal()
     {
         var sut = new TimeTravelersClock();
         // arrange
@@ -52,8 +52,8 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBe(DateTimeOffset.Now, _allowedDeviation);
     }
 
-    [Fact]
-    public void BaselineMocksNow()
+    [Test]
+    public async Task BaselineMocksNow()
     {
         var sut = new TimeTravelersClock();
         var now = DateTimeOffset.Now;
@@ -64,8 +64,8 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBe(baseLine.Add(slept), _allowedDeviation);
     }
 
-    [Fact]
-    public void AdvanceFrozenTime()
+    [Test]
+    public async Task AdvanceFrozenTime()
     {
         var sut = new TimeTravelersClock();
         var frozenTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -74,16 +74,16 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBe(new DateTimeOffset(2021, 1, 2, 0, 0, 0, TimeSpan.Zero));
     }
 
-    [Fact]
-    public void AdvanceLiveTime()
+    [Test]
+    public async Task AdvanceLiveTime()
     {
         var sut = new TimeTravelersClock();
         sut.Advance(TimeSpan.FromDays(1));
         sut.Now().ShouldBe(DateTimeOffset.Now.AddDays(1), _allowedDeviation);
     }
 
-    [Fact]
-    public void AdvanceFrozenTimeAndThenThaw()
+    [Test]
+    public async Task AdvanceFrozenTimeAndThenThaw()
     {
         var sut = new TimeTravelersClock();
         var frozenTime = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -94,8 +94,8 @@ public class TimeTravelersClockTests
         sut.Now().ShouldBe(frozenTime.AddDays(1).Add(slept), _allowedDeviation);
     }
 
-    [Fact]
-    public void AComplicatedTest()
+    [Test]
+    public async Task AComplicatedTest()
     {
         var sut = new TimeTravelersClock();
         var baseLine = new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero);

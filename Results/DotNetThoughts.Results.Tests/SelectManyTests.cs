@@ -2,20 +2,20 @@
 
 public class SelectManyTests
 {
-    [Fact]
-    public void SelectMany_ThreeSuccessful()
+    [Test]
+    public async Task SelectMany_ThreeSuccessful()
     {
         var result =
             from a in UnitResult.Ok
             from b in Result<int>.Ok(2)
             from c in Result<string>.Ok("c")
             select (a, b, c);
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 
-    [Fact]
-    public void SelectMany_OneFailure()
+    [Test]
+    public async Task SelectMany_OneFailure()
     {
         var result =
             from a in UnitResult.Ok
@@ -26,8 +26,8 @@ public class SelectManyTests
         result.HasError<FakeError>().ShouldBeTrue();
     }
 
-    [Fact]
-    public void SelectMany_FirstFailureShortCircuits()
+    [Test]
+    public async Task SelectMany_FirstFailureShortCircuits()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -45,7 +45,7 @@ public class SelectManyTests
         failedResults.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public async Task SelectManyTasks_ThreeSuccessful()
     {
         var result = await
@@ -53,11 +53,11 @@ public class SelectManyTests
              from b in Result<int>.Ok(2)
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 
-    [Fact]
+    [Test]
     public async Task SelectManyTasks2_ThreeSuccessful()
     {
         var result = await
@@ -65,7 +65,7 @@ public class SelectManyTests
              from b in Task.FromResult(Result<int>.Ok(2))
              from c in Task.FromResult(Result<string>.Ok("c"))
              select (a, b, c));
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Value.ShouldBe((Unit.Instance, 2, "c"));
     }
 

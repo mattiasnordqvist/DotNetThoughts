@@ -2,8 +2,8 @@
 
 public class MapTests
 {
-    [Fact]
-    public void MapTransfersValueToLastInChain()
+    [Test]
+    public async Task MapTransfersValueToLastInChain()
     {
         Result<object>.Ok(new object())
             .Map(x => 1)
@@ -11,7 +11,7 @@ public class MapTests
             .Value.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public async Task MapFromTaskTransfersValueToLastInChain()
     {
         (await Task.FromResult(Result<object>.Ok(new object()))
@@ -20,16 +20,16 @@ public class MapTests
             .Value.ShouldBe(2);
     }
 
-    [Fact]
-    public void MapReturnsErrorIfBeginsWithError()
+    [Test]
+    public async Task MapReturnsErrorIfBeginsWithError()
     {
         Result<object>.Error(new FakeError())
             .Map(x => 1)
             .Map(x => 2)
             .Success.ShouldBeFalse();
     }
-    [Fact]
-    public void MapReturnsErrorIfEndsWithError()
+    [Test]
+    public async Task MapReturnsErrorIfEndsWithError()
     {
         Result<object>.Ok(new object())
             .Map(x => 1)
@@ -37,8 +37,8 @@ public class MapTests
             .Success.ShouldBeFalse();
     }
 
-    [Fact]
-    public void MapReturnsErrorIfErrorInMiddle()
+    [Test]
+    public async Task MapReturnsErrorIfErrorInMiddle()
     {
         Result<object>.Ok(new object())
             .Bind(x => Result<int>.Error(new FakeError()))
@@ -46,8 +46,8 @@ public class MapTests
             .Success.ShouldBeFalse();
     }
 
-    [Fact]
-    public void MapPassesValueCorrectly()
+    [Test]
+    public async Task MapPassesValueCorrectly()
     {
         Result<int>.Ok(1)
             .Map(x => x + 1)
@@ -55,8 +55,8 @@ public class MapTests
             .Value.ShouldBe(3);
     }
 
-    [Fact]
-    public void MapWith2Tuple()
+    [Test]
+    public async Task MapWith2Tuple()
     {
         Result<(int, int)>.Ok((0, 10))
             .Map((x, y) => (x + 1, y + 1))
@@ -64,7 +64,7 @@ public class MapTests
             .Value.ShouldBe((2, 12));
     }
 
-    [Fact]
+    [Test]
     public async Task MapWith2Tuple_FromTask()
     {
         (await Task.FromResult(Result<(int, int)>.Ok((0, 10)))
@@ -73,8 +73,8 @@ public class MapTests
             .Value.ShouldBe((2, 12));
     }
 
-    [Fact]
-    public void MapWith3Tuple()
+    [Test]
+    public async Task MapWith3Tuple()
     {
         Result<(int, int, decimal)>.Ok((0, 10, 100m))
             .Map((x, y, z) => (x + 1, y + 1, z + 1))

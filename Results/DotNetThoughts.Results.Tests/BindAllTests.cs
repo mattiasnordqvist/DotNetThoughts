@@ -3,8 +3,8 @@
 public class BindAllTests
 {
 
-    [Fact]
-    public void Unit_Errors_DoesNotShortCircuit()
+    [Test]
+    public async Task Unit_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -18,8 +18,8 @@ public class BindAllTests
         failedResults.ShouldBe(2);
     }
 
-    [Fact]
-    public void Unit_Success()
+    [Test]
+    public async Task Unit_Success()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -27,13 +27,13 @@ public class BindAllTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Errors.Count().ShouldBe(0);
         successfulResults.ShouldBe(6);
         failedResults.ShouldBe(0);
     }
 
-    [Fact]
+    [Test]
     public async Task TaskUnit_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
@@ -48,7 +48,7 @@ public class BindAllTests
         failedResults.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public async Task TaskUnit_Success()
     {
         int successfulResults = 0;
@@ -57,14 +57,14 @@ public class BindAllTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = await bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Errors.Count().ShouldBe(0);
         successfulResults.ShouldBe(6);
         failedResults.ShouldBe(0);
     }
 
-    [Fact]
-    public void T_Errors_DoesNotShortCircuit()
+    [Test]
+    public async Task T_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -78,8 +78,8 @@ public class BindAllTests
         failedResults.ShouldBe(2);
     }
 
-    [Fact]
-    public void T_Success()
+    [Test]
+    public async Task T_Success()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -87,14 +87,14 @@ public class BindAllTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Errors.Count().ShouldBe(0);
         successfulResults.ShouldBe(6);
         failedResults.ShouldBe(0);
         result.Value.Count().ShouldBe(6);
     }
 
-    [Fact]
+    [Test]
     public async Task T_Success_WithTaskResultInput_WithTaskResultOutput()
     {
         int successfulResults = 0;
@@ -113,7 +113,7 @@ public class BindAllTests
                 return await failure();
             }
         });
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
         result.Errors.Count().ShouldBe(0);
         successfulResults.ShouldBe(6);
         failedResults.ShouldBe(0);

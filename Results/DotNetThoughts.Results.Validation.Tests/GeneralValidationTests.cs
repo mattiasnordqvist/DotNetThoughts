@@ -3,20 +3,20 @@
 public class GeneralValidationTests
 {
 
-    [Fact]
-    public void Parse_Parseable_Success()
+    [Test]
+    public async Task Parse_Parseable_Success()
     {
         // Arrange
         var parseable = "4000";
         // Act
         var parseResult = GeneralValidation.Parse<long, string?>(parseable, StringToLong);
         // Assert
-        parseResult.Success.ShouldBeTrue();
+        parseawait Assert.That(result.Success).IsTrue();
         parseResult.Value.ShouldBe(long.Parse(parseable));
     }
 
-    [Fact]
-    public void Parse_NotParseable_Error()
+    [Test]
+    public async Task Parse_NotParseable_Error()
     {
         // Arrange
         var unparseable = "fyratusen";
@@ -27,8 +27,8 @@ public class GeneralValidationTests
         parseResult.HasError<UnparseableError>().ShouldBeTrue();
     }
 
-    [Fact]
-    public void Parse_Null_Error()
+    [Test]
+    public async Task Parse_Null_Error()
     {
         // Arrange
         // Act
@@ -38,31 +38,31 @@ public class GeneralValidationTests
         parseResult.HasError<MissingArgumentError>().ShouldBeTrue();
     }
 
-    [Fact]
-    public void ParseAllowNull_Null_Success()
+    [Test]
+    public async Task ParseAllowNull_Null_Success()
     {
         // Arrange
         // Act
         var parseResult = GeneralValidation.ParseAllowNull((string?)null, StringToValueObject);
         // Assert
-        parseResult.Success.ShouldBeTrue();
+        parseawait Assert.That(result.Success).IsTrue();
         parseResult.Value.ShouldBe(null);
     }
 
-    [Fact]
-    public void ParseAllowNull_NotNullParseable_Success()
+    [Test]
+    public async Task ParseAllowNull_NotNullParseable_Success()
     {
         // Arrange
         var parseable = "10";
         // Act
         var parseResult = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
         // Assert
-        parseResult.Success.ShouldBeTrue();
+        parseawait Assert.That(result.Success).IsTrue();
         parseResult.Value.ShouldBe(new SomeValueObject(long.Parse(parseable)));
     }
 
-    [Fact]
-    public void ParseAllowNull_NotNullNotParseable_Error()
+    [Test]
+    public async Task ParseAllowNull_NotNullNotParseable_Error()
     {
         // Arrange
         var parseable = "tio";
@@ -73,27 +73,27 @@ public class GeneralValidationTests
         parseResult.HasError<UnparseableError>().ShouldBeTrue();
     }
 
-    [Fact]
-    public void ParseAllowNull_NullableStructs()
+    [Test]
+    public async Task ParseAllowNull_NullableStructs()
     {
         // Arrange
         string? parseable = "2022-12-01";
         // Act
         var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.ShouldBeTrue();
+        parseawait Assert.That(result.Success).IsTrue();
         parseResult.Value.ShouldBe(new DateOnly(2022, 12, 1));
     }
 
-    [Fact]
-    public void ParseAllowNull_NullableStructs2()
+    [Test]
+    public async Task ParseAllowNull_NullableStructs2()
     {
         // Arrange
         string? parseable = null;
         // Act
         var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.ShouldBeTrue();
+        parseawait Assert.That(result.Success).IsTrue();
         parseResult.Value.ShouldBe(null);
     }
     public record UnparseableError(string? Candidate) : ErrorBase;
