@@ -10,7 +10,7 @@ public class Tests
         Converters = { new JsonConverterFactoryForResultOfT() }
     };
 
-    [Fact]
+    [Test]
     public async Task SerializeSuccessfulResultOfUnit()
     {
         var unitResult = UnitResult.Ok;
@@ -18,7 +18,7 @@ public class Tests
         await Verify(json);
     }
 
-    [Fact]
+    [Test]
     public async Task SerializeSuccessfulResultOfPrimitive()
     {
         var primitiveResult = Result<int>.Ok(12);
@@ -41,7 +41,7 @@ public class Tests
             public string Description { get; set; } = "Description";
         }
     }
-    [Fact]
+    [Test]
     public async Task SerializeSuccessfulResultOfComplexType()
     {
 
@@ -50,7 +50,7 @@ public class Tests
         await Verify(json);
     }
 
-    [Fact]
+    [Test]
     public async Task SerializeErrorResultOfUnit()
     {
         var unitResult = UnitResult.Error(new MyError(123, "hej fel"));
@@ -60,43 +60,42 @@ public class Tests
     public record MyError(int Code, string Description) : ErrorBase;
 
 
-    [Fact]
-    public void DeserializeSuccessfulResultOfUnit()
+    [Test]
+    public async Task DeserializeSuccessfulResultOfUnit()
     {
         var unitResultJson = @"{""success"": true}";
         var unitResult = JsonSerializer.Deserialize<Result<Unit>>(unitResultJson, Options);
 
-        unitResult.Success.ShouldBeTrue();
-        unitResult.Value.ShouldBe(Unit.Instance);
+        await Assert.That(unitResult.Success).IsTrue();
+        await Assert.That(unitResult.Value).IsEqualTo(Unit.Instance);
     }
 
-    [Fact]
-    public void DeserializeSuccessfulResultOfPrimitive()
+    [Test]
+    public async Task DeserializeSuccessfulResultOfPrimitive()
     {
         var unitResultJson = @"{""success"": true, ""value"": 123 }";
         var unitResult = JsonSerializer.Deserialize<Result<int>>(unitResultJson, Options);
-
-        unitResult.Success.ShouldBeTrue();
-        unitResult.Value.ShouldBe(123);
+        await Assert.That(unitResult.Success).IsTrue();
+        await Assert.That(unitResult.Value).IsEqualTo(123);
     }
 
-    [Fact]
-    public void DeserializeSuccessfulResultOfComplextType()
+    [Test]
+    public async Task DeserializeSuccessfulResultOfComplextType()
     {
         var complextResult = Result<ComplexType>.Ok(new ComplexType());
         var json = JsonSerializer.Serialize(complextResult, Options);
         var deserialized = JsonSerializer.Deserialize<Result<ComplexType>>(json, Options);
-        deserialized.Success.ShouldBeTrue();
-        deserialized.Value.ShouldBeEquivalentTo(new ComplexType());
+        await Assert.That(deserialized.Success).IsTrue();
+        await Assert.That(deserialized.Value).IsEquivalentTo(new ComplexType());
     }
 
-    [Fact]
+    [Test]
     public async Task DeserializeErrorResultOfUnit()
     {
         var unitResult = UnitResult.Error(new MyError(123, "hej fel"));
         var json = JsonSerializer.Serialize(unitResult, Options);
         var deserialized = JsonSerializer.Deserialize<Result<Unit>>(json, Options);
-        deserialized.Success.ShouldBeFalse();
+        await Assert.That(deserialized.Success).IsFalse();
         await Verify(deserialized.Errors);
     }
 }

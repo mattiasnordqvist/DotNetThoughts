@@ -15,8 +15,8 @@ public class EnumLoaderTests
         Pluto
     }
 
-    [Fact]
-    public void Parse_ExistsAsGivenEnum_Success()
+    [Test]
+    public async Task Parse_ExistsAsGivenEnum_Success()
     {
         // Arrange
         var validPlanet = "Mercury";
@@ -25,12 +25,12 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
-    [Fact]
-    public void Parse_DoesNotExistAsGivenEnum_Error()
+    [Test]
+    public async Task Parse_DoesNotExistAsGivenEnum_Error()
     {
         // Arrange
         var invalidPlanet = "Xena";
@@ -39,24 +39,24 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
-    [Fact]
-    public void Parse_Null_Error()
+    [Test]
+    public async Task Parse_Null_Error()
     {
         // Arrange
         // Act
         var result = EnumLoader.Parse<Planet>(null);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
-    [Fact]
-    public void Parse_ImplicitlyNumeric_Success()
+    [Test]
+    public async Task Parse_ImplicitlyNumeric_Success()
     {
         // Arrange
         var enumFormat = Planet.Venus;
@@ -66,24 +66,24 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(implicitlyNumericFormat);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(enumFormat);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(enumFormat);
     }
 
-    [Fact]
-    public void ParseAllowNull_Null_Success()
+    [Test]
+    public async Task ParseAllowNull_Null_Success()
     {
         // Arrange
         // Act
         var result = EnumLoader.ParseAllowNull<Planet>(null);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBeNull();
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsNull();
     }
 
-    [Fact]
-    public void ParseAllowNull_NotNull_Success()
+    [Test]
+    public async Task ParseAllowNull_NotNull_Success()
     {
         // Arrange
         var validPlanet = "Neptune";
@@ -92,12 +92,12 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Neptune);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Neptune);
     }
 
-    [Fact]
-    public void ParseAllowNull_DoesNotExistAsGivenEnum_Error()
+    [Test]
+    public async Task ParseAllowNull_DoesNotExistAsGivenEnum_Error()
     {
         // Arrange
         var invalidPlanet = "Murrcurry";
@@ -106,12 +106,12 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.HasError<EnumValueMustExistError<Planet>>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<EnumValueMustExistError<Planet>>()).IsTrue();
     }
 
-    [Fact]
-    public void Parse_UpperCased_Error()
+    [Test]
+    public async Task Parse_UpperCased_Error()
     {
         // Arrange
         var invalidPlanet = "MERCURY";
@@ -120,11 +120,11 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
-    [Fact]
-    public void ParseCaseInsensitive_UpperCased_Success()
+    [Test]
+    public async Task ParseCaseInsensitive_UpperCased_Success()
     {
         // Arrange
         var validPlanet = "MERCURY";
@@ -133,13 +133,12 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
-
-    [Fact]
-    public void ParseCaseInsensitive_RandomCased_Success()
+    [Test]
+    public async Task ParseCaseInsensitive_RandomCased_Success()
     {
         // Arrange
         var validPlanet = "MeRCuRY";
@@ -148,12 +147,12 @@ public class EnumLoaderTests
         var result = EnumLoader.Parse<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
-    [Fact]
-    public void ParseAllowNull_UpperCased_Error()
+    [Test]
+    public async Task ParseAllowNull_UpperCased_Error()
     {
         // Arrange
         var invalidPlanet = "MERCURY";
@@ -162,11 +161,11 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
-    [Fact]
-    public void ParseAllowNullCaseInsensitive_UpperCased_Success()
+    [Test]
+    public async Task ParseAllowNullCaseInsensitive_UpperCased_Success()
     {
         // Arrange
         var validPlanet = "MERCURY";
@@ -175,13 +174,12 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
-
-    [Fact]
-    public void ParseAllowNullCaseInsensitive_RandomCased_Success()
+    [Test]
+    public async Task ParseAllowNullCaseInsensitive_RandomCased_Success()
     {
         // Arrange
         var validPlanet = "MeRCuRY";
@@ -190,21 +188,18 @@ public class EnumLoaderTests
         var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(Planet.Mercury);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(Planet.Mercury);
     }
 
-    [Fact]
-    public void ParseAllowNullCaseInsensitive_null_Success()
+    [Test]
+    public async Task ParseAllowNullCaseInsensitive_null_Success()
     {
         // Act
         var result = EnumLoader.ParseAllowNull<Planet>(null, true);
 
         // Assert
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe(null);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsNull();
     }
-
-
-
 }

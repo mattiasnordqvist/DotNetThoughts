@@ -2,17 +2,17 @@
 
 public class UnitTests
 {
-    [Fact]
-    public void UnitIsSingleInstance()
+    [Test]
+    public async Task UnitIsSingleInstance()
     {
-        Unit.Instance.ShouldBeSameAs(Unit.Instance);
+        await Assert.That(Unit.Instance).IsEqualTo(Unit.Instance);
     }
 
-    [Fact]
-    public void UnitIsSingleInstance_2()
+    [Test]
+    public async Task UnitIsSingleInstance_2()
     {
         Result<Unit> result = Result<int>.Ok(23);
         Result<Unit> result2 = Result<decimal>.Ok(65.6m);
-        result.Value.ShouldBeSameAs(result2.Value);
+        await Assert.That(result.Value).IsEqualTo(result2.Value);
     }
 }

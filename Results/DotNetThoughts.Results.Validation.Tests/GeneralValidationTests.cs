@@ -2,100 +2,100 @@
 
 public class GeneralValidationTests
 {
-
-    [Fact]
-    public void Parse_Parseable_Success()
+    [Test]
+    public async Task Parse_Parseable_Success()
     {
         // Arrange
         var parseable = "4000";
         // Act
-        var parseResult = GeneralValidation.Parse<long, string?>(parseable, StringToLong);
+        var result = GeneralValidation.Parse<long, string?>(parseable, StringToLong);
         // Assert
-        parseResult.Success.ShouldBeTrue();
-        parseResult.Value.ShouldBe(long.Parse(parseable));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(long.Parse(parseable));
     }
 
-    [Fact]
-    public void Parse_NotParseable_Error()
+    [Test]
+    public async Task Parse_NotParseable_Error()
     {
         // Arrange
         var unparseable = "fyratusen";
         // Act
-        var parseResult = GeneralValidation.Parse<long, string?>(unparseable, StringToLong);
+        var result = GeneralValidation.Parse<long, string?>(unparseable, StringToLong);
         // Assert
-        parseResult.Success.ShouldBeFalse();
-        parseResult.HasError<UnparseableError>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<UnparseableError>()).IsTrue();
     }
 
-    [Fact]
-    public void Parse_Null_Error()
+    [Test]
+    public async Task Parse_Null_Error()
     {
         // Arrange
         // Act
-        var parseResult = GeneralValidation.Parse<long, string?>((string?)null, StringToLong);
+        var result = GeneralValidation.Parse<long, string?>((string?)null, StringToLong);
         // Assert
-        parseResult.Success.ShouldBeFalse();
-        parseResult.HasError<MissingArgumentError>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<MissingArgumentError>()).IsTrue();
     }
 
-    [Fact]
-    public void ParseAllowNull_Null_Success()
+    [Test]
+    public async Task ParseAllowNull_Null_Success()
     {
         // Arrange
         // Act
-        var parseResult = GeneralValidation.ParseAllowNull((string?)null, StringToValueObject);
+        var result = GeneralValidation.ParseAllowNull((string?)null, StringToValueObject);
         // Assert
-        parseResult.Success.ShouldBeTrue();
-        parseResult.Value.ShouldBe(null);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsNull();
     }
 
-    [Fact]
-    public void ParseAllowNull_NotNullParseable_Success()
+    [Test]
+    public async Task ParseAllowNull_NotNullParseable_Success()
     {
         // Arrange
         var parseable = "10";
         // Act
-        var parseResult = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
+        var result = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
         // Assert
-        parseResult.Success.ShouldBeTrue();
-        parseResult.Value.ShouldBe(new SomeValueObject(long.Parse(parseable)));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(new SomeValueObject(long.Parse(parseable)));
     }
 
-    [Fact]
-    public void ParseAllowNull_NotNullNotParseable_Error()
+    [Test]
+    public async Task ParseAllowNull_NotNullNotParseable_Error()
     {
         // Arrange
         var parseable = "tio";
         // Act
-        var parseResult = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
+        var result = GeneralValidation.ParseAllowNull(parseable, StringToValueObject);
         // Assert
-        parseResult.Success.ShouldBeFalse();
-        parseResult.HasError<UnparseableError>().ShouldBeTrue();
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.HasError<UnparseableError>()).IsTrue();
     }
 
-    [Fact]
-    public void ParseAllowNull_NullableStructs()
+    [Test]
+    public async Task ParseAllowNull_NullableStructs()
     {
         // Arrange
         string? parseable = "2022-12-01";
         // Act
-        var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
+        var result = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.ShouldBeTrue();
-        parseResult.Value.ShouldBe(new DateOnly(2022, 12, 1));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo(new DateOnly(2022, 12, 1));
     }
 
-    [Fact]
-    public void ParseAllowNull_NullableStructs2()
+    [Test]
+    public async Task ParseAllowNull_NullableStructs2()
     {
         // Arrange
         string? parseable = null;
         // Act
-        var parseResult = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
+        var result = GeneralValidation.ParseAllowNullStruct(parseable, v => DateOnly.TryParse(v, out var result) ? result.Return() : Result<DateOnly>.Error(new InvalidDateError()));
         // Assert
-        parseResult.Success.ShouldBeTrue();
-        parseResult.Value.ShouldBe(null);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsNull();
     }
+
     public record UnparseableError(string? Candidate) : ErrorBase;
     public static Result<long> StringToLong(string? candidate) =>
       long.TryParse(candidate, out var longified)

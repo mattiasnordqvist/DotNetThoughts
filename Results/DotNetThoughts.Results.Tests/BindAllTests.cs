@@ -3,8 +3,8 @@
 public class BindAllTests
 {
 
-    [Fact]
-    public void Unit_Errors_DoesNotShortCircuit()
+    [Test]
+    public async Task Unit_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -12,14 +12,14 @@ public class BindAllTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
-        successfulResults.ShouldBe(4);
-        failedResults.ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
+        await Assert.That(successfulResults).IsEqualTo(4);
+        await Assert.That(failedResults).IsEqualTo(2);
     }
 
-    [Fact]
-    public void Unit_Success()
+    [Test]
+    public async Task Unit_Success()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -27,13 +27,13 @@ public class BindAllTests
         Func<Result<Unit>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
     }
 
-    [Fact]
+    [Test]
     public async Task TaskUnit_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
@@ -42,13 +42,13 @@ public class BindAllTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = await bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
-        successfulResults.ShouldBe(4);
-        failedResults.ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
+        await Assert.That(successfulResults).IsEqualTo(4);
+        await Assert.That(failedResults).IsEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task TaskUnit_Success()
     {
         int successfulResults = 0;
@@ -57,14 +57,14 @@ public class BindAllTests
         Func<Task<Result<Unit>>> failure = () => { failedResults++; return UnitResult.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = await bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
     }
 
-    [Fact]
-    public void T_Errors_DoesNotShortCircuit()
+    [Test]
+    public async Task T_Errors_DoesNotShortCircuit()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -72,14 +72,14 @@ public class BindAllTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, false, true, true, false });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
-        successfulResults.ShouldBe(4);
-        failedResults.ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
+        await Assert.That(successfulResults).IsEqualTo(4);
+        await Assert.That(failedResults).IsEqualTo(2);
     }
 
-    [Fact]
-    public void T_Success()
+    [Test]
+    public async Task T_Success()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -87,14 +87,14 @@ public class BindAllTests
         Func<Result<bool>> failure = () => { failedResults++; return Result<bool>.Error(new FakeError()); };
         var bs = Result<IEnumerable<bool>>.Ok(new List<bool>() { true, true, true, true, true, true });
         var result = bs.BindAll(x => x ? success() : failure());
-        result.Success.ShouldBeTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
-        result.Value.Count().ShouldBe(6);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
+        await Assert.That(result.Value.Count()).IsEqualTo(6);
     }
 
-    [Fact]
+    [Test]
     public async Task T_Success_WithTaskResultInput_WithTaskResultOutput()
     {
         int successfulResults = 0;
@@ -113,10 +113,10 @@ public class BindAllTests
                 return await failure();
             }
         });
-        result.Success.ShouldBeTrue();
-        result.Errors.Count().ShouldBe(0);
-        successfulResults.ShouldBe(6);
-        failedResults.ShouldBe(0);
-        result.Value.Count().ShouldBe(6);
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Errors.Count()).IsEqualTo(0);
+        await Assert.That(successfulResults).IsEqualTo(6);
+        await Assert.That(failedResults).IsEqualTo(0);
+        await Assert.That(result.Value.Count()).IsEqualTo(6);
     }
 }

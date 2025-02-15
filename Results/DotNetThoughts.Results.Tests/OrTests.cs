@@ -6,71 +6,71 @@ public class OrTests
     private static readonly Result<int> _intResultError = Result<int>.Error(new FakeError());
     private static readonly Task<Result<int>> _intResultErrorTask = Task.FromResult(Result<int>.Error(new FakeError()));
 
-    [Fact]
-    public void SuccessfulOrSuccesfulEqualsSuccesful()
+    [Test]
+    public async Task SuccessfulOrSuccesfulEqualsSuccesful()
     {
         var result = UnitResult.Ok.Or(UnitResult.Ok);
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
     }
 
-    [Fact]
-    public void SuccessfulOrFailureEqualsFailure()
+    [Test]
+    public async Task SuccessfulOrFailureEqualsFailure()
     {
         var result = UnitResult.Ok.Or(_unitResultError);
-        result.Success.ShouldBeFalse();
+        await Assert.That(result.Success).IsFalse();
     }
 
-    [Fact]
-    public void ReturnValuesShouldBeCombined()
+    [Test]
+    public async Task ReturnValuesShouldBeCombined()
     {
         var result = Result<int>.Ok(1).Or(Result<int>.Ok(2));
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe((1, 2));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo((1, 2));
     }
 
-    [Fact]
-    public void ErrorsShouldBeCollectedFromAllResults()
+    [Test]
+    public async Task ErrorsShouldBeCollectedFromAllResults()
     {
         var result = Result<int>.Error(new FakeError()).Or(_intResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
-    [Fact]
-    public void ErrorsShouldBeCollectedFromAll3Results()
+    [Test]
+    public async Task ErrorsShouldBeCollectedFromAll3Results()
     {
         var result = _intResultError.Or(_intResultError).Or(Result<bool>.Error(new FakeError()));
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
-    [Fact]
+    [Test]
     public async Task ErrorsShouldBeCollectedFromAll2ResultTasks()
     {
         var result = await _intResultErrorTask
             .Or(_intResultErrorTask);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task ErrorsShouldBeCollectedFromAll2ResultTasksMixedWithNoTasks()
     {
         var result = await _intResultErrorTask.Or(_intResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(2);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task ErrorsShouldBeCollectedFromAll3ResultTasksMixedWithNoTasks()
     {
         var result = await _intResultErrorTask.Or(_intResultError).Or(_intResultErrorTask);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
-    [Fact]
-    public void AllSuccessfulEqualsSuccesful()
+    [Test]
+    public async Task AllSuccessfulEqualsSuccesful()
     {
         var result = UnitResult.Ok
             .Or(UnitResult.Ok)
@@ -80,11 +80,11 @@ public class OrTests
             .Or(UnitResult.Ok)
             .Or(UnitResult.Ok)
             .Or(UnitResult.Ok);
-        result.Success.ShouldBeTrue();
+        await Assert.That(result.Success).IsTrue();
     }
 
-    [Fact]
-    public void AllErrorsEqualsErrors()
+    [Test]
+    public async Task AllErrorsEqualsErrors()
     {
         var result = _unitResultError
             .Or(_unitResultError)
@@ -94,23 +94,23 @@ public class OrTests
             .Or(_unitResultError)
             .Or(_unitResultError)
             .Or(_unitResultError);
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(8);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(8);
     }
 
-    [Fact]
-    public void StaticOr_ErrorsShouldBeCollectedFromAll3Results()
+    [Test]
+    public async Task StaticOr_ErrorsShouldBeCollectedFromAll3Results()
     {
         var result = Extensions.OrResult(
              _intResultError,
              _intResultError,
              Result<bool>.Error(new FakeError()));
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(3);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(3);
     }
 
-    [Fact]
-    public void StaticOr_AllResultsAreEvaluated()
+    [Test]
+    public async Task StaticOr_AllResultsAreEvaluated()
     {
         int successfulResults = 0;
         int failedResults = 0;
@@ -120,9 +120,9 @@ public class OrTests
              success(), failure(), success(), failure(),
              success(), failure(), success(), failure()
              );
-        result.Success.ShouldBeFalse();
-        result.Errors.Count().ShouldBe(4);
-        successfulResults.ShouldBe(4);
-        failedResults.ShouldBe(4);
+        await Assert.That(result.Success).IsFalse();
+        await Assert.That(result.Errors.Count()).IsEqualTo(4);
+        await Assert.That(successfulResults).IsEqualTo(4);
+        await Assert.That(failedResults).IsEqualTo(4);
     }
 }

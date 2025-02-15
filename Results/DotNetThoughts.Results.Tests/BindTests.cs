@@ -2,101 +2,102 @@
 
 public class BindTests
 {
-    [Theory]
-    [InlineData(123)]
-    [InlineData(null)]
-    public void ReturnWrapsInSuccessResult(object? value)
+    [Test]
+    [Arguments(123)]
+    [Arguments(null)]
+    public async Task ReturnWrapsInSuccessResult(object? value)
     {
-        value.Return().Success.ShouldBeTrue();
-        value.Return().Value.ShouldBe(value);
+        await Assert.That(value.Return().Success).IsTrue();
+        await Assert.That(value.Return().Value).IsEqualTo(value);
     }
 
-    [Fact]
-    public void BindTransfersValueToLastInChain()
+    [Test]
+    public async Task BindTransfersValueToLastInChain()
     {
-        Result<object>.Ok(new object())
+        var result = Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1))
-            .Bind(x => Result<int>.Ok(2))
-            .Value.ShouldBe(2);
+            .Bind(x => Result<int>.Ok(2));
+        await Assert.That(result.Value).IsEqualTo(2);
     }
 
-    [Fact]
-    public void BindTransfersValueToLastInChainWhenBindingDeep()
+    [Test]
+    public async Task BindTransfersValueToLastInChainWhenBindingDeep()
     {
-        Result<object>.Ok(new object())
+        var result = Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1)
-                .Bind(x => Result<int>.Ok(2)))
-            .Value.ShouldBe(2);
+                .Bind(x => Result<int>.Ok(2)));
+        await Assert.That(result.Value).IsEqualTo(2);
     }
 
-    [Fact]
-    public void BindReturnsErrorIfBeginsWithError()
+    [Test]
+    public async Task BindReturnsErrorIfBeginsWithError()
     {
-        Result<object>.Error(new FakeError())
+        var result = Result<object>.Error(new FakeError())
             .Bind(x => Result<int>.Ok(1))
-            .Bind(x => Result<int>.Ok(2))
-            .Success.ShouldBeFalse();
+            .Bind(x => Result<int>.Ok(2));
+        await Assert.That(result.Success).IsFalse();
     }
-    [Fact]
-    public void BindReturnsErrorIfEndsWithError()
+
+    [Test]
+    public async Task BindReturnsErrorIfEndsWithError()
     {
-        Result<object>.Ok(new object())
+        var result = Result<object>.Ok(new object())
             .Bind(x => Result<int>.Ok(1))
+            .Bind(x => Result<int>.Error(new FakeError()));
+        await Assert.That(result.Success).IsFalse();
+    }
+
+    [Test]
+    public async Task BindReturnsErrorIfErrorInMiddle()
+    {
+        var result = Result<object>.Ok(new object())
             .Bind(x => Result<int>.Error(new FakeError()))
-            .Success.ShouldBeFalse();
+            .Bind(x => Result<int>.Ok(2));
+        await Assert.That(result.Success).IsFalse();
     }
 
-    [Fact]
-    public void BindReturnsErrorIfErrorInMiddle()
+    [Test]
+    public async Task BindPassesValueCorrectly()
     {
-        Result<object>.Ok(new object())
-            .Bind(x => Result<int>.Error(new FakeError()))
-            .Bind(x => Result<int>.Ok(2))
-            .Success.ShouldBeFalse();
-    }
-
-    [Fact]
-    public void BindPassesValueCorrectly()
-    {
-        Result<int>.Ok(1)
+        var result = Result<int>.Ok(1)
             .Bind(x => Result<int>.Ok(x + 1))
-            .Bind(x => Result<int>.Ok(x + 1))
-            .Value.ShouldBe(3);
+            .Bind(x => Result<int>.Ok(x + 1));
+        await Assert.That(result.Value).IsEqualTo(3);
     }
 
-    [Fact]
-    public void BindPassesValueCorrectlyWhenBindingInside()
+    [Test]
+    public async Task BindPassesValueCorrectlyWhenBindingInside()
     {
-        Result<int>.Ok(1)
+        var result = Result<int>.Ok(1)
             .Bind(x => Result<int>.Ok(x + 1)
-                .Bind(x => Result<int>.Ok(x + 1)))
-            .Value.ShouldBe(3);
+                .Bind(x => Result<int>.Ok(x + 1)));
+        await Assert.That(result.Value).IsEqualTo(3);
     }
 
-    [Fact]
-    public void BindWith2Tuple()
+    [Test]
+    public async Task BindWith2Tuple()
     {
-        Result<(int, int)>.Ok((0, 10))
+        var result = Result<(int, int)>.Ok((0, 10))
             .Bind((x, y) => Result<(int, int)>.Ok((x + 1, y + 1)))
-            .Bind((x, y) => Result<(int, int)>.Ok((x + 1, y + 1)))
-            .Value.ShouldBe((2, 12));
+            .Bind((x, y) => Result<(int, int)>.Ok((x + 1, y + 1)));
+        await Assert.That(result.Value).IsEqualTo((2, 12));
     }
 
-    [Fact]
-    public void BindWith3Tuple()
+    [Test]
+    public async Task BindWith3Tuple()
     {
-        Result<(int, int, decimal)>.Ok((0, 10, 100m))
+        var result = Result<(int, int, decimal)>.Ok((0, 10, 100m))
             .Bind((x, y, z) => Result<(int, int, decimal)>.Ok((x + 1, y + 1, z + 1)))
-            .Bind((x, y, z) => Result<(int, int, decimal)>.Ok((x + 1, y + 1, z + 1)))
-            .Value.ShouldBe((2, 12, 102m));
+            .Bind((x, y, z) => Result<(int, int, decimal)>.Ok((x + 1, y + 1, z + 1)));
+        await Assert.That(result.Value).IsEqualTo((2, 12, 102m));
     }
 
-    [Fact]
-    public void BindWith4Tuple()
+    [Test]
+    public async Task BindWith4Tuple()
     {
-        Result<(int, int, decimal, bool)>.Ok((0, 10, 100m, true))
+        var result = Result<(int, int, decimal, bool)>.Ok((0, 10, 100m, true))
             .Bind((x, y, z, w) => Result<(int, int, decimal, bool)>.Ok((x + 1, y + 1, z + 1, true)))
-            .Bind((x, y, z, w) => Result<(int, int, decimal, bool)>.Ok((x + 1, y + 1, z + 1, true)))
-            .Value.ShouldBe((2, 12, 102m, true));
+            .Bind((x, y, z, w) => Result<(int, int, decimal, bool)>.Ok((x + 1, y + 1, z + 1, true)));
+        await Assert.That(result.Value).IsEqualTo((2, 12, 102m, true));
     }
 }

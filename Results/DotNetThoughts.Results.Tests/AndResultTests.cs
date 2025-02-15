@@ -3,24 +3,23 @@
 public class AndResultTests
 {
 
-    [Fact]
-    public void HappyDays_And1()
+    [Test]
+    public async Task HappyDays_And1()
     {
         var result = Result<int>.Ok(1)
             .And(x => Result<int>.Ok(2));
-
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe((1, 2));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo((1, 2));
     }
 
-    [Fact]
-    public void HappyDays_And2()
+    [Test]
+    public async Task HappyDays_And2()
     {
         var result = Result<int>.Ok(1)
             .And(x => Result<int>.Ok(2))
             .And((x, y) => Result<int>.Ok(3));
 
-        result.Success.ShouldBeTrue();
-        result.Value.ShouldBe((1, 2, 3));
+        await Assert.That(result.Success).IsTrue();
+        await Assert.That(result.Value).IsEqualTo((1, 2, 3));
     }
 }
