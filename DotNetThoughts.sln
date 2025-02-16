@@ -61,6 +61,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Sql.Utilitie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Sql.Utilities", "Sql\DotNetThoughts.Sql.Utilities\DotNetThoughts.Sql.Utilities.csproj", "{D60A5B11-269A-46DE-ACDB-EE23910691A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureDevops", "AzureDevops", "{32A1F4DA-9CDC-4D16-9A1D-3A7102461418}"
+	ProjectSection(SolutionItems) = preProject
+		AzureDevOps\auto-update-nuget-packages.az-pipelines.yml = AzureDevOps\auto-update-nuget-packages.az-pipelines.yml
+		AzureDevOps\ReadMe.md = AzureDevOps\ReadMe.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Sql.Migrations.Tests", "Sql\DotNetThoughts.Sql.Migrations.Tests\DotNetThoughts.Sql.Migrations.Tests.csproj", "{96B2BCCD-1971-43AF-B1A5-446144D57132}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Render", "DotNetThoughts.Render\DotNetThoughts.Render.csproj", "{74F8A23F-2D10-4B82-9733-E8280EC71B6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Render.Tests", "DotNetThoughts.Render.Tests\DotNetThoughts.Render.Tests.csproj", "{7DD69946-CB52-4934-B941-26E313F1CD4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +147,18 @@ Global
 		{D60A5B11-269A-46DE-ACDB-EE23910691A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D60A5B11-269A-46DE-ACDB-EE23910691A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D60A5B11-269A-46DE-ACDB-EE23910691A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B2BCCD-1971-43AF-B1A5-446144D57132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B2BCCD-1971-43AF-B1A5-446144D57132}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B2BCCD-1971-43AF-B1A5-446144D57132}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B2BCCD-1971-43AF-B1A5-446144D57132}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74F8A23F-2D10-4B82-9733-E8280EC71B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74F8A23F-2D10-4B82-9733-E8280EC71B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74F8A23F-2D10-4B82-9733-E8280EC71B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74F8A23F-2D10-4B82-9733-E8280EC71B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DD69946-CB52-4934-B941-26E313F1CD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DD69946-CB52-4934-B941-26E313F1CD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DD69946-CB52-4934-B941-26E313F1CD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DD69946-CB52-4934-B941-26E313F1CD4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,6 +181,7 @@ Global
 		{6D6F6DB2-5574-489F-A7FF-68B88396F0E0} = {741A680C-B401-44FA-914A-86B19FE2B6EC}
 		{5EDC7CB0-79B2-4BB7-8A6C-48F1FE19F1B1} = {741A680C-B401-44FA-914A-86B19FE2B6EC}
 		{D60A5B11-269A-46DE-ACDB-EE23910691A6} = {741A680C-B401-44FA-914A-86B19FE2B6EC}
+		{96B2BCCD-1971-43AF-B1A5-446144D57132} = {741A680C-B401-44FA-914A-86B19FE2B6EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAA5B6BA-B6C8-4A90-B9E6-D7634295532E}

@@ -1,0 +1,16 @@
+﻿|  Version | Name               | IsSnapshot |
++==========+====================+============+
+|        1 | Migration 1        | False      |
+|        2 | Migration 2        | False      |
+|        3 | Migration 3        | False      |
+|     1000 | Migration 1000     | False      |
+|     1001 | Migration 1001     | False      |
+|     1002 | Migration 1002     | False      |
+|     2000 | Migration 2000     | False      |
+|     3000 | Migration 3000     | False      |
+|     3001 | Migration 3001     | False      |
+| 10000001 | Migration 10000001 | False      |
+| 10000002 | Migration 10000002 | False      |
+| 10001000 | Migration 10001000 | False      |
+| 20000000 | Migration 20000000 | False      |
+| 30000000 | Migration 30000000 | False      |

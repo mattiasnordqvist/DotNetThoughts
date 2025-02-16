@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="TUnit" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DotNetThoughts.Sql.Utilities\DotNetThoughts.Sql.Utilities.csproj" />
   </ItemGroup>
 </Project>

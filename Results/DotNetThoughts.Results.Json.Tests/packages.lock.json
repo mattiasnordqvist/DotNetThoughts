@@ -27,12 +27,12 @@
       },
       "TUnit": {
         "type": "Direct",
-        "requested": "[0.12.23, )",
-        "resolved": "0.12.23",
-        "contentHash": "kA6gzUWtnUBqYUEeYXJXy+bnJpHG07TWHPAbPOY1LadZqQl1f2HDOUOPq9zrlgmgER/W40mi1+vWn74FFGgvEg==",
+        "requested": "[0.13.0, )",
+        "resolved": "0.13.0",
+        "contentHash": "wnvodz0pkHF/tmv+OGWtlyH47rTb47OLtGHXpasntRem4d4qnn37NrBlJZOX0hzo0yJhemFKfz6bHd1/wnE80A==",
         "dependencies": {
-          "TUnit.Assertions": "0.12.23",
-          "TUnit.Engine": "0.12.23"
+          "TUnit.Assertions": "0.13.0",
+          "TUnit.Engine": "0.13.0"
         }
       },
       "Verify.TUnit": {
@@ -186,24 +186,24 @@
       },
       "TUnit.Assertions": {
         "type": "Transitive",
-        "resolved": "0.12.23",
-        "contentHash": "MkdjmZRsXgjgyDN8/ztNEjDu8/hj7mwSWqfWlXU6tZuqz2aRZvdgWq8UqXamLb1Am4gY+Q28zVOUkJWLYuGc5Q=="
+        "resolved": "0.13.0",
+        "contentHash": "fI/AFbdk9kwI3LC1Ok2p+KWoy+FLPVCCg/D9RN9iAbTTK7fUoLnX2MYmqFExeUlWORqoF+zXAXSoZ72NmL7b5w=="
       },
       "TUnit.Core": {
         "type": "Transitive",
-        "resolved": "0.12.23",
-        "contentHash": "L4ouAerpwWbHMSEg36NU8byDgSpgmmmiMTd0IVbj4q6yrWAgQZPMlkjPsnhDQA19NFgdcgnDCYbTBXQhb8jopQ=="
+        "resolved": "0.13.0",
+        "contentHash": "5jTfar1rddkiEKCU8nQFrDYRwFHN8Q6//xD/dWFW8VfrSI4dm62MV7y8j88szvF5z3ejSeqOlngE9i+RSh7l2Q=="
       },
       "TUnit.Engine": {
         "type": "Transitive",
-        "resolved": "0.12.23",
-        "contentHash": "8u7rXipIvsHX1XoNfmFrqCNmjlHx9QYMw2w9ibSpGj7BMFF594mBZOL4oK+TPggbbb5eYsNF37m8auN4iQ8sMA==",
+        "resolved": "0.13.0",
+        "contentHash": "aSbvAN4e5uUlcrC4w/IMZ5dQS6Vhg9Z/ciGFJ2hfrgK5YjpqIJtJkq3J7BhWGxay+K72c7nbVNI5Ejbh4CeikQ==",
         "dependencies": {
           "EnumerableAsyncProcessor": "2.1.0",
           "Microsoft.Testing.Extensions.TrxReport.Abstractions": "1.4.3",
           "Microsoft.Testing.Platform": "1.4.3",
           "Microsoft.Testing.Platform.MSBuild": "1.4.3",
-          "TUnit.Core": "0.12.23"
+          "TUnit.Core": "0.13.0"
         }
       },
       "Verify": {
@@ -226,7 +226,7 @@
       "dotnetthoughts.results.json": {
         "type": "Project",
         "dependencies": {
-          "DotNetThoughts.Results": "[1.5.12, )"
+          "DotNetThoughts.Results": "[1.5.13, )"
         }
       },
       "DotNetThoughts.Results.Analyzer": {

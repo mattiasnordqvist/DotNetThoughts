@@ -1,0 +1,6 @@
+| Version | Name        | IsSnapshot |
++=========+=============+============+
+|       1 | Migration 1 | False      |
+|       2 | Migration 2 | False      |
+|       3 | Migration 3 | False      |
+|       4 | Migration 4 | False      |

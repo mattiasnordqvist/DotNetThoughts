@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="FakeItEasy" />
+    <PackageReference Include="Testcontainers.MsSql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotNetThoughts.Render\DotNetThoughts.Render.csproj" />
+    <ProjectReference Include="..\DotNetThoughts.Sql.Migrations\DotNetThoughts.Sql.Migrations.csproj" />
+  </ItemGroup>
+</Project>
