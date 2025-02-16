@@ -5,7 +5,7 @@
     <PackageReference Include="Testcontainers.MsSql" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DotNetThoughts.Render\DotNetThoughts.Render.csproj" />
+    <ProjectReference Include="..\..\Render\DotNetThoughts.Render\DotNetThoughts.Render.csproj" />
     <ProjectReference Include="..\DotNetThoughts.Sql.Migrations\DotNetThoughts.Sql.Migrations.csproj" />
   </ItemGroup>
 </Project>
