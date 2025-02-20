@@ -5,44 +5,86 @@ namespace DotNetThoughts.Render;
 
 public class Table
 {
-    public static string Render<T>(IEnumerable<T> items)
+    private List<Column> _columns = [];
+
+    private class Column
+    {
+        public required string Header { get; set; }
+        public required Alignment Alignment { get; set; }
+
+        public Func<object?, string> Render { get; set; } = DefaultRender;
+
+        public static Func<object?, string> DefaultRender = (value) => value?.ToString() ?? "";
+    }
+    internal enum Alignment
+    {
+        Right,
+        Left
+    }
+
+    public static Table CreateFrom<T>()
+    {
+        var table = new Table();
+        var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        table._columns = properties.Select(p => new Column
+        {
+            Header = p.Name,
+            Alignment = IsNumericType(p.PropertyType) ? Alignment.Right : Alignment.Left
+        }).ToList();
+        return table;
+    }
+
+    public string Render<T>(IEnumerable<T> items)
     {
         var stringBuilder = new StringBuilder();
-        RenderTo(stringBuilder, items);
+        this.RenderTo(stringBuilder, items);
         return stringBuilder.ToString();
     }
 
-    public static void RenderTo<T>(StringBuilder stringBuilder, IEnumerable<T> items)
+    public void RenderTo<T>(StringBuilder stringBuilder, IEnumerable<T> items)
     {
+        var headers = _columns.Select(c => c.Header).ToArray();
+
         var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        var headers = properties.Select(p => p.Name).ToArray();
-        var rowsData = items.Select(item => properties.Select(p => p.GetValue(item, null)).ToArray()).ToList();
-        var renderedRows = rowsData.Select(row => row.Select(cell => cell?.ToString() ?? "").ToArray()).ToList();
+        var renderedRows = items.Select(item => _columns.Select(c => c.Render(properties.FirstOrDefault(p => p.Name == c.Header)?.GetValue(item, null))).ToArray()).ToList();
 
-        var columns = headers
-            .Select((header, index) =>
-            {
-                var widht = Math.Max(header.Length, renderedRows.Max(row => row[index].Length));
-                var alignment = IsNumericType(properties[index].PropertyType) ? Alignment.Right : Alignment.Left;
-                return new Column
-                {
-                    Header = header,
-                    Width = widht,
-                    Alignment = alignment,
-                };
-            })
-            .ToArray();
-
-        AppendRow(headers, columns, stringBuilder);
-        AppendSeparator(columns.Select(c => c.Width).ToArray(), stringBuilder);
-
-        foreach (var row in renderedRows)
+        var calculatedColumnWidths = headers.Select((header, index) =>
         {
-            AppendRow(row, columns, stringBuilder);
+            var width = Math.Max(header.Length, renderedRows.Max(row => row[index].Length));
+            return width;
+        }).ToArray();
+
+        var columnRenderInfo = _columns.Select((c, index) => new ColumnRenderInfo
+        {
+            Alignment = c.Alignment,
+            Width = calculatedColumnWidths[index]
+        }).ToArray();
+
+        AppendRow(headers, columnRenderInfo, stringBuilder);
+        AppendSeparator(columnRenderInfo, stringBuilder);
+        foreach (var renderedRow in renderedRows)
+        {
+            AppendRow(renderedRow, columnRenderInfo, stringBuilder);
         }
     }
 
-    private static void AppendRow(string[] row, Column[] columns, StringBuilder sb)
+    private class ColumnRenderInfo
+    {
+        public Alignment Alignment { get; set; }
+        public int Width { get; set; }
+    }
+
+    private static bool IsNumericType(Type type)
+    {
+        return type == typeof(byte) || type == typeof(sbyte) ||
+               type == typeof(short) || type == typeof(ushort) ||
+               type == typeof(int) || type == typeof(uint) ||
+               type == typeof(long) || type == typeof(ulong) ||
+               type == typeof(float) || type == typeof(double) ||
+               type == typeof(decimal);
+    }
+
+    private static void AppendRow(string[] row, ColumnRenderInfo[] columns, StringBuilder sb)
     {
         for (int i = 0; i < row.Length; i++)
         {
@@ -59,37 +101,25 @@ public class Table
         sb.AppendLine("|");
     }
 
-    private static void AppendSeparator(int[] columnWidths, StringBuilder sb)
+    private static void AppendSeparator(ColumnRenderInfo[] columnWidths, StringBuilder sb)
     {
         foreach (var width in columnWidths)
         {
             sb.Append("+");
-            sb.Append(new string('=', width + 2)); // 2 for padding
+            sb.Append(new string('=', width.Width + 2)); // 2 for padding
         }
         sb.AppendLine("+");
     }
-
-    private class Column
+    public static string RenderTable<T>(IEnumerable<T> items)
     {
-        public required string Header { get; set; }
-        public required int Width { get; set; }
-        public required Alignment Alignment { get; set; }
+        var stringBuilder = new StringBuilder();
+        RenderTableTo(stringBuilder, items);
+        return stringBuilder.ToString();
     }
 
-    // Helper function to check if a type is numeric
-    private static bool IsNumericType(Type type)
+    public static void RenderTableTo<T>(StringBuilder stringBuilder, IEnumerable<T> items)
     {
-        return type == typeof(byte) || type == typeof(sbyte) ||
-               type == typeof(short) || type == typeof(ushort) ||
-               type == typeof(int) || type == typeof(uint) ||
-               type == typeof(long) || type == typeof(ulong) ||
-               type == typeof(float) || type == typeof(double) ||
-               type == typeof(decimal);
-    }
-    internal enum Alignment
-    {
-        Right,
-        Left
+        Table.CreateFrom<T>().RenderTo(stringBuilder, items);
     }
 }
 

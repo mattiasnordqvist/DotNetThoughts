@@ -1,11 +1,8 @@
 ﻿namespace DotNetThoughts.Sql.Migrations.Tests;
-public partial class Tests
+public class FakeMigrationLoader : List<IMigration>, IMigrationLoader
 {
-    public class FakeMigrationLoader : List<IMigration>, IMigrationLoader
+    public IEnumerable<IMigration> LoadMigrations()
     {
-        public IEnumerable<IMigration> LoadMigrations()
-        {
-            return this;
-        }
+        return this;
     }
 }

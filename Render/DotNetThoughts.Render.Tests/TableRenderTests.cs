@@ -9,7 +9,7 @@ public class TableRenderTests
     public async Task SimpleTableRender()
     {
         var stringBuilder = new StringBuilder();
-        Table.RenderTo(stringBuilder,
+        Table.RenderTableTo(stringBuilder,
         [
             new { Name = "John", Age = 25 },
             new { Name = "Jane", Age = 22 },

@@ -7,13 +7,10 @@ using DotNetThoughts.Sql.Utilities;
 
 using Microsoft.Data.SqlClient;
 
-using System.Text;
-using System.Threading;
-
 using Testcontainers.MsSql;
 
 namespace DotNetThoughts.Sql.Migrations.Tests;
-public partial class Tests
+public class Tests
 {
     public static string? _masterConnectionString = null;
 
@@ -79,7 +76,7 @@ public partial class Tests
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync(cancellationToken);
         var versionInfo = await connection.QueryAsync<VersionInfo>("SELECT * FROM dbo.VersionInfo");
-        return Verify(Table.Render(versionInfo));
+        return Verify(Table.RenderTable(versionInfo));
 
     }
 }
