@@ -9,6 +9,8 @@ using Microsoft.Data.SqlClient;
 
 using Testcontainers.MsSql;
 
+using static DotNetThoughts.Render.Render;
+
 namespace DotNetThoughts.Sql.Migrations.Tests;
 public class Tests
 {
@@ -51,9 +53,6 @@ public class Tests
             new FakeMigration(20000000, "Migration 20000000", false),
             new FakeMigration(30000000, "Migration 30000000", false),
         ], cancellationToken);
-
-
-
     }
 
     private async Task<Task> Test(IEnumerable<IMigration> migrations, CancellationToken cancellationToken)
@@ -76,7 +75,7 @@ public class Tests
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync(cancellationToken);
         var versionInfo = await connection.QueryAsync<VersionInfo>("SELECT * FROM dbo.VersionInfo");
-        return Verify(Table.RenderTable(versionInfo));
+        return Verify(Table.Render([..versionInfo]));
 
     }
 }
