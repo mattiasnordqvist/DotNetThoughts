@@ -18,9 +18,9 @@
 
 [TimeKeeping/DotNetThoughts.TimeKeeping/ReadMe.md](TimeKeeping/DotNetThoughts.TimeKeeping/ReadMe.md)
 
-# LocalDateTime
+# LocalTimeKit
 
-[LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md](LocalDateTime/DotNetThoughts.LocalTimeKit/ReadMe.md)
+[LocalTimeKit/DotNetThoughts.LocalTimeKit/ReadMe.md](LocalTimeKit/DotNetThoughts.LocalTimeKit/ReadMe.md)
 
 # Sql.Migrations
 
