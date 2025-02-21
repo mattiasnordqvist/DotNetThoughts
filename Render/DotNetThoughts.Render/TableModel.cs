@@ -98,10 +98,20 @@ public class TableModel<TRow>
         var headers = Columns.Select(x => x.Header).ToArray();
         var renderedRows = Rows.Select(row => Columns.Select(c => c.RenderValue(c.GetValue(c, row), row)).ToArray());
 
-        var calculatedColumnWidths = headers.Select((header, index) =>
+        var calculatedColumnWidths = Columns.Select((column, index) =>
         {
-            var width = Math.Max(header.Length, renderedRows.Max(row => row[index].Length));
-            return width;
+            if(column.Width is FixedWidth fixedWidth)
+            {
+                return fixedWidth.Width;
+            }
+            else if (column.Width is FitToContent)
+            {
+                return Math.Max(column.Header.Length, renderedRows.Max(row => row[index].Length));
+            }
+            else
+            {
+                throw new NotSupportedException($"Width type {column.Width.GetType().Name} is not supported");
+            }
         }).ToArray();
 
         var columnRenderInfo = Columns.Select((c, index) => new ColumnRenderInfo
@@ -142,11 +152,14 @@ public class TableModel<TRow>
             // Check if the property is numeric to align it to the right
             if (columns[i].Alignment == Alignment.Right)
             {
-                sb.Append($"| {row[i].PadLeft(columns[i].Width)} ");
+                var content = row[i];
+                var padded = content.PadLeft(columns[i].Width);
+                var constrained = padded[(padded.Length - columns[i].Width)..];
+                sb.Append($"| {constrained} ");
             }
             else
             {
-                sb.Append($"| {row[i].PadRight(columns[i].Width)} ");
+                sb.Append($"| {row[i].PadRight(columns[i].Width)[0..columns[i].Width]} ");
             }
         }
         sb.AppendLine("|");
