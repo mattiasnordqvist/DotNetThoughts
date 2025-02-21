@@ -2,7 +2,6 @@
 
 using Dapper;
 
-using DotNetThoughts.Render;
 using DotNetThoughts.Sql.Utilities;
 
 using Microsoft.Data.SqlClient;

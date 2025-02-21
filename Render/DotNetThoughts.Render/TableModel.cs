@@ -30,6 +30,8 @@ public class TableModel<TRow>
 {
     public List<ColumnModel> Columns = [];
 
+    public List<TRow> Rows = [];
+
     public class ColumnModel
     {
         public required int Index { get; set; }
@@ -45,22 +47,28 @@ public class TableModel<TRow>
     }
 
 
-    public static TableModel<List<string>> CreateFrom(List<string> headers)
+    public static TableModel<List<string>> CreateFrom(List<List<string>> headerRowAndDataRows)
     {
         var table = new TableModel<List<string>>();
-        table.Columns = headers.Select(static (h,i) => new TableModel<List<string>>.ColumnModel
+
+        var headers = headerRowAndDataRows.First();
+        var rows = headerRowAndDataRows.Skip(1).ToList();
+        table.Columns = headers.Select((h,i) => new TableModel<List<string>>.ColumnModel
         {
             Index = i,
             Header = h,
             Width = new FitToContent(),
-            Alignment = Alignment.Left,
+            Alignment = rows.Select(x => x[i]).All(IsNumeric) ? Alignment.Right : Alignment.Left,
             GetValue = (info, row) => row[info.Index],
 
         }).ToList();
+        table.Rows = rows;
         return table;
+
+        bool IsNumeric(string value) => double.TryParse(value, out _);
     }
 
-    public static TableModel<T> CreateFrom<T>()
+    public static TableModel<T> CreateFrom<T>(List<T> rows)
     {
         var table = new TableModel<T>();
         var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -73,21 +81,22 @@ public class TableModel<TRow>
             GetValue = (info, row) => p.GetValue(row, null),
 
         }).ToList();
+        table.Rows = rows;
         return table;
     }
 
-    public string Render(List<TRow> items)
+    public string Render()
     {
         var stringBuilder = new StringBuilder();
-        this.RenderTo(stringBuilder, items);
+        this.RenderTo(stringBuilder);
         return stringBuilder.ToString();
     }
 
 
-    public void RenderTo(StringBuilder stringBuilder, List<TRow> items) 
+    public void RenderTo(StringBuilder stringBuilder) 
     {
         var headers = Columns.Select(x => x.Header).ToArray();
-        var renderedRows = items.Select(item => Columns.Select(c => c.RenderValue(c.GetValue(c, item), item)).ToArray());
+        var renderedRows = Rows.Select(row => Columns.Select(c => c.RenderValue(c.GetValue(c, row), row)).ToArray());
 
         var calculatedColumnWidths = headers.Select((header, index) =>
         {
@@ -168,8 +177,8 @@ public static class Render
         }
         public static void RenderTo<T>(StringBuilder stringBuilder, List<T> items)
         {
-            var table = TableModel<T>.CreateFrom<T>();
-            table.RenderTo(stringBuilder, items);
+            var table = TableModel<T>.CreateFrom(items);
+            table.RenderTo(stringBuilder);
         }
 
 
@@ -182,8 +191,8 @@ public static class Render
         }
         public static void RenderTo(StringBuilder stringBuilder, List<List<string>> items)
         {
-            var table = TableModel<List<string>>.CreateFrom(items.First());
-            table.RenderTo(stringBuilder, items.Skip(1).ToList());
+            var table = TableModel<List<string>>.CreateFrom(items);
+            table.RenderTo(stringBuilder);
         }
     }
 }
