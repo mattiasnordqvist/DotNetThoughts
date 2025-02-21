@@ -8,6 +8,23 @@ public enum Alignment
     Right,
     Left
 }
+public interface Width
+{
+}
+
+public class FitToContent : Width
+{
+}
+
+public class FixedWidth : Width
+{
+    public FixedWidth(int width)
+    {
+        Width = width;
+    }
+
+    public int Width { get; set; }
+}
 
 public class TableModel<TRow>
 {
@@ -19,11 +36,10 @@ public class TableModel<TRow>
         public required string Header { get; set; }
         public required Alignment Alignment { get; set; }
 
+        public required Width Width { get; set; }
 
         public required Func<ColumnModel, TRow, object?> GetValue { get; set; }
         public Func<object?, TRow, string> RenderValue { get; set; } = DefaultRenderValue;
-
-
 
         public static Func<object?, TRow, string> DefaultRenderValue = (value, _) => value?.ToString() ?? "";
     }
@@ -36,6 +52,7 @@ public class TableModel<TRow>
         {
             Index = i,
             Header = h,
+            Width = new FitToContent(),
             Alignment = Alignment.Left,
             GetValue = (info, row) => row[info.Index],
 
@@ -51,6 +68,7 @@ public class TableModel<TRow>
         {
             Index = i,
             Header = p.Name,
+            Width = new FitToContent(),
             Alignment = IsNumericType(p.PropertyType) ? Alignment.Right : Alignment.Left,
             GetValue = (info, row) => p.GetValue(row, null),
 
