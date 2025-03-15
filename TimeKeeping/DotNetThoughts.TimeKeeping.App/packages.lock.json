@@ -23,15 +23,15 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[9.0.2, )",
-        "resolved": "9.0.2",
-        "contentHash": "+KFnCLVPicEq99ko0tq+ycTvNLXHw0tImmTZjPloB/DOFLPT56KLfk5aS7wbgXRPzYhXTTBYLGaABea5mke77w=="
+        "requested": "[9.0.3, )",
+        "resolved": "9.0.3",
+        "contentHash": "1rqGTfubVg0qj2PsK6esyq3PIxtYJYrN3LsYUV9RrvH3anmt3fT3ozYdAZZH4U8JU/pt5pPIUk8NBSu26wtekA=="
       },
       "Microsoft.NET.Sdk.WebAssembly.Pack": {
         "type": "Direct",
-        "requested": "[9.0.2, )",
-        "resolved": "9.0.2",
-        "contentHash": "svOs6YArbcpL06ZWj+b4hNVlJC5m37ydSgS+1XJWJzQu5fdT7ToEOaik1yiNo9AD357PBEiUJWTlrIcwdF8IeA=="
+        "requested": "[9.0.3, )",
+        "resolved": "9.0.3",
+        "contentHash": "DMmycEIk9lhnpvDMYprPo0eCJNv0g3jujnpREkormE8wQ8NfWjuh+Sj66V4FS+e+OE1jws4FbKdat0GPWwA92g=="
       },
       "Microsoft.AspNetCore.Authorization": {
         "type": "Transitive",

@@ -62,9 +62,9 @@ public class TableRenderTests
     {
         var stringBuilder = new StringBuilder();
         var table = new TableModel<List<string>>();
-        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 0, Width = new FixedWidth(10), Header = "C1", Alignment = Alignment.Left, GetValue = (x, y) => y[0] });
-        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 1, Width = new FixedWidth(5), Header = "C2", Alignment = Alignment.Left, GetValue = (x, y) => y[1] });
-        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 2, Width = new FixedWidth(5), Header = "C3", Alignment = Alignment.Right, GetValue = (x, y) => y[2] });
+        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 0, Width = new FixedWidth(10), Header = "C1", Alignment = Alignment.Left, GetValue = (x, y, _) => y[0] });
+        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 1, Width = new FixedWidth(5), Header = "C2", Alignment = Alignment.Left, GetValue = (x, y, _) => y[1] });
+        table.Columns.Add(new TableModel<List<string>>.ColumnModel { Index = 2, Width = new FixedWidth(5), Header = "C3", Alignment = Alignment.Right, GetValue = (x, y, _) => y[2] });
 
         stringBuilder.AppendLine("C1 has fixed width 10");
         stringBuilder.AppendLine("C2 has fixed width 5");
@@ -83,6 +83,19 @@ public class TableRenderTests
         table.RenderTo(stringBuilder);
         stringBuilder.AppendLine();
 
+        await Verify(stringBuilder.ToString());
+    }
+
+    [Test]
+    public async Task RowIndex()
+    {
+        var table = new TableModel<string>();
+        table.Columns.Add(new TableModel<string>.ColumnModel { Index = 0, Width = new FitToContent(), Header = "Index", Alignment = Alignment.Right, GetValue = (x, y, ri) => ri });
+        table.Columns.Add(new TableModel<string>.ColumnModel { Index = 1, Width = new FitToContent(), Header = "Value", Alignment = Alignment.Left, GetValue = (x, y, ri) => y });
+
+        table.Rows = ["Row 1", "Row 2", "Row 3"];
+        var stringBuilder = new StringBuilder();
+        table.RenderTo(stringBuilder);
         await Verify(stringBuilder.ToString());
     }
 }

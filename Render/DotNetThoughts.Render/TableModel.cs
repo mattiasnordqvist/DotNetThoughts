@@ -40,10 +40,10 @@ public class TableModel<TRow>
 
         public required Width Width { get; set; }
 
-        public required Func<ColumnModel, TRow, object?> GetValue { get; set; }
-        public Func<object?, TRow, string> RenderValue { get; set; } = DefaultRenderValue;
+        public required Func<ColumnModel, TRow, int, object?> GetValue { get; set; }
+        public Func<object?, TRow, int, string> RenderValue { get; set; } = DefaultRenderValue;
 
-        public static Func<object?, TRow, string> DefaultRenderValue = (value, _) => value?.ToString() ?? "";
+        public static Func<object?, TRow, int, string> DefaultRenderValue = (value, _, _) => value?.ToString() ?? "";
     }
 
 
@@ -59,7 +59,7 @@ public class TableModel<TRow>
             Header = h,
             Width = new FitToContent(),
             Alignment = rows.Select(x => x[i]).All(IsNumeric) ? Alignment.Right : Alignment.Left,
-            GetValue = (info, row) => row[info.Index],
+            GetValue = (info, row, _) => row[info.Index],
 
         }).ToList();
         table.Rows = rows;
@@ -78,7 +78,7 @@ public class TableModel<TRow>
             Header = p.Name,
             Width = new FitToContent(),
             Alignment = IsNumericType(p.PropertyType) ? Alignment.Right : Alignment.Left,
-            GetValue = (info, row) => p.GetValue(row, null),
+            GetValue = (info, row, _) => p.GetValue(row, null),
 
         }).ToList();
         table.Rows = rows;
@@ -96,7 +96,7 @@ public class TableModel<TRow>
     public void RenderTo(StringBuilder stringBuilder) 
     {
         var headers = Columns.Select(x => x.Header).ToArray();
-        var renderedRows = Rows.Select(row => Columns.Select(c => c.RenderValue(c.GetValue(c, row), row)).ToArray());
+        var renderedRows = Rows.Select((row, rowIndex) => Columns.Select(c => c.RenderValue(c.GetValue(c, row, rowIndex), row, rowIndex)).ToArray());
 
         var calculatedColumnWidths = Columns.Select((column, index) =>
         {
