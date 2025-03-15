@@ -44,6 +44,30 @@ public class TableModel<TRow>
         public Func<object?, TRow, int, string> RenderValue { get; set; } = DefaultRenderValue;
 
         public static Func<object?, TRow, int, string> DefaultRenderValue = (value, _, _) => value?.ToString() ?? "";
+
+
+        public static ColumnModel Create<TValue>(
+           int columnIndex,
+           string header,
+           Func<ColumnModel, TRow, int, TValue?> getValue,
+           Func<TValue?, TRow, int, string>? renderValue = null,
+           Action<ColumnModel>? configure = null)
+        {
+            var columnModel = new ColumnModel
+            {
+                Index = columnIndex,
+                Header = header,
+                Width = new FitToContent(),
+                Alignment = Alignment.Left,
+                GetValue = (info, row, rowIndex) => getValue(info, row, rowIndex),
+            };
+            if (renderValue != null)
+            {
+                columnModel.RenderValue = (value, row, rowIndex) => renderValue((TValue?)value, row, rowIndex);
+            }
+            configure?.Invoke(columnModel);
+            return columnModel;
+        }
     }
 
 

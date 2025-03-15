@@ -90,7 +90,7 @@ public class TableRenderTests
     public async Task RowIndex()
     {
         var table = new TableModel<string>();
-        table.Columns.Add(new TableModel<string>.ColumnModel { Index = 0, Width = new FitToContent(), Header = "Index", Alignment = Alignment.Right, GetValue = (x, y, ri) => ri });
+        table.Columns.Add(TableModel<string>.ColumnModel.Create(0, "Index", (cm, row, index) => index, configure: cm => cm.Alignment = Alignment.Right));
         table.Columns.Add(new TableModel<string>.ColumnModel { Index = 1, Width = new FitToContent(), Header = "Value", Alignment = Alignment.Left, GetValue = (x, y, ri) => y });
 
         table.Rows = ["Row 1", "Row 2", "Row 3"];
