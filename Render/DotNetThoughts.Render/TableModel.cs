@@ -193,7 +193,7 @@ public class TableModel<TRow>
     {
         foreach (var width in columnWidths)
         {
-            sb.Append("+");
+            sb.Append('+');
             sb.Append(new string('=', width.Width + 2)); // 2 for padding
         }
         sb.AppendLine("+");

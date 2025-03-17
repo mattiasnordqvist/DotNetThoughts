@@ -10,7 +10,7 @@ namespace DotNetThoughts.Results;
 /// The value of Type is probably good enough, but please provide a better Message by setting it in the constructor.
 /// Also defaults GetData() to return a string representation of all property values on the inheriting type.
 /// </summary>
-public abstract record ErrorBase : IError
+public abstract record Error : IError
 {
     private static readonly ConcurrentDictionary<Type, string> _cache = new();
 
@@ -27,7 +27,7 @@ public abstract record ErrorBase : IError
 
         if (t.IsGenericTypeDefinition)
         {
-            var removedBackTick = (t.Name.IndexOf('`') >= 0 ? t.Name.Remove(t.Name.IndexOf('`')) : t.Name);
+            var removedBackTick = t.Name.Contains('`') ? t.Name[..t.Name.IndexOf('`')] : t.Name;
             var nrOfGenericArguments = t.GetGenericArguments().Length;
             result = removedBackTick + "<" +new string(',',nrOfGenericArguments-1)+ ">";
         }
@@ -37,7 +37,7 @@ public abstract record ErrorBase : IError
         }
         else
         {
-            var removedBackTick = (t.Name.IndexOf('`') >= 0 ? t.Name.Remove(t.Name.IndexOf('`')) : t.Name);
+            var removedBackTick = t.Name.Contains('`') ? t.Name[..t.Name.IndexOf('`')] : t.Name;
             result = $"{removedBackTick}<{string.Join(',', t.GetGenericArguments().Select(x => ExpandTypeName(x)))}>";
         }
 
@@ -48,16 +48,16 @@ public abstract record ErrorBase : IError
     }
 
     /// <summary>
-    /// This implicit operator takes an ErrorBase and returns a failed Result of type Unit, with the passed ErrorBase as the only error.
+    /// This implicit operator takes an Error and returns a failed Result of type Unit, with the passed Error as the only error.
     /// Can't have this for type generics, because that doesnt work with implicit operators, because an implicit cast operator must be defined in the type of either its return value or its argument.
     /// </summary>
     /// <param name="error"></param>
-    public static implicit operator Result<Unit>(ErrorBase error) => Result<Unit>.Error(error);
+    public static implicit operator Result<Unit>(Error error) => Result<Unit>.Error(error);
 
     /// <summary>
     /// Type defaults to the name of the inheriting Type.
     /// </summary>
-    public ErrorBase(string message)
+    public Error(string message)
     {
         Type = ExpandTypeName(GetType());
         Message = message;
@@ -67,7 +67,7 @@ public abstract record ErrorBase : IError
     /// Type defaults to the name of the inheriting Type.
     /// Message defaults to the name of the inheriting Type.
     /// </summary>
-    public ErrorBase()
+    public Error()
     {
         Type = ExpandTypeName(GetType());
         Message = ExpandTypeName(GetType());
@@ -98,7 +98,7 @@ public abstract record ErrorBase : IError
     {
         var propValues = GetType()
          .GetProperties()
-         .Where(p => p.DeclaringType != typeof(IError) && p.DeclaringType != typeof(ErrorBase))
+         .Where(p => p.DeclaringType != typeof(IError) && p.DeclaringType != typeof(Error))
          .ToDictionary(d => d.Name, d => d.GetValue(this));
         foreach (var prop in propValues)
         {
@@ -125,9 +125,9 @@ public abstract record ErrorBase : IError
         builder.Append(", ");
         builder.Append(nameof(Data));
         builder.Append(" = ");
-        builder.Append("{");
-        builder.Append(Data.Any () ? $" {string.Join(", ", Data.Select(x => $"{x.Key} = {x.Value}"))} ": " ");
-        builder.Append("}");
+        builder.Append('{');
+        builder.Append(Data.Count != 0 ? $" {string.Join(", ", Data.Select(x => $"{x.Key} = {x.Value}"))} ": " ");
+        builder.Append('}');
 
         return true;
     }

@@ -96,7 +96,7 @@ public class GeneralValidationTests
         await Assert.That(result.Value).IsNull();
     }
 
-    public record UnparseableError(string? Candidate) : ErrorBase;
+    public record UnparseableError(string? Candidate) : Error;
     public static Result<long> StringToLong(string? candidate) =>
       long.TryParse(candidate, out var longified)
           ? longified.Return()

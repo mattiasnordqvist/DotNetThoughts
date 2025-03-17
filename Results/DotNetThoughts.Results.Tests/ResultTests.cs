@@ -145,17 +145,17 @@ public class ResultTests
     }
 }
 
-record FakeError : ErrorBase
+record FakeError : Error
 {
 
 }
 
-record AnotherError : ErrorBase
+record AnotherError : Error
 {
 
 }
 
-record ErrorWithData(int Number) : ErrorBase($"Error message number {Number}")
+record ErrorWithData(int Number) : Error($"Error message number {Number}")
 {
 
 }

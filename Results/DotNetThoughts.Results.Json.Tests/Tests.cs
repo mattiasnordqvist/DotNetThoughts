@@ -57,7 +57,7 @@ public class Tests
         var json = JsonSerializer.Serialize(unitResult, Options);
         await Verify(json);
     }
-    public record MyError(int Code, string Description) : ErrorBase;
+    public record MyError(int Code, string Description) : Error;
 
 
     [Test]

@@ -5,7 +5,7 @@ namespace DotNetThoughts.Results.Validation;
 /// <summary>
 /// Represents an error that occurs when an argument is missing.
 /// </summary>
-public record MissingArgumentError : ErrorBase
+public record MissingArgumentError : Error
 {
     public MissingArgumentError(string? argumentExpression = null)
     {

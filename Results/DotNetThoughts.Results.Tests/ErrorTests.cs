@@ -1,11 +1,11 @@
 ﻿namespace DotNetThoughts.Results.Tests;
 
-public class ErrorBaseTests
+public class ErrorTests
 {
     [Test]
     [Arguments(typeof(string), "String")]
     [Arguments(typeof(List<>), "List<>")]
-    [Arguments(typeof(ErrorBase), "ErrorBase")]
+    [Arguments(typeof(Error), "Error")]
     [Arguments(typeof(GenericError<int>), "GenericError<Int32>")]
     [Arguments(typeof(GenericError<GenericError<string>>), "GenericError<GenericError<String>>")]
     [Arguments(typeof(TwoGenerics<int, string>), "TwoGenerics<Int32,String>")]
@@ -13,18 +13,18 @@ public class ErrorBaseTests
     [Arguments(typeof(TaskFailedError), "TaskFailedError")]
     public async Task ExpandTypeNameTest1(Type t, string result)
     {
-        await Assert.That(ErrorBase.ExpandTypeName(t)).IsEqualTo(result);
+        await Assert.That(Error.ExpandTypeName(t)).IsEqualTo(result);
     }
 
-    public record TaskTakesTooLongError : ErrorBase;
-    public record TaskFailedError : ErrorBase;
-    public record TwoGenerics<T, T2> : ErrorBase;
+    public record TaskTakesTooLongError : Error;
+    public record TaskFailedError : Error;
+    public record TwoGenerics<T, T2> : Error;
 
-    public record GenericError<T> : ErrorBase
+    public record GenericError<T> : Error
     {
     }
 
-    public record FakeError : ErrorBase
+    public record FakeError : Error
     {
         public string PropertyA { get; set; } = "A";
         public int PropertyB { get; set; } = 2;

@@ -231,7 +231,7 @@ I think this is a bit like the do-notation in Haskell
 
 Given 
 ```csharp
-    record DivideByZeroError : ErrorBase;
+    record DivideByZeroError : Error;
     Result<int> Divide(int a, int b) => b == 0 ? Result<int>.Error(new DivideByZeroError()) : Result<int>.Ok(a / b);
     Result<int> Multiply(int a, int b) => a * b;        
 ```

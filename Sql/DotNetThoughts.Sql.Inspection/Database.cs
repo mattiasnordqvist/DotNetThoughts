@@ -32,6 +32,6 @@ public static class Database
         return UnitResult.Ok;
     }
 
-    public record DatabaseDoesNotExistError(string DatabaseName) : ErrorBase($"The database {DatabaseName} does not exist");
-    public record DatabaseIsNotOnlineError(string DatabaseName) : ErrorBase($"The database {DatabaseName} is not online");
+    public record DatabaseDoesNotExistError(string DatabaseName) : Error($"The database {DatabaseName} does not exist");
+    public record DatabaseIsNotOnlineError(string DatabaseName) : Error($"The database {DatabaseName} is not online");
 }
