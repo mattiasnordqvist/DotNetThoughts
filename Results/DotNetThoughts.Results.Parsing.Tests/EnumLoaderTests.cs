@@ -1,4 +1,6 @@
-﻿namespace DotNetThoughts.Results.Validation.Tests;
+﻿using DotNetThoughts.Results.Parsing;
+
+namespace DotNetThoughts.Results.Validation.Tests;
 
 public class EnumLoaderTests
 {
@@ -22,7 +24,7 @@ public class EnumLoaderTests
         var validPlanet = "Mercury";
 
         // Act
-        var result = EnumLoader.Parse<Planet>(validPlanet);
+        var result = Parsers.Parse<Planet>(validPlanet);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -36,7 +38,7 @@ public class EnumLoaderTests
         var invalidPlanet = "Xena";
 
         // Act
-        var result = EnumLoader.Parse<Planet>(invalidPlanet);
+        var result = Parsers.Parse<Planet>(invalidPlanet);
 
         // Assert
         await Assert.That(result.Success).IsFalse();
@@ -48,7 +50,7 @@ public class EnumLoaderTests
     {
         // Arrange
         // Act
-        var result = EnumLoader.Parse<Planet>(null);
+        var result = Parsers.Parse<Planet>(null);
 
         // Assert
         await Assert.That(result.Success).IsFalse();
@@ -63,7 +65,7 @@ public class EnumLoaderTests
         var implicitlyNumericFormat = ((int)enumFormat).ToString();
 
         // Act
-        var result = EnumLoader.Parse<Planet>(implicitlyNumericFormat);
+        var result = Parsers.Parse<Planet>(implicitlyNumericFormat);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -75,7 +77,7 @@ public class EnumLoaderTests
     {
         // Arrange
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(null);
+        var result = Parsers.ParseAllowNull<Planet>(null);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -89,7 +91,7 @@ public class EnumLoaderTests
         var validPlanet = "Neptune";
 
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(validPlanet);
+        var result = Parsers.ParseAllowNull<Planet>(validPlanet);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -103,7 +105,7 @@ public class EnumLoaderTests
         var invalidPlanet = "Murrcurry";
 
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
+        var result = Parsers.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
         await Assert.That(result.Success).IsFalse();
@@ -117,7 +119,7 @@ public class EnumLoaderTests
         var invalidPlanet = "MERCURY";
 
         // Act
-        var result = EnumLoader.Parse<Planet>(invalidPlanet);
+        var result = Parsers.Parse<Planet>(invalidPlanet);
 
         // Assert
         await Assert.That(result.Success).IsFalse();
@@ -130,7 +132,7 @@ public class EnumLoaderTests
         var validPlanet = "MERCURY";
 
         // Act
-        var result = EnumLoader.Parse<Planet>(validPlanet, true);
+        var result = Parsers.Parse<Planet>(validPlanet, true);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -144,7 +146,7 @@ public class EnumLoaderTests
         var validPlanet = "MeRCuRY";
 
         // Act
-        var result = EnumLoader.Parse<Planet>(validPlanet, true);
+        var result = Parsers.Parse<Planet>(validPlanet, true);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -158,7 +160,7 @@ public class EnumLoaderTests
         var invalidPlanet = "MERCURY";
 
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(invalidPlanet);
+        var result = Parsers.ParseAllowNull<Planet>(invalidPlanet);
 
         // Assert
         await Assert.That(result.Success).IsFalse();
@@ -171,7 +173,7 @@ public class EnumLoaderTests
         var validPlanet = "MERCURY";
 
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
+        var result = Parsers.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -185,7 +187,7 @@ public class EnumLoaderTests
         var validPlanet = "MeRCuRY";
 
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(validPlanet, true);
+        var result = Parsers.ParseAllowNull<Planet>(validPlanet, true);
 
         // Assert
         await Assert.That(result.Success).IsTrue();
@@ -196,7 +198,7 @@ public class EnumLoaderTests
     public async Task ParseAllowNullCaseInsensitive_null_Success()
     {
         // Act
-        var result = EnumLoader.ParseAllowNull<Planet>(null, true);
+        var result = Parsers.ParseAllowNull<Planet>(null, true);
 
         // Assert
         await Assert.That(result.Success).IsTrue();

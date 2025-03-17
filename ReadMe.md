@@ -6,9 +6,9 @@
 
 [Results/DotNetThoughts.Results/ReadMe.md](Results/DotNetThoughts.Results/ReadMe.md)
 
-# Results.Validation
+# Results.Parsing
 
-[Results/DotNetThoughts.Results.Validation/ReadMe.md](Results/DotNetThoughts.Results.Validation/ReadMe.md)
+[Results/DotNetThoughts.Results.Parsing/ReadMe.md](Results/DotNetThoughts.Results.Parsing/ReadMe.md)
 
 # Results.Json
 

@@ -1,4 +1,6 @@
-﻿namespace DotNetThoughts.Results.Validation;
+﻿using DotNetThoughts.Results;
+
+namespace DotNetThoughts.Results.Parsing;
 
 /// <summary>
 /// Represents an error that occurs when the value of a string cannot be parsed to a given enum.    

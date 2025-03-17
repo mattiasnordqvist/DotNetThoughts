@@ -210,10 +210,10 @@
           "DotNetThoughts.Results.Analyzer": "[1.5.11, )"
         }
       },
-      "dotnetthoughts.results.validation": {
+      "dotnetthoughts.results.parsing": {
         "type": "Project",
         "dependencies": {
-          "DotNetThoughts.Results": "[1.5.13, )"
+          "DotNetThoughts.Results": "[1.5.14, )"
         }
       },
       "DotNetThoughts.Results.Analyzer": {

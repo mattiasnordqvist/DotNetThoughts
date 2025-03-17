@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace DotNetThoughts.Results.Validation;
+namespace DotNetThoughts.Results.Parsing;
 
 /// <summary>
 /// Represents an error that occurs when an argument is missing.
