@@ -412,4 +412,24 @@ public static partial class Extensions
             return Result<List<TResult>>.Error((await source).Errors);
         }
     }
+
+    public static Result<List<TResult>> BindAll<T, TResult>(this Result<List<T>> source, Func<T, Result<TResult>> next)
+    {
+        if ((source).Success)
+        {
+            var results = new List<Result<TResult>>();
+
+            foreach (var s in (source).Value)
+            {
+                results.Add(next(s));
+            }
+            return results.Any(x => !x.Success)
+               ? Result<List<TResult>>.Error(results.SelectMany(x => x.Errors))
+               : Result<List<TResult>>.Ok(results.Select(x => x.Value).ToList());
+        }
+        else
+        {
+            return Result<List<TResult>>.Error((source).Errors);
+        }
+    }
 }
