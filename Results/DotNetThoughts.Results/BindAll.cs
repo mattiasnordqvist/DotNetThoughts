@@ -67,14 +67,14 @@ public static partial class Extensions
     /// <summary>
     /// 3
     /// </summary>
-    public static Result<Unit> BindAll<T>(this Result<IEnumerable<T>> source, Func<T, Task<Result<Unit>>> next)
+    public static async Task<Result<Unit>> BindAll<T>(this Result<IEnumerable<T>> source, Func<T, Task<Result<Unit>>> next)
     {
         if (source.Success)
         {
             var results = new List<Result<Unit>>();
             foreach (var s in source.Value)
             {
-                results.Add(next(s).Result);
+                results.Add(await next(s));
             }
             return results.Any(x => !x.Success)
                 ? UnitResult.Error(results.SelectMany(x => x.Errors))
@@ -89,14 +89,14 @@ public static partial class Extensions
     /// <summary>
     /// 4
     /// </summary>
-    public static Result<List<TResult>> BindAll<T, TResult>(this Result<IEnumerable<T>> source, Func<T, Task<Result<TResult>>> next)
+    public static async Task<Result<List<TResult>>> BindAll<T, TResult>(this Result<IEnumerable<T>> source, Func<T, Task<Result<TResult>>> next)
     {
         if (source.Success)
         {
             var results = new List<Result<TResult>>();
             foreach (var s in source.Value)
             {
-                results.Add(next(s).Result);
+                results.Add(await next(s));
             }
             return results.Any(x => !x.Success)
                 ? Result<List<TResult>>.Error(results.SelectMany(x => x.Errors))
@@ -159,7 +159,7 @@ public static partial class Extensions
     /// <summary>
     /// 7
     /// </summary>
-    public static Result<Unit> BindAll<T>(this Result<IEnumerable<T>> source, Func<T, int, Task<Result<Unit>>> next)
+    public static async Task<Result<Unit>> BindAll<T>(this Result<IEnumerable<T>> source, Func<T, int, Task<Result<Unit>>> next)
     {
         if (source.Success)
         {
@@ -167,7 +167,7 @@ public static partial class Extensions
             var index = 0;
             foreach (var s in source.Value)
             {
-                results.Add(next(s, index).Result);
+                results.Add(await next(s, index));
                 index++;
             }
             return results.Any(x => !x.Success)
@@ -183,7 +183,7 @@ public static partial class Extensions
     /// <summary>
     /// 8
     /// </summary>
-    public static Result<List<TResult>> BindAll<T, TResult>(this Result<IEnumerable<T>> source, Func<T, int, Task<Result<TResult>>> next)
+    public static async Task<Result<List<TResult>>> BindAll<T, TResult>(this Result<IEnumerable<T>> source, Func<T, int, Task<Result<TResult>>> next)
     {
         if (source.Success)
         {
@@ -191,7 +191,7 @@ public static partial class Extensions
             var index = 0;
             foreach (var s in source.Value)
             {
-                results.Add(next(s, index).Result);
+                results.Add(await next(s, index));
                 index++;
             }
             return results.Any(x => !x.Success)
@@ -766,14 +766,14 @@ public static partial class Extensions
     /// <summary>
     /// 3
     /// </summary>
-    public static Result<Unit> BindAll<T>(this Result<IReadOnlyList<T>> source, Func<T, Task<Result<Unit>>> next)
+    public static async Task<Result<Unit>> BindAll<T>(this Result<IReadOnlyList<T>> source, Func<T, Task<Result<Unit>>> next)
     {
         if (source.Success)
         {
             var results = new List<Result<Unit>>();
             foreach (var s in source.Value)
             {
-                results.Add(next(s).Result);
+                results.Add(await next(s));
             }
             return results.Any(x => !x.Success)
                 ? UnitResult.Error(results.SelectMany(x => x.Errors))
@@ -788,14 +788,14 @@ public static partial class Extensions
     /// <summary>
     /// 4
     /// </summary>
-    public static Result<List<TResult>> BindAll<T, TResult>(this Result<IReadOnlyList<T>> source, Func<T, Task<Result<TResult>>> next)
+    public static async Task<Result<List<TResult>>> BindAll<T, TResult>(this Result<IReadOnlyList<T>> source, Func<T, Task<Result<TResult>>> next)
     {
         if (source.Success)
         {
             var results = new List<Result<TResult>>();
             foreach (var s in source.Value)
             {
-                results.Add(next(s).Result);
+                results.Add(await next(s));
             }
             return results.Any(x => !x.Success)
                 ? Result<List<TResult>>.Error(results.SelectMany(x => x.Errors))
@@ -858,7 +858,7 @@ public static partial class Extensions
     /// <summary>
     /// 7
     /// </summary>
-    public static Result<Unit> BindAll<T>(this Result<IReadOnlyList<T>> source, Func<T, int, Task<Result<Unit>>> next)
+    public static async Task<Result<Unit>> BindAll<T>(this Result<IReadOnlyList<T>> source, Func<T, int, Task<Result<Unit>>> next)
     {
         if (source.Success)
         {
@@ -866,7 +866,7 @@ public static partial class Extensions
             var index = 0;
             foreach (var s in source.Value)
             {
-                results.Add(next(s, index).Result);
+                results.Add(await next(s, index));
                 index++;
             }
             return results.Any(x => !x.Success)
@@ -882,7 +882,7 @@ public static partial class Extensions
     /// <summary>
     /// 8
     /// </summary>
-    public static Result<List<TResult>> BindAll<T, TResult>(this Result<IReadOnlyList<T>> source, Func<T, int, Task<Result<TResult>>> next)
+    public static async Task<Result<List<TResult>>> BindAll<T, TResult>(this Result<IReadOnlyList<T>> source, Func<T, int, Task<Result<TResult>>> next)
     {
         if (source.Success)
         {
@@ -890,7 +890,7 @@ public static partial class Extensions
             var index = 0;
             foreach (var s in source.Value)
             {
-                results.Add(next(s, index).Result);
+                results.Add(await next(s, index));
                 index++;
             }
             return results.Any(x => !x.Success)
