@@ -51,12 +51,13 @@ stages:
             displayName: "Switch to branch $(branchName) if exists"
           - script: |
               dotnet outdated --fail-on-updates $(targetPath)
-              if [ $? -eq 2 ]; then
+              exit_status=$?
+              if [ $exit_status -eq 2 ]; then
                 echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]true"
                 exit 0
               else
                 echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]false"
-                exit $?
+                exit $exit_status
               fi
             displayName: Check for updates
             name: UpdateCheck
