@@ -1,5 +1,4 @@
-﻿namespace DotNetThoughts.Sql.Inspection.Tests;
-
+﻿
 using Bogus;
 
 using Dapper;
@@ -8,12 +7,9 @@ using DotNetThoughts.Sql.Utilities;
 
 using Microsoft.Data.SqlClient;
 
-using System.Text;
-
 using Testcontainers.MsSql;
 
-using VerifyTests;
-
+namespace DotNetThoughts.Sql.Inspection.Tests;
 public class Tests
 {
     public static string? _masterConnectionString = null;
