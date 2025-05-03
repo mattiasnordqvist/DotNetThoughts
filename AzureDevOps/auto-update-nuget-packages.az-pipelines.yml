@@ -15,7 +15,7 @@ pr: none
 trigger: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 stages:
   - stage: UpdateNugets
@@ -49,15 +49,18 @@ stages:
                   Invoke-Expression -Command "git pull"
               }
             displayName: "Switch to branch $(branchName) if exists"
-          - script: |
+          - pwsh: |
+              dotnet restore $(targetPath)
               dotnet outdated --fail-on-updates $(targetPath)
-              if [ $? -eq 2 ]; then
-                echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]true"
+              $exit_status=$LASTEXITCODE
+              if ($exit_status -eq 2) {
+                Write-Host "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]true"
                 exit 0
-              else
-                echo "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]false"
-                exit $?
-              fi
+              }
+              else {
+                Write-Host "##vso[task.setvariable variable=UpdatesAvailable;isOutput=true]false"
+                exit $exit_status
+              }
             displayName: Check for updates
             name: UpdateCheck
 
@@ -67,7 +70,7 @@ stages:
         steps:
           - checkout: self
             persistCredentials: true
-          - bash: |
+          - pwsh: |
               git config --global user.email "pipeline@dev.azure.com"
               git config --global user.name "Azure DevOps Pipeline"
               git config pull.rebase false
@@ -88,7 +91,9 @@ stages:
                   Invoke-Expression -Command "git pull"
               }
             displayName: Switch to or create branch $(branchName)
-          - script: dotnet outdated --upgrade --no-restore --output "../updates.md" --output-format "MarkDown"  $(targetPath)
+          - script: |
+              dotnet restore $(targetPath)
+              dotnet outdated --upgrade --no-restore --output "../updates.md" --output-format "MarkDown"  $(targetPath)
             displayName: "Run dotnet outdated"
           - script: dotnet restore --force-evaluate $(targetPath)
             displayName: "Run dotnet restore"
