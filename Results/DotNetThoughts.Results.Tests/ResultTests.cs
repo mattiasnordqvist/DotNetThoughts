@@ -111,7 +111,7 @@ public class ResultTests
     {
         Result<Unit> casted = Result<object>.Error(new FakeError());
         await Assert.That(casted.Success).IsFalse();
-        await Assert.That(casted.HasError<FakeError>()).IsNotNull();
+        await Assert.That(casted.HasError<FakeError>()).IsTrue();
     }
 
     [Test]

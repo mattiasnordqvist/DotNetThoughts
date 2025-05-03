@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Pars
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Results.Parsing.Tests", "Results\DotNetThoughts.Results.Parsing.Tests\DotNetThoughts.Results.Parsing.Tests.csproj", "{FF21CAC9-BB15-68DD-4340-A704A2417E61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetThoughts.Sql.Inspection.Tests", "Sql\DotNetThoughts.Sql.Inspection.Tests\DotNetThoughts.Sql.Inspection.Tests.csproj", "{6F42A2C4-748C-4A0A-AC18-DE48895C3810}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{FF21CAC9-BB15-68DD-4340-A704A2417E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF21CAC9-BB15-68DD-4340-A704A2417E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF21CAC9-BB15-68DD-4340-A704A2417E61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F42A2C4-748C-4A0A-AC18-DE48895C3810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F42A2C4-748C-4A0A-AC18-DE48895C3810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F42A2C4-748C-4A0A-AC18-DE48895C3810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F42A2C4-748C-4A0A-AC18-DE48895C3810}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +192,7 @@ Global
 		{13323671-49A4-4324-A722-627C17920F0E} = {AB217698-0663-49E8-8BE4-5804AB7F69C3}
 		{9FF683DF-E277-A8DB-6F5C-66B4B212E5EE} = {BECD3795-EDD5-459E-BFCC-017082E1C34D}
 		{FF21CAC9-BB15-68DD-4340-A704A2417E61} = {BECD3795-EDD5-459E-BFCC-017082E1C34D}
+		{6F42A2C4-748C-4A0A-AC18-DE48895C3810} = {741A680C-B401-44FA-914A-86B19FE2B6EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAA5B6BA-B6C8-4A90-B9E6-D7634295532E}

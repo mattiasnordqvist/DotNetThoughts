@@ -116,7 +116,7 @@ public static class Schema
         """;
 
     public static string _viewsSql = """
-        SELECT definition AS Definition, schema_id AS SchemaId
+        SELECT V.object_id, v.name, definition AS Definition, schema_id AS SchemaId
         FROM sys.sql_modules m
         INNER JOIN sys.views v on v.object_id = m.object_id
         WHERE v.is_ms_shipped = 0;
@@ -144,6 +144,13 @@ public static class Schema
         from sys.check_constraints cc;
         """;
 
+    public static string _dependenciesSql = """
+        SELECT 
+            referencing_id, 
+            referenced_id
+        FROM sys.sql_expression_dependencies
+        """;
+
     public record TableInfo(int ObjectId, string Name, int SchemaId);
     public record SchemaInfo(int SchemaId, string SchemaName);
     public record ColumnInfo(
@@ -165,10 +172,11 @@ public static class Schema
     public record ForeignKeyColumnsInfo(int ConstraintObjectId, int ConstraintColumnId, int ParentObjectId, int ParentColumnId, int ReferencedObjectId, int ReferencedColumnId);
     public record DefaultConstraintInfo(int ParentObjectId, int ParentColumnId, string ConstraintName, string ConstraintDefinition);
     public record IdentityColumnInfo(int ObjectId, int ColumnId, object SeedValue, object IncrementValue);
-    public record ViewInfo(string Definition, int SchemaId);
+    public record ViewInfo(int object_id, string name, string Definition, int SchemaId);
     public record TriggerInfo(string Definition);
     public record ComputedColumnInfo(string Definition, bool IsPersisted, int ObjectId, int ColumnId);
     public record CheckConstraintInfo(string Definition, string Name, int ObjectId, int SchemaId, int ParentObjectId, int ParentColumnId);
+    public record DependencyInfo(int referencing_id, int referenced_id);
     public static async Task<FlatDatabaseSchema> GetSchemaAsync(this DbConnection connection)
     {
         var sql = _schemasSql +
@@ -184,7 +192,8 @@ public static class Schema
             _viewsSql +
             _triggersSql +
             _computedColumnsSql +
-            _checkConstraintsSql;
+            _checkConstraintsSql +
+            _dependenciesSql;
         using var results = await connection.QueryMultipleAsync(sql);
         var schemas = await results.ReadAsync<SchemaInfo>();
         var tables = await results.ReadAsync<TableInfo>();
@@ -200,6 +209,7 @@ public static class Schema
         var triggers = await results.ReadAsync<TriggerInfo>();
         var computedColumns = await results.ReadAsync<ComputedColumnInfo>();
         var checkConstraints = await results.ReadAsync<CheckConstraintInfo>();
+        var dependencies = await results.ReadAsync<DependencyInfo>();
 
         return new FlatDatabaseSchema(
             schemas.ToArray(),
@@ -215,7 +225,8 @@ public static class Schema
             views.ToArray(),
             triggers.ToArray(),
             computedColumns.ToArray(),
-            checkConstraints.ToArray()
+            checkConstraints.ToArray(),
+            dependencies.ToArray()
             );
     }
 
@@ -233,5 +244,6 @@ public static class Schema
         ViewInfo[] ViewInfos,
         TriggerInfo[] TriggerInfos,
         ComputedColumnInfo[] ComputedColumnInfos,
-        CheckConstraintInfo[] CheckConstraintInfos);
+        CheckConstraintInfo[] CheckConstraintInfos,
+        DependencyInfo[] DependencyInfos);
 }
