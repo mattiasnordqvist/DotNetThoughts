@@ -25,11 +25,11 @@ public class Tests
     private static string CreateDBForTest()
     {
         var dbNameFaker = new Faker();
-        var dbName = $"[{dbNameFaker.Hacker.Adjective() + dbNameFaker.Hacker.Noun()}]";
+        var dbName = dbNameFaker.Hacker.Adjective() + dbNameFaker.Hacker.Noun() ;
         using (var connection = new SqlConnection(_masterConnectionString))
         {
             connection.Open();
-            connection.Execute("CREATE DATABASE " + dbName);
+            connection.Execute($"CREATE DATABASE [{dbName}]");
         }
         var connectionString = ConnectionStringUtils.ReplaceInitialCatalog(_masterConnectionString, dbName);
         return connectionString;
