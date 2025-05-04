@@ -132,7 +132,7 @@ public static class Parsers
     /// Short-circuits on first missing argument.
     /// </summary>
     public static Result<List<T>> ParseEach<T, TInput>(List<TInput?>? input, Func<TInput, Result<T>> parser, [CallerArgumentExpression("input")] string? argumentExpression = null) =>
-        Parse(input, elements => elements.Return<IEnumerable<TInput?>>().BindEach(el => Parse(el, parser)), argumentExpression);
+        Parse(input, elements => elements.Return().BindEach(el => Parse(el, parser)), argumentExpression);
 
     /// <summary>
     /// If the given list or any of its elements is null, returns an error Result with a MissingArgumentError.
@@ -142,5 +142,7 @@ public static class Parsers
     /// Does not short-circuit
     /// </summary>
     public static Result<List<T>> ParseAll<T, TInput>(List<TInput?>? input, Func<TInput, Result<T>> parser, [CallerArgumentExpression("input")] string? argumentExpression = null) =>
-      Parse(input, elements => elements.Return<IEnumerable<TInput?>>().BindAll(el => Parse(el, parser)), argumentExpression);
+      Parse(input, elements => elements.Return().BindAll(el => Parse(el, parser)), argumentExpression);
+
+
 }
