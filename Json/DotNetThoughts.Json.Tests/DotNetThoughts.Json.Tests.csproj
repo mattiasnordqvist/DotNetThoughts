@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetThoughts.Json\DotNetThoughts.Json.csproj" />
+  </ItemGroup>
+</Project>
