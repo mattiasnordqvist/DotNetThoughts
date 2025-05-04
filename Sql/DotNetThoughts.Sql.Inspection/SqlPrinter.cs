@@ -65,7 +65,7 @@ public class SqlPrinter
         }
 
         foreach (var defaultConstraint in db.DefaultConstraintInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects ||  !ignoreTableIds.Contains(x.ParentObjectId))
+            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
             .OrderBy(x => x.ConstraintName))
         {
             PrintDefaultConstraint(sb, db, defaultConstraint);

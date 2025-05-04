@@ -16,11 +16,13 @@ internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
         {
             throw new Exception("Cant order nulls.");
         }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id)){
+        if (!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id))
+        {
             // x is not referenced or referencing on anyone
             return 0;
         }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id)){
+        if (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id))
+        {
             // y is not referenced or referencing on anyone
             return 0;
         }

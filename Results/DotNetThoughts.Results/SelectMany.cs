@@ -35,9 +35,9 @@ public static partial class Extensions
     /// SelectMany has the same type signature as And. This code is provided for LINQ syntax
     /// </summary>
     [Pure]
-    public static Result<V> SelectMany<U, V, R>(this Result<R> first, Func<R, Result<U>> getSecond, Func<R, U, V> project) 
+    public static Result<V> SelectMany<U, V, R>(this Result<R> first, Func<R, Result<U>> getSecond, Func<R, U, V> project)
         => first.Bind(a => getSecond(a).Map(b => project(a, b)));
-    
+
     /// <summary>
     /// SelectMany has the same type signature as And. This code is provided for LINQ syntax
     /// </summary>
@@ -49,7 +49,7 @@ public static partial class Extensions
     /// SelectMany has the same type signature as And. This code is provided for LINQ syntax
     /// </summary>
     [Pure]
-    public static async Task<Result<V>> SelectMany<U, V, R>(this Task<Result<R>> first, Func<R, Result<U>> getSecond, Func<R, U, V> project) 
+    public static async Task<Result<V>> SelectMany<U, V, R>(this Task<Result<R>> first, Func<R, Result<U>> getSecond, Func<R, U, V> project)
         => (await first).Bind(a => getSecond(a).Map(b => project(a, b)));
 
     /// <summary>

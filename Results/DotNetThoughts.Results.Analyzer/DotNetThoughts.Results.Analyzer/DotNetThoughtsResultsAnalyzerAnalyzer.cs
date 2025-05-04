@@ -49,6 +49,6 @@ namespace DotNetThoughts.Results.Analyzer
             }
         }
 
-     
+
     }
 }

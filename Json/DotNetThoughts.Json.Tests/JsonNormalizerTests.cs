@@ -14,8 +14,9 @@ public class JsonNormalizerTests
             }
             """;
 
-        var options = new JsonNormalizer.Options { 
-            WriteIndented = true, 
+        var options = new JsonNormalizer.Options
+        {
+            WriteIndented = true,
             IndentSize = 2,
             OrderProperties = false,
         };
@@ -29,7 +30,7 @@ public class JsonNormalizerTests
     {
         var json = "{ \"name\": \"John\", \"age\": 30, \"city\": \"New York\" }";
         var expected = "{\"age\":30,\"city\":\"New York\",\"name\":\"John\"}";
-      
+
         var options = new JsonNormalizer.Options
         {
             WriteIndented = false,

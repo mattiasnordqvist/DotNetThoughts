@@ -135,7 +135,7 @@ public static partial class Extensions
     /// <summary>
     /// 6
     /// </summary>
-    public static Result<List<TResult>> BindAll<T,TResult>(this Result<IEnumerable<T>> source, Func<T, int, Result<TResult>> next)
+    public static Result<List<TResult>> BindAll<T, TResult>(this Result<IEnumerable<T>> source, Func<T, int, Result<TResult>> next)
     {
         if (source.Success)
         {

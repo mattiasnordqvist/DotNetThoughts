@@ -77,7 +77,7 @@ public class TableModel<TRow>
 
         var headers = headerRowAndDataRows.First();
         var rows = headerRowAndDataRows.Skip(1).ToList();
-        table.Columns = headers.Select((h,i) => new TableModel<List<string>>.ColumnModel
+        table.Columns = headers.Select((h, i) => new TableModel<List<string>>.ColumnModel
         {
             Index = i,
             Header = h,
@@ -96,7 +96,7 @@ public class TableModel<TRow>
     {
         var table = new TableModel<T>();
         var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        table.Columns = properties.Select((p,i) => new TableModel<T>.ColumnModel
+        table.Columns = properties.Select((p, i) => new TableModel<T>.ColumnModel
         {
             Index = i,
             Header = p.Name,
@@ -117,14 +117,14 @@ public class TableModel<TRow>
     }
 
 
-    public void RenderTo(StringBuilder stringBuilder) 
+    public void RenderTo(StringBuilder stringBuilder)
     {
         var headers = Columns.Select(x => x.Header).ToArray();
         var renderedRows = Rows.Select((row, rowIndex) => Columns.Select(c => c.RenderValue(c.GetValue(c, row, rowIndex), row, rowIndex)).ToArray());
 
         var calculatedColumnWidths = Columns.Select((column, index) =>
         {
-            if(column.Width is FixedWidth fixedWidth)
+            if (column.Width is FixedWidth fixedWidth)
             {
                 return fixedWidth.Width;
             }

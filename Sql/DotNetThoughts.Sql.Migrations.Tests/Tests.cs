@@ -74,7 +74,7 @@ public class Tests
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync(cancellationToken);
         var versionInfo = await connection.QueryAsync<VersionInfo>("SELECT * FROM dbo.VersionInfo");
-        return Verify(Table.Render([..versionInfo]));
+        return Verify(Table.Render([.. versionInfo]));
 
     }
 }

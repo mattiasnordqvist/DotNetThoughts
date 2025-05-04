@@ -22,7 +22,7 @@ public static partial class Extensions
 {
 
     #region Result<T> -> (T -> Result<U>) -> Result<(T,U)>
-    
+
     /// <summary>
     /// Sidechains previous results with next function, keeping the previous results in the returned tuple.
     /// </summary>

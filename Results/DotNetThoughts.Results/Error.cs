@@ -29,9 +29,9 @@ public abstract record Error : IError
         {
             var removedBackTick = t.Name.Contains('`') ? t.Name[..t.Name.IndexOf('`')] : t.Name;
             var nrOfGenericArguments = t.GetGenericArguments().Length;
-            result = removedBackTick + "<" +new string(',',nrOfGenericArguments-1)+ ">";
+            result = removedBackTick + "<" + new string(',', nrOfGenericArguments - 1) + ">";
         }
-        else if(!t.IsGenericType)
+        else if (!t.IsGenericType)
         {
             result = t.Name;
         }
@@ -126,7 +126,7 @@ public abstract record Error : IError
         builder.Append(nameof(Data));
         builder.Append(" = ");
         builder.Append('{');
-        builder.Append(Data.Count != 0 ? $" {string.Join(", ", Data.Select(x => $"{x.Key} = {x.Value}"))} ": " ");
+        builder.Append(Data.Count != 0 ? $" {string.Join(", ", Data.Select(x => $"{x.Key} = {x.Value}"))} " : " ");
         builder.Append('}');
 
         return true;
