@@ -26,7 +26,7 @@ public class SqlPrinter
             { "db_denydatareader", true },
             { "db_denydatawriter", true }
         };
-        public bool PrintObjectsReferecingIgnoredObjects = true;
+        public bool PrintObjectsReferencingIgnoredObjects = true;
     }
 
     public static string PrintAsExecutable(FlatDatabaseSchema db, Action<PrintOptions> configure)
@@ -65,7 +65,7 @@ public class SqlPrinter
         }
 
         foreach (var defaultConstraint in db.DefaultConstraintInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
             .OrderBy(x => x.ConstraintName))
         {
             PrintDefaultConstraint(sb, db, defaultConstraint);
@@ -73,21 +73,21 @@ public class SqlPrinter
         }
 
         foreach (var foreignkey in db.ForeignKeyInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
             .OrderBy(x => x.ForeignKeyName))
         {
             PrintForeignKey(sb, db, foreignkey);
             sb.AppendLine("GO");
         }
         foreach (var uc in db.IndexInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ObjectId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ObjectId))
             .Where(x => x.IsUniqueConstraint).OrderBy(x => x.Name))
         {
             PrintUniqueConstraints(sb, db, uc);
             sb.AppendLine("GO");
         }
         foreach (var ix in db.IndexInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ObjectId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ObjectId))
             .Where(x => !x.IsPrimaryKey && !x.IsUniqueConstraint
             && x.TypeDesc != "HEAP")
             .OrderBy(x => x.Name))
@@ -106,7 +106,7 @@ public class SqlPrinter
             .Where(x => viewObjectIds.Contains(x.referenced_id) && viewObjectIds.Contains(x.referencing_id));
 
         foreach (var view in db.ViewInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreSchemaIds.Contains(x.SchemaId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreSchemaIds.Contains(x.SchemaId))
             .OrderBy(x => x, new ViewDependencySorter(view_viewDependencies))
             .ThenBy(x => x.name))
         {
@@ -121,7 +121,7 @@ public class SqlPrinter
         }
 
         foreach (var checkConstraint in db.CheckConstraintInfos
-            .Where(x => options.PrintObjectsReferecingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
+            .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
             .OrderBy(x => x.Name))
         {
             var table = db.TableInfos.Single(x => x.ObjectId == checkConstraint.ParentObjectId);
