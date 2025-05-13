@@ -16,16 +16,6 @@ internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
         {
             throw new Exception("Cant order nulls.");
         }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id))
-        {
-            // x is not referenced or referencing on anyone
-            return 0;
-        }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id))
-        {
-            // y is not referenced or referencing on anyone
-            return 0;
-        }
         if (x.object_id == y.object_id)
         {
             // x and y are the same
@@ -40,6 +30,21 @@ internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
         {
             // x is referenced by y
             return -1;
+        }
+        if ((!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id)) && (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id)))
+        {
+            // x is not referenced or referencing on anyone
+            return 0;
+        }
+        if (!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id))
+        {
+            // x is not referenced or referencing on anyone
+            return -1;
+        }
+        if (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id))
+        {
+            // y is not referenced or referencing on anyone
+            return 1;
         }
         return 0;
     }
