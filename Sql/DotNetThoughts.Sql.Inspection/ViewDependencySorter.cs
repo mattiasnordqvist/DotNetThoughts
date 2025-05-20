@@ -41,8 +41,9 @@ internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
             throw new Exception("Cant order nulls.");
         }
         var indexOfX = _ordered.IndexOf(x.object_id);
-        if (indexOfX < 0) return 1;
         var indexOfY = _ordered.IndexOf(y.object_id);
+        if (indexOfX < 0 && indexOfY < 0) return 0;
+        if (indexOfX < 0) return 1;
         if (indexOfY < 0) return -1;
         return indexOfX > indexOfY ? 1 :-1;
 
