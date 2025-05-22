@@ -3,11 +3,35 @@ namespace DotNetThoughts.Sql.Inspection;
 
 internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
 {
-    private IEnumerable<Schema.DependencyInfo> _view_viewDependencies;
-
+    List<int> _ordered = new List<int>();
     public ViewDependencySorter(IEnumerable<Schema.DependencyInfo> view_viewDependencies)
     {
-        _view_viewDependencies = view_viewDependencies;
+        Dictionary<int, HashSet<int>> deps = [];
+        foreach (var dependency in view_viewDependencies)
+        {
+            if (!deps.ContainsKey(dependency.referencing_id))
+            {
+                deps.Add(dependency.referencing_id, [dependency.referenced_id]);
+            }
+            else
+            {
+                deps[dependency.referencing_id].Add(dependency.referenced_id);
+            }
+            if (!deps.ContainsKey(dependency.referenced_id))
+            {
+                deps.Add(dependency.referenced_id, []);
+            }
+        }
+        while (deps.Count > 0)
+        {
+            var hasNoDeps = deps.First(x => x.Value.Count == 0);
+            _ordered.Add(hasNoDeps.Key);
+            deps.Remove(hasNoDeps.Key);
+            foreach (var dependency in deps)
+            {
+                dependency.Value.Remove(hasNoDeps.Key);
+            }
+        }
     }
 
     public int Compare(Schema.ViewInfo? x, Schema.ViewInfo? y)
@@ -16,36 +40,12 @@ internal class ViewDependencySorter : IComparer<Schema.ViewInfo>
         {
             throw new Exception("Cant order nulls.");
         }
-        if (x.object_id == y.object_id)
-        {
-            // x and y are the same
-            return 0;
-        }
-        if (_view_viewDependencies.Any(d => d.referencing_id == x.object_id && d.referenced_id == y.object_id))
-        {
-            // x references y
-            return 1;
-        }
-        if (_view_viewDependencies.Any(d => d.referencing_id == y.object_id && d.referenced_id == x.object_id))
-        {
-            // x is referenced by y
-            return -1;
-        }
-        if ((!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id)) && (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id)))
-        {
-            // x is not referenced or referencing on anyone
-            return 0;
-        }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == x.object_id || d.referenced_id == x.object_id))
-        {
-            // x is not referenced or referencing on anyone
-            return -1;
-        }
-        if (!_view_viewDependencies.Any(d => d.referencing_id == y.object_id || d.referenced_id == y.object_id))
-        {
-            // y is not referenced or referencing on anyone
-            return 1;
-        }
-        return 0;
+        var indexOfX = _ordered.IndexOf(x.object_id);
+        var indexOfY = _ordered.IndexOf(y.object_id);
+        if (indexOfX < 0 && indexOfY < 0) return 0;
+        if (indexOfX < 0) return 1;
+        if (indexOfY < 0) return -1;
+        return indexOfX > indexOfY ? 1 :-1;
+
     }
 }
