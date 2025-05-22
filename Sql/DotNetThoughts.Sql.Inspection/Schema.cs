@@ -1,6 +1,7 @@
-using System.Data.Common;
-
 using Dapper;
+
+using System.Data;
+using System.Data.Common;
 namespace DotNetThoughts.Sql.Inspection;
 public static class Schema
 {
@@ -177,7 +178,7 @@ public static class Schema
     public record ComputedColumnInfo(string Definition, bool IsPersisted, int ObjectId, int ColumnId);
     public record CheckConstraintInfo(string Definition, string Name, int ObjectId, int SchemaId, int ParentObjectId, int ParentColumnId);
     public record DependencyInfo(int referencing_id, int referenced_id);
-    public static async Task<FlatDatabaseSchema> GetSchemaAsync(this DbConnection connection)
+    public static async Task<FlatDatabaseSchema> GetSchemaAsync(this DbConnection connection, IDbTransaction? transaction = null, int? commandTimeout = null)
     {
         var sql = _schemasSql +
             _tablesSql +
@@ -194,7 +195,7 @@ public static class Schema
             _computedColumnsSql +
             _checkConstraintsSql +
             _dependenciesSql;
-        using var results = await connection.QueryMultipleAsync(sql);
+        using var results = await connection.QueryMultipleAsync(sql, transaction: transaction, commandTimeout: commandTimeout);
         var schemas = await results.ReadAsync<SchemaInfo>();
         var tables = await results.ReadAsync<TableInfo>();
         var columns = await results.ReadAsync<ColumnInfo>();
