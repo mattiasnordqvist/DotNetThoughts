@@ -125,7 +125,7 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
                     {
                         throw new Exception($"Source database {sourceDatabase} does not exist! Can't create copy a non-existing database. Make sure the source database exists.");
                     }
-                    _logger.LogInformation("{databaseName} does not exist. Restoring from {sourceDatabase}.", databaseName, sourceDatabase);
+                    _logger.LogInformation("{databaseName} does not exist. Restoring from {sourceDatabase}... (interrupt and you'll have a corrupt db)", databaseName, sourceDatabase);
                     var sql = $"""
                     DECLARE @BackupFolderPath sql_variant = (SELECT ServerProperty(N'InstanceDefaultBackupPath'));
                     DECLARE @DataFolderPath sql_variant = (SELECT ServerProperty(N'InstanceDefaultDataPath'));
@@ -181,6 +181,7 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
                     try
                     {
                         await masterConnection.ExecuteAsync(sql);
+                        _logger.LogInformation("Restoration of {databaseName} complete", databaseName);
                     }
                     catch (Exception e)
                     {
