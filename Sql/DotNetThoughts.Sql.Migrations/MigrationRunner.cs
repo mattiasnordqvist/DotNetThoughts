@@ -33,6 +33,7 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
 
         using var connection = new SqlConnection(connectionString);
         connection.Open();
+        var databaseName = ConnectionStringUtils.GetInitialCatalog(connectionString);
         var migrations = _configuration.MigrationLoaders.SelectMany(x => x.LoadMigrations()).ToList();
         if (migrations.Count == 0)
         {
@@ -70,15 +71,15 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
                 await connection.ExecuteAsync(sql, new { m.Version, m.IsSnapshot, m.Name, AppliedAt = DateTimeOffset.Now }, transaction: t);
                 m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultCommandTimeout);
                 t.Commit();
-                _logger.LogInformation("Applied {version}: {name}", m.Version, m.Name);
+                _logger.LogInformation("Applied {version}: {name} on database {databaseNam}", m.Version, m.Name, databaseName);
             }
             catch
             {
-                _logger.LogError("Failed to apply migration {version}: {name}", m.Version, m.Name);
+                _logger.LogError("Failed to apply migration {version}: {name} on database {databaseName}", m.Version, m.Name, databaseName);
                 throw;
             }
         }
-        _logger.LogInformation("Database up to date! Version {version}", migrationsToExecute.Count != 0 ? migrationsToExecute.Last().Version : lastMigrationVersion);
+        _logger.LogInformation("Database {databaseName} is up to date! Version {version}", databaseName, migrationsToExecute.Count != 0 ? migrationsToExecute.Last().Version : lastMigrationVersion);
     }
 
 
