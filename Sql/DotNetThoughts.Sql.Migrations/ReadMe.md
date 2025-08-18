@@ -1,8 +1,56 @@
 # SQL Server Migrations
 
+A simple and straightforward SQL Server database migration system using plain .sql files as embedded resources.
+
+## TL;DR - Quick Start
+
+Manage your database schema changes with versioned .sql files:
+
+```csharp
+// Install the NuGet package
+// Install-Package DotNetThoughts.Sql.Migrations
+
+// 1. Create migration files as embedded resources:
+// 000_000_000_001_CreateUsersTable.sql
+// 000_000_000_002_AddEmailColumnToUsers.sql
+
+// 2. Create a migration runner
+public class MyMigrationRunner : MigrationRunner<MyMigrationRunner>
+{
+    public MyMigrationRunner(MigrationRunnerConfiguration<MyMigrationRunner> config, ILogger<MyMigrationRunner> logger) 
+        : base(config, logger)
+    {
+        config.AddMigrationLoaders(new EmbeddedResourceMigrationLoader(typeof(MyMigrationRunner).Assembly));
+    }
+}
+
+// 3. Register with DI container
+builder.AddMigrationRunner<MyMigrationRunner>("Migrations");
+
+// 4. Configure in appsettings.json
+{
+  "Migrations": {
+    "ConnectionString": "Server=.;Database=MyApp;Trusted_Connection=true;",
+    "AutoCreate": "IF_NOT_EXISTS"
+  }
+}
+
+// 5. Run migrations
+await migrationRunner.MigrateAsync();
+```
+
+Key features:
+- Simple .sql file based migrations
+- Version-controlled execution order
+- Embedded resource loading
+- Configurable database creation
+- Transaction support
+
+## Deep Dive
+
 Manage your SQL Server database schema changes using SQL Server Migrations as simple `.sql`-files.
 
-## Runner (example setup)
+### Runner (example setup)
 
 Create a class that inherits from `SqlMigrationRunner`.
 Currently, migrations can only be loaded from Embedded Resources.

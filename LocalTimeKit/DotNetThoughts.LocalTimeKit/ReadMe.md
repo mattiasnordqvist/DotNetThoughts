@@ -1,6 +1,43 @@
-# Local Time Kit
+# LocalTimeKit
 
-## LocalDateTime
+Unambiguous date and time representation that includes timezone information, eliminating confusion around local vs UTC times.
+
+## TL;DR - Quick Start
+
+Work with dates and times that always know their timezone context:
+
+```csharp
+// Install the NuGet package
+// Install-Package DotNetThoughts.LocalTimeKit
+
+using DotNetThoughts.LocalTimeKit;
+
+// Create a LocalDateTime with explicit timezone
+var newYorkTime = new LocalDateTime(
+    new DateOnly(2024, 1, 1), 
+    new TimeOnly(15, 30), 
+    TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+);
+
+// Convert between timezones safely
+var utcTime = newYorkTime.ToTimeZone(TimeZoneInfo.Utc);
+var londonTime = newYorkTime.ToTimeZone(TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
+
+// Get timezone-aware calculations
+var startOfDay = newYorkTime.StartOfDay();
+var endOfYear = newYorkTime.EndOfYear();
+```
+
+Key benefits:
+- Always knows what timezone it represents
+- Safe timezone conversions
+- Handles daylight saving time correctly
+- No ambiguous DateTime values
+- Explicit about timezone context
+
+## Deep Dive
+
+### LocalDateTime
 
 `LocalDateTime` is an unambiguous representation of an instance in time.
 Types like `DateTime` and `DateOnly` does not provide enough information to determine exactly what instance in time they represent. LocalDateTime aims to package all you need into one type.
