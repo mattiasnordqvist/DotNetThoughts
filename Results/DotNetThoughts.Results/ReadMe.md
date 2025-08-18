@@ -1,8 +1,54 @@
-Inspired by scott wlaschins talks about railway oriented programming and functional domain modeling, I decided to implement a Result type in c#. 
+# Results
+
+A functional programming Result type for C# that represents operations that can succeed or fail, inspired by railway-oriented programming.
+
+## TL;DR - Quick Start
+
+Instead of throwing exceptions or returning null, use `Result<T>` to explicitly handle success and failure cases:
+
+```csharp
+// Install the NuGet package
+// Install-Package DotNetThoughts.Results
+
+using DotNetThoughts.Results;
+
+// Basic usage
+public Result<int> Divide(int a, int b)
+{
+    if (b == 0)
+        return Result<int>.Error("Cannot divide by zero");
+    
+    return Result<int>.Ok(a / b);
+}
+
+// Chain operations with Bind
+var result = GetNumber()
+    .Bind(x => Divide(x, 2))
+    .Bind(x => MultiplyBy(x, 3));
+
+if (result.Success)
+{
+    Console.WriteLine($"Result: {result.Value}");
+}
+else
+{
+    Console.WriteLine($"Error: {string.Join(", ", result.Errors)}");
+}
+```
+
+Key benefits:
+- No more null reference exceptions
+- Explicit error handling at compile time
+- Composable operations with `Bind`
+- Clean, readable error flow
+
+## Deep Dive
+
+Inspired by Scott Wlaschin's talks about railway oriented programming and functional domain modeling, I decided to implement a Result type in C#. 
 This post explains a lot: https://fsharpforfunandprofit.com/posts/elevated-world/
 I know lang-ext library already has something similar, but I found the library hard to understand and use, so I decided to make my own implementation, as a way of learning.
 
-# The Result type
+### The Result type
 
 The result type represent the result of an operation that can either succeed or fail. It serves as an alternative to a traditional combination of a return value (success) and an exception (failure). Instead of throwing exceptions on errors, some prefer to return special values to indicate errors, like null, or false, or some other arbitrary type.
 The result type allows a standard way of returning errors without having to resort to special values.
