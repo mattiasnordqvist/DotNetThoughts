@@ -7,7 +7,7 @@ public class Tests
     private static JsonSerializerOptions Options => new()
     {
         WriteIndented = true,
-        Converters = { new JsonConverterFactoryForResultOfT() }
+        Converters = { new JsonConverterFactoryForResultOfT(), new JsonConverterForIError() }
     };
 
     [Test]
@@ -97,5 +97,35 @@ public class Tests
         var deserialized = JsonSerializer.Deserialize<Result<Unit>>(json, Options);
         await Assert.That(deserialized.Success).IsFalse();
         await Verify(deserialized.Errors);
+    }
+
+    [Test]
+    public async Task DeserializeIError()
+    {
+        var errorJson = @"{""Type"": ""MyError"", ""Message"": ""hej fel"", ""Data"": { ""Code"": 123 } }";
+        var error = JsonSerializer.Deserialize<IError>(errorJson, Options);
+
+        await Assert.That(error).IsNotNull();
+        await Assert.That(error!.Message).IsEqualTo("hej fel");
+        await Assert.That(error.Type).IsEqualTo("MyError");
+        await Assert.That(error.GetData()).ContainsKey("Code");
+    }
+
+    [Test]
+    public async Task DeserializeListOfIErrors()
+    {
+        var errorsJson = @"[
+    {""Type"": ""MyError"", ""Message"": ""hej fel"", ""Data"": { ""Code"": 123 } },
+    {""Type"": ""MyError2"", ""Message"": ""another error"", ""Data"": { ""Code"": 456 } }
+]";
+        var errors = JsonSerializer.Deserialize<List<IError>>(errorsJson, Options);
+        await Assert.That(errors).IsNotNull();
+        await Assert.That(errors).HasCount(2);
+        await Assert.That(errors![0].Message).IsEqualTo("hej fel");
+        await Assert.That(errors[0].Type).IsEqualTo("MyError");
+        await Assert.That(errors[0].GetData()).ContainsKey("Code");
+        await Assert.That(errors[1].Message).IsEqualTo("another error");
+        await Assert.That(errors[1].Type).IsEqualTo("MyError2");
+        await Assert.That(errors[1].GetData()).ContainsKey("Code");
     }
 }

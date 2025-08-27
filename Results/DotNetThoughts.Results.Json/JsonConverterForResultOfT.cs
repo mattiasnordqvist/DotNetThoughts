@@ -39,6 +39,7 @@ internal class JsonConverterForResultOfT<T> : JsonConverter<Result<T>>
             }
             else if (propertyName == nameof(Result<T>.Errors).ToLower())
             {
+                // Could the JsonConverterForIError be reused here?
                 errors = JsonSerializer.Deserialize<List<DeserializedError>>(ref reader, options)!;
             }
         }
@@ -58,6 +59,7 @@ internal class JsonConverterForResultOfT<T> : JsonConverter<Result<T>>
         }
         else
         {
+            // Could the JsonConverterForIError be reused here?
             JsonSerializer.Serialize(writer, new
             {
                 value.Success,

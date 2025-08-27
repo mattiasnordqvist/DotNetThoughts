@@ -2,7 +2,6 @@
 using System.Text.Json;
 
 namespace DotNetThoughts.Results.Json;
-
 internal class JsonConverterForResultOfUnit : JsonConverter<Result<Unit>>
 {
     public override Result<Unit> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -34,6 +33,7 @@ internal class JsonConverterForResultOfUnit : JsonConverter<Result<Unit>>
             }
             else if (propertyName == nameof(Result<Unit>.Errors).ToLower())
             {
+                // Could the JsonConverterForIError be reused here?
                 errors = JsonSerializer.Deserialize<List<DeserializedError>>(ref reader, options)!;
             }
         }
@@ -52,6 +52,7 @@ internal class JsonConverterForResultOfUnit : JsonConverter<Result<Unit>>
         }
         else
         {
+            // Could the JsonConverterForIError be reused here?
             JsonSerializer.Serialize(writer, new
             {
                 value.Success,
