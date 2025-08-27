@@ -6,6 +6,19 @@ Remember, a Result representing one or more Errors contains a list of objects im
 The actual type of an Error object is not included when serialized. This means, that when deserializing that Error again, it can't be deserialized to its original type.
 Instead, the Error object is deserialized to a generic `DeserializedError` object.
 
+Package also contains a serializer for IError objects, called `JsonConverterForIError`. You only need this if you want to serialize or deserialize IError objects outside of a Result object.
+
+To use the converters, add them to your JsonSerializerOptions like this:
+```csharp
+options.Converters.Add(new JsonConverterFactoryForResultOfT());
+options.Converters.Add(new JsonConverterForIError());
+```
+
+or using this extension method:
+```csharp
+options.AddResultConverters();
+```
+
 A serialized _Successful_ `Result<T>` will look like this:
 ```json
 {
