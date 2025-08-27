@@ -56,9 +56,8 @@ internal class JsonConverterForResultOfUnit : JsonConverter<Result<Unit>>
             JsonSerializer.Serialize(writer, new
             {
                 value.Success,
-                Errors = value.Errors.Select(x => new { x.Type, x.Message, Data = x.GetData() })
+                Errors = value.Errors.Select(x => new { x.Type, x.Message, x.Data })
             }, options);
         }
-
     }
 }

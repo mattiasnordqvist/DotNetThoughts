@@ -59,7 +59,6 @@ public class Tests
     }
     public record MyError(int Code, string Description) : Error;
 
-
     [Test]
     public async Task DeserializeSuccessfulResultOfUnit()
     {
@@ -108,7 +107,7 @@ public class Tests
         await Assert.That(error).IsNotNull();
         await Assert.That(error!.Message).IsEqualTo("hej fel");
         await Assert.That(error.Type).IsEqualTo("MyError");
-        await Assert.That(error.GetData()).ContainsKey("Code");
+        await Assert.That(error.Data).ContainsKey("Code");
     }
 
     [Test]
@@ -123,9 +122,9 @@ public class Tests
         await Assert.That(errors).HasCount(2);
         await Assert.That(errors![0].Message).IsEqualTo("hej fel");
         await Assert.That(errors[0].Type).IsEqualTo("MyError");
-        await Assert.That(errors[0].GetData()).ContainsKey("Code");
+        await Assert.That(errors[0].Data).ContainsKey("Code");
         await Assert.That(errors[1].Message).IsEqualTo("another error");
         await Assert.That(errors[1].Type).IsEqualTo("MyError2");
-        await Assert.That(errors[1].GetData()).ContainsKey("Code");
+        await Assert.That(errors[1].Data).ContainsKey("Code");
     }
 }

@@ -22,5 +22,5 @@ public interface IError
     /// Returns a Dictionary that may contain instance specific data about the error, that can be used to explain or handle the error.
     /// </summary>
     /// <returns>A dictionary of data needed to describe the error in detail.</returns>
-    Dictionary<string, object?> GetData();
+    Dictionary<string, object?> Data { get; }
 }

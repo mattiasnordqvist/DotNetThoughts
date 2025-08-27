@@ -15,7 +15,7 @@ public class JsonConverterForIError : JsonConverter<IError>
         {
             value.Type,
             value.Message,
-            Data = value.GetData()
+            value.Data
         }, options);
     }
 }
