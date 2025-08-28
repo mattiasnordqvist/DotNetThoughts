@@ -18,6 +18,7 @@ or using this extension method:
 ```csharp
 options.AddResultConverters();
 ```
+which adds both converters. However, you typically don't want the IError converter on the serializing side, only on the deserializing side.
 
 A serialized _Successful_ `Result<T>` will look like this:
 ```json
