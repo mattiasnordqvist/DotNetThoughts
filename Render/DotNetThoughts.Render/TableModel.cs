@@ -161,6 +161,11 @@ public class TableModel<TRow>
 
     private static bool IsNumericType(Type type)
     {
+        // Handle nullable value types by unwrapping them
+        if (Nullable.GetUnderlyingType(type) is Type underlying)
+        {
+            type = underlying;
+        }
         return type == typeof(byte) || type == typeof(sbyte) ||
                type == typeof(short) || type == typeof(ushort) ||
                type == typeof(int) || type == typeof(uint) ||
