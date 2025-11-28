@@ -64,6 +64,14 @@ public class SqlPrinter
             sb.AppendLine("GO");
         }
 
+        foreach (var table in db.TemporalTableInfos
+            .Where(x => !options.IgnoreTables.Contains(x.Name) && x.TemporalType == 2)
+            .OrderBy(x => x.Name))
+        {
+            PrintTemporalTable(sb, db, table);
+            sb.AppendLine("GO");
+        }
+
         foreach (var defaultConstraint in db.DefaultConstraintInfos
             .Where(x => options.PrintObjectsReferencingIgnoredObjects || !ignoreTableIds.Contains(x.ParentObjectId))
             .OrderBy(x => x.ConstraintName))
@@ -167,6 +175,27 @@ public class SqlPrinter
         }
 
         sb.AppendLine();
+    }
+
+    public static void PrintTemporalTable(StringBuilder sb, FlatDatabaseSchema db, TemporalTableInfo table)
+    {
+        if (table.HistoryTableId is null)
+            return;
+
+        var schema = db.SchemaInfos.Single(x => x.SchemaId == table.SchemaId);
+        var historyTable = db.TableInfos.Single(x => x.ObjectId == table.HistoryTableId.Value);
+        var period = db.PeriodInfos.SingleOrDefault(x => x.ObjectId == table.ObjectId && x.PeriodType == 1);
+
+        if (period is not null)
+        {
+            var historySchema = db.SchemaInfos.Single(x => x.SchemaId == historyTable.SchemaId);
+            var startColumn = db.ColumnInfos.Single(x => x.ObjectId == table.ObjectId && x.ColumnId == period.StartColumnId);
+            var endColumn = db.ColumnInfos.Single(x => x.ObjectId == table.ObjectId && x.ColumnId == period.EndColumnId);
+
+            sb.AppendLine($"ALTER TABLE [{schema.SchemaName}].[{table.Name}] ADD PERIOD FOR SYSTEM_TIME ([{startColumn.ColumnName}], [{endColumn.ColumnName}]);");
+            sb.AppendLine($"ALTER TABLE [{schema.SchemaName}].[{table.Name}] SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [{historySchema.SchemaName}].[{historyTable.Name}]));");
+            sb.AppendLine();
+        }
     }
 
     public static void PrintDefaultConstraint(StringBuilder sb, FlatDatabaseSchema db, DefaultConstraintInfo dc)
