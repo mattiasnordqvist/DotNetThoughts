@@ -131,7 +131,7 @@ public class Tests
     }
 
     [Test]
-    public async Task TestTemporalTablesAreAddedToSchema(CancellationToken cancellationToken)
+    public async Task TestTemporalTablesAreIncludedInSchema(CancellationToken cancellationToken)
     {
         var connection = new SqlConnection(CreateDBForTest());
         connection.Open();
