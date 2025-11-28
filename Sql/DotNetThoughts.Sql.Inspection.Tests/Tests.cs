@@ -129,4 +129,18 @@ public class Tests
         await Verify(printed);
 
     }
+
+    [Test]
+    public async Task TestTemporalTablesAreAddedToSchema(CancellationToken cancellationToken)
+    {
+        var connection = new SqlConnection(CreateDBForTest());
+        connection.Open();
+
+        await connection.ExecuteAsync("CREATE TABLE Product_History (Id INT NOT NULL, StartTime DATETIME2 NOT NULL, EndTime DATETIME2 NOT NULL);");
+        await connection.ExecuteAsync("CREATE TABLE Product (Id INT NOT NULL CONSTRAINT PK_Product_Id PRIMARY KEY, StartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL, EndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL, PERIOD FOR SYSTEM_TIME (StartTime, EndTime)) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.Product_History));");
+
+        var schema = await Schema.GetSchemaAsync(connection);
+        var printed = SqlPrinter.PrintAsExecutable(schema, _ => { });
+        await Verify(printed);
+    }
 }
