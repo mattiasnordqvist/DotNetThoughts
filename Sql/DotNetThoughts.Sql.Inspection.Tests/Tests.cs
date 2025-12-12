@@ -52,7 +52,7 @@ public class ViewDependencySorterTests
         var sut = new ViewDependencySorter(dependencies);
         var _5 = new ViewInfo(5, "", "", 0);
         var _11 = new ViewInfo(11, "", "", 0);
-        var _2= new ViewInfo(2, "", "", 0);
+        var _2 = new ViewInfo(2, "", "", 0);
         var _7 = new ViewInfo(7, "", "", 0);
         var _8 = new ViewInfo(8, "", "", 0);
         var _9 = new ViewInfo(9, "", "", 0);
@@ -136,8 +136,7 @@ public class Tests
         var connection = new SqlConnection(CreateDBForTest());
         connection.Open();
 
-        await connection.ExecuteAsync("CREATE TABLE Product_History (Id INT NOT NULL, StartTime DATETIME2 NOT NULL, EndTime DATETIME2 NOT NULL);");
-        await connection.ExecuteAsync("CREATE TABLE Product (Id INT NOT NULL CONSTRAINT PK_Product_Id PRIMARY KEY, StartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL, EndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL, PERIOD FOR SYSTEM_TIME (StartTime, EndTime)) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.Product_History));");
+        await connection.ExecuteAsync("CREATE TABLE Product (Id INT CONSTRAINT PK_Product_Id PRIMARY KEY, StartTime DATETIME2 GENERATED ALWAYS AS ROW START, EndTime DATETIME2 GENERATED ALWAYS AS ROW END, PERIOD FOR SYSTEM_TIME (StartTime, EndTime)) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.Product_History));");
 
         var schema = await Schema.GetSchemaAsync(connection);
         var printed = SqlPrinter.PrintAsExecutable(schema, _ => { });
