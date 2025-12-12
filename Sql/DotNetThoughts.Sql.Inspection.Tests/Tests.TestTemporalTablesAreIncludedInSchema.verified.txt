@@ -1,0 +1,24 @@
+﻿CREATE TABLE [dbo].[Product] (
+    [Id] [INT] NOT NULL,
+    [StartTime] [DATETIME2] NOT NULL,
+    [EndTime] [DATETIME2] NOT NULL
+);
+
+ALTER TABLE [dbo].[Product] ADD CONSTRAINT [PK_Product_Id] PRIMARY KEY CLUSTERED ([Id] ASC);
+
+GO
+CREATE TABLE [dbo].[Product_History] (
+    [Id] [INT] NOT NULL,
+    [StartTime] [DATETIME2] NOT NULL,
+    [EndTime] [DATETIME2] NOT NULL
+);
+
+
+GO
+ALTER TABLE [dbo].[Product] ADD PERIOD FOR SYSTEM_TIME ([StartTime], [EndTime]);
+ALTER TABLE [dbo].[Product] SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[Product_History]));
+
+GO
+CREATE CLUSTERED INDEX [ix_Product_History] ON [dbo].[Product_History] ([EndTime] ASC, [StartTime] ASC);
+
+GO

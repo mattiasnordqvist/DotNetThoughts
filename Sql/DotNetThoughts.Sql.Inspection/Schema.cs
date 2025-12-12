@@ -149,7 +149,28 @@ public static class Schema
         SELECT 
             referencing_id, 
             referenced_id
-        FROM sys.sql_expression_dependencies
+        FROM sys.sql_expression_dependencies;
+        """;
+
+    public static string _temporalTablesSql = """
+        select 
+            t.object_id AS ObjectId,
+            t.name AS Name,
+            t.schema_id AS SchemaId,
+            t.temporal_type AS TemporalType,
+            t.history_table_id AS HistoryTableId
+        from sys.tables t
+        where t.temporal_type IN (1, 2);
+        """;
+
+    public static string _periodsSql = """
+        select
+            p.object_id AS ObjectId,
+            p.name AS PeriodName,
+            p.period_type AS PeriodType,
+            p.start_column_id AS StartColumnId,
+            p.end_column_id AS EndColumnId
+        from sys.periods p;
         """;
 
     public record TableInfo(int ObjectId, string Name, int SchemaId);
@@ -178,6 +199,8 @@ public static class Schema
     public record ComputedColumnInfo(string Definition, bool IsPersisted, int ObjectId, int ColumnId);
     public record CheckConstraintInfo(string Definition, string Name, int ObjectId, int SchemaId, int ParentObjectId, int ParentColumnId);
     public record DependencyInfo(int referencing_id, int referenced_id);
+    public record TemporalTableInfo(int ObjectId, string Name, int SchemaId, byte TemporalType, int? HistoryTableId);
+    public record PeriodInfo(int ObjectId, string PeriodName, byte PeriodType, int StartColumnId, int EndColumnId);
     public static async Task<FlatDatabaseSchema> GetSchemaAsync(this DbConnection connection, IDbTransaction? transaction = null, int? commandTimeout = null)
     {
         var sql = _schemasSql +
@@ -194,7 +217,9 @@ public static class Schema
             _triggersSql +
             _computedColumnsSql +
             _checkConstraintsSql +
-            _dependenciesSql;
+            _dependenciesSql +
+            _temporalTablesSql +
+            _periodsSql;
         using var results = await connection.QueryMultipleAsync(sql, transaction: transaction, commandTimeout: commandTimeout);
         var schemas = await results.ReadAsync<SchemaInfo>();
         var tables = await results.ReadAsync<TableInfo>();
@@ -211,6 +236,8 @@ public static class Schema
         var computedColumns = await results.ReadAsync<ComputedColumnInfo>();
         var checkConstraints = await results.ReadAsync<CheckConstraintInfo>();
         var dependencies = await results.ReadAsync<DependencyInfo>();
+        var temporalTables = await results.ReadAsync<TemporalTableInfo>();
+        var periods = await results.ReadAsync<PeriodInfo>();
 
         return new FlatDatabaseSchema(
             schemas.ToArray(),
@@ -227,7 +254,9 @@ public static class Schema
             triggers.ToArray(),
             computedColumns.ToArray(),
             checkConstraints.ToArray(),
-            dependencies.ToArray()
+            dependencies.ToArray(),
+            temporalTables.ToArray(),
+            periods.ToArray()
             );
     }
 
@@ -246,5 +275,7 @@ public static class Schema
         TriggerInfo[] TriggerInfos,
         ComputedColumnInfo[] ComputedColumnInfos,
         CheckConstraintInfo[] CheckConstraintInfos,
-        DependencyInfo[] DependencyInfos);
+        DependencyInfo[] DependencyInfos,
+        TemporalTableInfo[] TemporalTableInfos,
+        PeriodInfo[] PeriodInfos);
 }
