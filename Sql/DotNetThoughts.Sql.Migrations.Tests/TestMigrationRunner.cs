@@ -1,4 +1,4 @@
-﻿using FakeItEasy;
+using FakeItEasy;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,6 +20,26 @@ public class TestMigrationRunner : MigrationRunner<TestMigrationRunner>
 
     public TestMigrationRunner(Action<MigrationRunnerConfiguration<TestMigrationRunner>> configure)
         : base(DefaultConfiguration(configure), A.Fake<ILogger<TestMigrationRunner>>())
+    {
+    }
+}
+
+public class TestMigrationRunnerWithShortTimeout : MigrationRunner<TestMigrationRunnerWithShortTimeout>
+{
+    public static MigrationRunnerConfiguration<TestMigrationRunnerWithShortTimeout> DefaultConfiguration(Action<MigrationRunnerConfiguration<TestMigrationRunnerWithShortTimeout>> configure)
+    {
+        var configuration = new MigrationRunnerConfiguration<TestMigrationRunnerWithShortTimeout>(Options.Create(new MigrationRunnerOptions<TestMigrationRunnerWithShortTimeout>
+        {
+            AutoCreate = AutoCreateMode.NEVER, // Database already exists
+            EnableSnapshot = false,
+            MigrationLockTimeoutMs = 100 // Very short timeout for testing
+        }));
+        configure(configuration);
+        return configuration;
+    }
+
+    public TestMigrationRunnerWithShortTimeout(Action<MigrationRunnerConfiguration<TestMigrationRunnerWithShortTimeout>> configure)
+        : base(DefaultConfiguration(configure), A.Fake<ILogger<TestMigrationRunnerWithShortTimeout>>())
     {
     }
 }
