@@ -12,17 +12,19 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
     private readonly MigrationRunnerConfiguration<T> _configuration = configuration;
     private readonly ILogger<T> _logger = logger;
 
+    private const string LockResourcePrefix = "DotNetThoughts.Sql.Migrations";
+
     public async Task RunAsync(string connectionString)
     {
         var autoCreate = _configuration.Options.Value.AutoCreate;
+        var databaseName = ConnectionStringUtils.GetInitialCatalog(connectionString);
 
         _logger.LogInformation("AutoCreate database {autoCreate} configured!", autoCreate);
 
         if (autoCreate == AutoCreateMode.IF_NOT_EXISTS || autoCreate == AutoCreateMode.DROP_CREATE)
         {
             var masterConnStr = ConnectionStringUtils.ReplaceInitialCatalog(connectionString, "master");
-            var localDb = ConnectionStringUtils.GetInitialCatalog(connectionString);
-            await CreateDatabase(masterConnStr, localDb, autoCreate == AutoCreateMode.DROP_CREATE);
+            await CreateDatabaseWithLock(masterConnStr, databaseName, autoCreate == AutoCreateMode.DROP_CREATE);
         }
 
         if (_configuration.MigrationLoaders.Count == 0)
@@ -31,9 +33,6 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
             return;
         }
 
-        using var connection = new SqlConnection(connectionString);
-        connection.Open();
-        var databaseName = ConnectionStringUtils.GetInitialCatalog(connectionString);
         var migrations = _configuration.MigrationLoaders.SelectMany(x => x.LoadMigrations()).ToList();
         if (migrations.Count == 0)
         {
@@ -41,45 +40,149 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
             return;
         }
         OfflineMigrationsValidation(migrations, _logger, true);
-        OnlineMigrationsValidation(migrations, await GetVersionInfo(connection), true);
 
-        var lastMigrationVersion = await GetCurrentVersion(connection);
-        List<IMigration> migrationsToExecute = [];
-        if (lastMigrationVersion == 0 && _configuration.Options.Value.EnableSnapshot)
+        using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync();
+
+        await RunMigrationsWithLock(connection, databaseName, migrations);
+    }
+
+    /// <summary>
+    /// Wraps the CreateDatabase operation with a master-scoped application lock to prevent
+    /// race conditions when multiple runners attempt to create/drop the same database.
+    /// </summary>
+    private async Task CreateDatabaseWithLock(string masterConnStr, string databaseName, bool dropIfAlreadyExists)
+    {
+        var useLock = _configuration.Options.Value.UseMigrationLock;
+        var lockResource = $"{LockResourcePrefix}:CreateDatabase:{databaseName}";
+
+        await using var masterConnection = new SqlConnection(masterConnStr);
+        await masterConnection.OpenAsync();
+
+        if (useLock)
         {
-            var lastSnapshot = migrations
-                .Where(x => x.IsSnapshot)
-                .OrderByDescending(x => x.Version)
-                .FirstOrDefault();
-            if (lastSnapshot != null)
+            _logger.LogDebug("Acquiring create database lock for {databaseName}", databaseName);
+            await AcquireAppLockAsync(masterConnection, lockResource, databaseName);
+        }
+
+        try
+        {
+            await CreateDatabase(masterConnection, databaseName, dropIfAlreadyExists);
+        }
+        finally
+        {
+            if (useLock)
             {
-                migrationsToExecute.Add(lastSnapshot);
-                lastMigrationVersion = lastSnapshot.Version;
+                await ReleaseAppLockAsync(masterConnection, lockResource);
+                _logger.LogDebug("Released create database lock for {databaseName}", databaseName);
             }
         }
-        migrationsToExecute.AddRange(migrations
-            .Where(x => !x.IsSnapshot)
-            .Where(x => x.Version > lastMigrationVersion)
-            .OrderBy(x => x.Version));
+    }
 
-        foreach (IMigration m in migrationsToExecute)
+    /// <summary>
+    /// Wraps the migration execution with a database-scoped application lock to prevent
+    /// race conditions when multiple runners attempt to apply migrations to the same database.
+    /// </summary>
+    private async Task RunMigrationsWithLock(SqlConnection connection, string databaseName, List<IMigration> migrations)
+    {
+        var useLock = _configuration.Options.Value.UseMigrationLock;
+        var lockResource = $"{LockResourcePrefix}:RunMigrations:{databaseName}";
+
+        if (useLock)
         {
-            using var t = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            try
+            _logger.LogDebug("Acquiring migrations lock for {databaseName}", databaseName);
+            await AcquireAppLockAsync(connection, lockResource, databaseName);
+        }
+
+        try
+        {
+            OnlineMigrationsValidation(migrations, await GetVersionInfo(connection), true);
+
+            var lastMigrationVersion = await GetCurrentVersion(connection);
+            List<IMigration> migrationsToExecute = [];
+            if (lastMigrationVersion == 0 && _configuration.Options.Value.EnableSnapshot)
             {
-                var sql = $"INSERT INTO {_configuration.Options.Value.VersionInfoTableSchema}.{_configuration.Options.Value.VersionInfoTableName} (Version, IsSnapshot, Name, AppliedAt) VALUES (@Version, @IsSnapshot, @Name, @AppliedAt)";
-                await connection.ExecuteAsync(sql, new { m.Version, m.IsSnapshot, m.Name, AppliedAt = DateTimeOffset.Now }, transaction: t);
-                m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultCommandTimeout);
-                t.Commit();
-                _logger.LogInformation("Applied {version}: {name} on database {databaseNam}", m.Version, m.Name, databaseName);
+                var lastSnapshot = migrations
+                    .Where(x => x.IsSnapshot)
+                    .OrderByDescending(x => x.Version)
+                    .FirstOrDefault();
+                if (lastSnapshot != null)
+                {
+                    migrationsToExecute.Add(lastSnapshot);
+                    lastMigrationVersion = lastSnapshot.Version;
+                }
             }
-            catch
+            migrationsToExecute.AddRange(migrations
+                .Where(x => !x.IsSnapshot)
+                .Where(x => x.Version > lastMigrationVersion)
+                .OrderBy(x => x.Version));
+
+            foreach (IMigration m in migrationsToExecute)
             {
-                _logger.LogError("Failed to apply migration {version}: {name} on database {databaseName}", m.Version, m.Name, databaseName);
-                throw;
+                using var t = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
+                try
+                {
+                    var sql = $"INSERT INTO {_configuration.Options.Value.VersionInfoTableSchema}.{_configuration.Options.Value.VersionInfoTableName} (Version, IsSnapshot, Name, AppliedAt) VALUES (@Version, @IsSnapshot, @Name, @AppliedAt)";
+                    await connection.ExecuteAsync(sql, new { m.Version, m.IsSnapshot, m.Name, AppliedAt = DateTimeOffset.Now }, transaction: t);
+                    m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultCommandTimeout);
+                    t.Commit();
+                    _logger.LogInformation("Applied {version}: {name} on database {databaseName}", m.Version, m.Name, databaseName);
+                }
+                catch
+                {
+                    _logger.LogError("Failed to apply migration {version}: {name} on database {databaseName}", m.Version, m.Name, databaseName);
+                    throw;
+                }
+            }
+            _logger.LogInformation("Database {databaseName} is up to date! Version {version}", databaseName, migrationsToExecute.Count != 0 ? migrationsToExecute.Last().Version : lastMigrationVersion);
+        }
+        finally
+        {
+            if (useLock)
+            {
+                await ReleaseAppLockAsync(connection, lockResource);
+                _logger.LogDebug("Released migrations lock for {databaseName}", databaseName);
             }
         }
-        _logger.LogInformation("Database {databaseName} is up to date! Version {version}", databaseName, migrationsToExecute.Count != 0 ? migrationsToExecute.Last().Version : lastMigrationVersion);
+    }
+
+    /// <summary>
+    /// Acquires an exclusive application lock using sp_getapplock.
+    /// The lock is session-owned and will be automatically released when the connection closes.
+    /// </summary>
+    private async Task AcquireAppLockAsync(SqlConnection connection, string lockResource, string databaseName)
+    {
+        var timeoutMs = _configuration.Options.Value.MigrationLockTimeoutMs;
+        var sql = @"
+            DECLARE @result INT;
+            EXEC @result = sp_getapplock 
+                @Resource = @LockResource,
+                @LockMode = 'Exclusive',
+                @LockOwner = 'Session',
+                @LockTimeout = @LockTimeout;
+            SELECT @result;";
+
+        var result = await connection.ExecuteScalarAsync<int>(sql, new
+        {
+            LockResource = lockResource,
+            LockTimeout = timeoutMs
+        });
+
+        if (result < 0)
+        {
+            throw new MigrationLockException(databaseName, lockResource, timeoutMs, result);
+        }
+
+        _logger.LogDebug("Acquired lock {lockResource} with result {result}", lockResource, result);
+    }
+
+    /// <summary>
+    /// Releases an application lock using sp_releaseapplock.
+    /// </summary>
+    private async Task ReleaseAppLockAsync(SqlConnection connection, string lockResource)
+    {
+        var sql = @"EXEC sp_releaseapplock @Resource = @LockResource, @LockOwner = 'Session';";
+        await connection.ExecuteAsync(sql, new { LockResource = lockResource });
     }
 
 
@@ -89,10 +192,8 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
         var sql = @$"SELECT CASE WHEN EXISTS(SELECT * FROM sys.databases WHERE name = '{databaseName}') THEN 1 ELSE 0 END";
         return connection.ExecuteScalarAsync<bool>(sql);
     }
-    private async Task CreateDatabase(string masterConnStr, string databaseName, bool dropIfAlreadyExists)
+    private async Task CreateDatabase(SqlConnection masterConnection, string databaseName, bool dropIfAlreadyExists)
     {
-        var masterConnection = new SqlConnection(masterConnStr);
-        await masterConnection.OpenAsync();
 
         if (dropIfAlreadyExists && await DatabaseExists(masterConnection, databaseName))
         {
@@ -111,16 +212,14 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
         else
         {
             _logger.LogInformation("Database {database} does not exist.", databaseName);
-            try
+            if (!_configuration.Options.Value.RestoreFromDatabaseOnAutoCreate)
             {
-                if (!_configuration.Options.Value.RestoreFromDatabaseOnAutoCreate)
-                {
-                    _logger.LogInformation("Creating new database {databaseName}", databaseName);
-                    var sql = $"CREATE DATABASE {databaseName.ToIdentifier()};";
-                    await masterConnection.ExecuteAsync(sql);
-                }
-                else
-                {
+                _logger.LogInformation("Creating new database {databaseName}", databaseName);
+                var sql = $"CREATE DATABASE {databaseName.ToIdentifier()};";
+                await masterConnection.ExecuteAsync(sql);
+            }
+            else
+            {
                     var sourceDatabase = _configuration.Options.Value.SourceDatabaseForRestore ?? throw new Exception("Source database for restore not configured. When RestoreFromBackupOnAutoCreate is true, a source database must exist.");
                     if (!await DatabaseExists(masterConnection, sourceDatabase))
                     {
@@ -190,12 +289,6 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
                         throw;
                     }
                 }
-            }
-            finally
-            {
-                masterConnection.Close();
-                masterConnection.Dispose();
-            }
         }
     }
 

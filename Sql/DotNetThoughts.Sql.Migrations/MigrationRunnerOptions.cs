@@ -40,4 +40,18 @@ public class MigrationRunnerOptions<T> where T : MigrationRunner<T>
     /// </summary>
     public string? SourceDatabaseForRestore { get; set; } = null;
 
+    /// <summary>
+    /// When true, uses SQL Server application locks (sp_getapplock) to serialize concurrent migration runs.
+    /// This prevents race conditions when multiple processes attempt to run migrations simultaneously.
+    /// Default is true.
+    /// </summary>
+    public bool UseMigrationLock { get; set; } = true;
+
+    /// <summary>
+    /// The timeout in milliseconds for acquiring migration locks.
+    /// If the lock cannot be acquired within this time, the migration will fail.
+    /// Default is 60000ms (60 seconds).
+    /// </summary>
+    public int MigrationLockTimeoutMs { get; set; } = 60000;
+
 }
