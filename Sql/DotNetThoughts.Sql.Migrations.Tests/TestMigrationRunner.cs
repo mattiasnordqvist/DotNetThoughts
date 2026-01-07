@@ -43,3 +43,48 @@ public class TestMigrationRunnerWithShortTimeout : MigrationRunner<TestMigration
     {
     }
 }
+
+/// <summary>
+/// Migration runner with IF_NOT_EXISTS mode - used for concurrent creation tests.
+/// </summary>
+public class TestMigrationRunnerIfNotExists : MigrationRunner<TestMigrationRunnerIfNotExists>
+{
+    public static MigrationRunnerConfiguration<TestMigrationRunnerIfNotExists> DefaultConfiguration(Action<MigrationRunnerConfiguration<TestMigrationRunnerIfNotExists>> configure)
+    {
+        var configuration = new MigrationRunnerConfiguration<TestMigrationRunnerIfNotExists>(Options.Create(new MigrationRunnerOptions<TestMigrationRunnerIfNotExists>
+        {
+            AutoCreate = AutoCreateMode.IF_NOT_EXISTS,
+            EnableSnapshot = false
+        }));
+        configure(configuration);
+        return configuration;
+    }
+
+    public TestMigrationRunnerIfNotExists(Action<MigrationRunnerConfiguration<TestMigrationRunnerIfNotExists>> configure)
+        : base(DefaultConfiguration(configure), A.Fake<ILogger<TestMigrationRunnerIfNotExists>>())
+    {
+    }
+}
+
+/// <summary>
+/// Migration runner with locking DISABLED - used to demonstrate race conditions.
+/// </summary>
+public class TestMigrationRunnerNoLocking : MigrationRunner<TestMigrationRunnerNoLocking>
+{
+    public static MigrationRunnerConfiguration<TestMigrationRunnerNoLocking> DefaultConfiguration(Action<MigrationRunnerConfiguration<TestMigrationRunnerNoLocking>> configure)
+    {
+        var configuration = new MigrationRunnerConfiguration<TestMigrationRunnerNoLocking>(Options.Create(new MigrationRunnerOptions<TestMigrationRunnerNoLocking>
+        {
+            AutoCreate = AutoCreateMode.NEVER, // DB pre-created in test
+            EnableSnapshot = false,
+            UseMigrationLock = false // LOCKING DISABLED - will cause race conditions!
+        }));
+        configure(configuration);
+        return configuration;
+    }
+
+    public TestMigrationRunnerNoLocking(Action<MigrationRunnerConfiguration<TestMigrationRunnerNoLocking>> configure)
+        : base(DefaultConfiguration(configure), A.Fake<ILogger<TestMigrationRunnerNoLocking>>())
+    {
+    }
+}
