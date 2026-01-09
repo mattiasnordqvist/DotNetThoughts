@@ -1,9 +1,10 @@
+using System.Diagnostics;
+using System.Data.Common;
+
 using Dapper;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-
-using System.Data.Common;
 using DotNetThoughts.Sql.Utilities;
 namespace DotNetThoughts.Sql.Migrations;
 
@@ -65,17 +66,21 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
         foreach (IMigration m in migrationsToExecute)
         {
             using var t = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            var sw = new Stopwatch();
             try
             {
                 var sql = $"INSERT INTO {_configuration.Options.Value.VersionInfoTableSchema}.{_configuration.Options.Value.VersionInfoTableName} (Version, IsSnapshot, Name, AppliedAt) VALUES (@Version, @IsSnapshot, @Name, @AppliedAt)";
                 await connection.ExecuteAsync(sql, new { m.Version, m.IsSnapshot, m.Name, AppliedAt = DateTimeOffset.Now }, transaction: t);
+                sw.Start();
                 m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultCommandTimeout);
+                sw.Stop();
                 t.Commit();
-                _logger.LogInformation("Applied {version}: {name} on database {databaseNam}", m.Version, m.Name, databaseName);
+                _logger.LogInformation("Applied {version}: {name} on database {databaseName}, execution time: {elapsedMs}ms", m.Version, m.Name, databaseName, sw.ElapsedMilliseconds);
             }
             catch
             {
-                _logger.LogError("Failed to apply migration {version}: {name} on database {databaseName}", m.Version, m.Name, databaseName);
+                sw.Stop();
+                _logger.LogError("Failed to apply migration {version}: {name} on database {databaseName}, execution time: {elapsedMs}ms", m.Version, m.Name, databaseName, sw.ElapsedMilliseconds);
                 throw;
             }
         }
