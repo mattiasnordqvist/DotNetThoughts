@@ -69,7 +69,7 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
             {
                 var sql = $"INSERT INTO {_configuration.Options.Value.VersionInfoTableSchema}.{_configuration.Options.Value.VersionInfoTableName} (Version, IsSnapshot, Name, AppliedAt) VALUES (@Version, @IsSnapshot, @Name, @AppliedAt)";
                 await connection.ExecuteAsync(sql, new { m.Version, m.IsSnapshot, m.Name, AppliedAt = DateTimeOffset.Now }, transaction: t);
-                m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultCommandTimeout);
+                m.Execute(connection, t, commandTimeout: _configuration.Options.Value.DefaultMigrationCommandTimeout);
                 t.Commit();
                 _logger.LogInformation("Applied {version}: {name} on database {databaseNam}", m.Version, m.Name, databaseName);
             }
@@ -181,7 +181,7 @@ public abstract class MigrationRunner<T>(MigrationRunnerConfiguration<T> configu
                     """;
                     try
                     {
-                        await masterConnection.ExecuteAsync(sql);
+                        await masterConnection.ExecuteAsync(sql, commandTimeout: _configuration.Options.Value.DefaultRestoreCommandTimeout);
                         _logger.LogInformation("Restoration of {databaseName} complete", databaseName);
                     }
                     catch (Exception e)

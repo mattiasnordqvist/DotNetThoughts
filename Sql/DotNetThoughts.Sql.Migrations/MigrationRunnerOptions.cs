@@ -7,7 +7,12 @@ public class MigrationRunnerOptions<T> where T : MigrationRunner<T>
     /// <summary>
     /// The command timeout in seconds for database operations. Default is 200 seconds.
     /// </summary>
-    public int DefaultCommandTimeout { get; set; } = 200;
+    public int DefaultMigrationCommandTimeout { get; set; } = 200;
+
+    /// <summary>
+    /// The command timeout in seconds for restore operations. Default is 300 seconds.
+    /// </summary>
+    public int DefaultRestoreCommandTimeout { get; set; } = 300;
 
     /// <summary>
     /// The name of the database table that will store the migration history.
