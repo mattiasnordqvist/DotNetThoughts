@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[ColumnLengths] (
+    [FixedBinary] [BINARY](16) NOT NULL,
+    [VariableBinary] [VARBINARY](128) NULL,
+    [UnlimitedBinary] [VARBINARY](MAX) NULL,
+    [VariableText] [VARCHAR](100) NOT NULL,
+    [UnlimitedText] [VARCHAR](MAX) NULL,
+    [UnicodeText] [NVARCHAR](50) NOT NULL,
+    [UnlimitedUnicodeText] [NVARCHAR](MAX) NULL,
+    [DecimalValue] [DECIMAL](18,4) NOT NULL
+);
+
+-- Table has no PRIMARY KEY. It is a HEAP.
+
+GO

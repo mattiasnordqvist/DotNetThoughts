@@ -131,6 +131,30 @@ public class Tests
     }
 
     [Test]
+    public async Task TestColumnLengthsArePrintedCorrectly(CancellationToken cancellationToken)
+    {
+        using var connection = new SqlConnection(CreateDBForTest());
+        await connection.OpenAsync(cancellationToken);
+
+        await connection.ExecuteAsync("""
+            CREATE TABLE ColumnLengths (
+                FixedBinary BINARY(16) NOT NULL,
+                VariableBinary VARBINARY(128) NULL,
+                UnlimitedBinary VARBINARY(MAX) NULL,
+                VariableText VARCHAR(100) NOT NULL,
+                UnlimitedText VARCHAR(MAX) NULL,
+                UnicodeText NVARCHAR(50) NOT NULL,
+                UnlimitedUnicodeText NVARCHAR(MAX) NULL,
+                DecimalValue DECIMAL(18,4) NOT NULL
+            );
+            """);
+
+        var schema = await Schema.GetSchemaAsync(connection);
+        var printed = SqlPrinter.PrintAsExecutable(schema, _ => { });
+        await Verify(printed);
+    }
+
+    [Test]
     public async Task TestTemporalTablesAreIncludedInSchema(CancellationToken cancellationToken)
     {
         var connection = new SqlConnection(CreateDBForTest());

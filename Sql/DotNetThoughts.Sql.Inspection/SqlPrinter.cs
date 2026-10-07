@@ -293,6 +293,8 @@ public class SqlPrinter
             "nvarchar" => $"({maxLength})",
             "decimal" => $"({column.Precision},{column.Scale})",
             "varchar" => $"({maxLength})",
+            "binary" => $"({maxLength})",
+            "varbinary" => $"({maxLength})",
             _ => ""
         };
 
